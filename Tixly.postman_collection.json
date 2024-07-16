@@ -9,11 +9,20 @@
 		{
 			"name": "Logout",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
-				"header": [],
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lcjEiLCJpYXQiOjE3MjExMzk0OTV9.RxJUY8geCzQxOGO_fLWQSK-FjR-DG7WrK4SKIJaf3m_oIo915FNXOiHGm3bZSXD9RUj1ju89ek00q-iJjqJr9g",
+						"type": "text"
+					}
+				],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "\r\n\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
