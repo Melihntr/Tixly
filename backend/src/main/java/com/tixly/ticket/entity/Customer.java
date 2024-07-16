@@ -15,6 +15,7 @@ public class Customer {
     private String password;
     private String mail;
     private String gender;
+    private String auth_key; // Using exact field name "auth_key"
 
     // Default constructor
     public Customer() {}
@@ -58,5 +59,13 @@ public class Customer {
 
     public void setGender(String gender) {
         this.gender = gender;
+    }
+
+    public String getAuth_key() {
+        return auth_key;
+    }
+
+    public void setAuth_key(String auth_key) {
+        this.auth_key = auth_key;
     }
 }
