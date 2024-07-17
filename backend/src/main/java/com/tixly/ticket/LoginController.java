@@ -26,6 +26,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        if (authService.isUserLoggedIn(loginRequest.getUsername())) {
+            return ResponseEntity.ok("User is already logged in.");
+        }
         LoginResponse response = authService.authenticateCustomer(loginRequest);
         if (response.getAuthKey() != null) {
             return ResponseEntity.ok(response);
@@ -35,35 +38,30 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
-    try {
-        if (token != null && token.startsWith("Bearer ")) {
-            // Extract JWT token from Authorization header
-            String jwtToken = token.substring(7); // Remove "Bearer " prefix
-
-            // Extract username from JWT token
-            String username = jwtUtil.extractUsername(jwtToken);
-
-            // Perform logout logic
-            authService.logout(username);
-
-            // Print "Logout successful" to console
-            System.out.println("Logout successful for username: " + username);
-
-            // Return a response
-            return ResponseEntity.ok(username + " logged out successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid token format");
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                // Extract JWT token from Authorization header
+                String jwtToken = token.substring(7); // Remove "Bearer " prefix
+                // Extract username from JWT token
+                String username = jwtUtil.extractUsername(jwtToken);
+    
+                // Check if the user is already logged out
+                if (!authService.isUserLoggedIn(username)) {
+                    return ResponseEntity.badRequest().body("No valid session available for user: " + username);
+                }
+    
+                authService.logout(username);
+                System.out.println("Logout successful for username: " + username);
+                return ResponseEntity.ok(username + " logged out successfully.");
+            } else {
+                return ResponseEntity.badRequest().body("Invalid token format");
+            }
+        } catch (Exception e) {
+            System.err.println("Error during logout: " + e.getMessage());
+            // Return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during logout: " + e.getMessage());
         }
-    } catch (Exception e) {
-        // Log the exception
-        System.err.println("Error during logout: " + e.getMessage());
-        e.printStackTrace(); // Print stack trace for detailed error analysis
-
-        // Return an error response
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("Error during logout: " + e.getMessage());
     }
-}
-
 }

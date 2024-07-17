@@ -133,7 +133,7 @@ public class AuthService {
         return count != null && count > 0;
     }
 
-    private void updateAuthKeyForCustomer(Long customerId, String authKey) {
+    public void updateAuthKeyForCustomer(Long customerId, String authKey) {
         String updateSql = "UPDATE customer SET auth_key = ? WHERE id = ?";
         jdbcTemplate.update(updateSql, authKey, customerId);
     }
@@ -141,5 +141,9 @@ public class AuthService {
     private void updateAuthKeyForOwner(Long ownerId, String authKey) {
         String updateSql = "UPDATE owner SET auth_key = ? WHERE id = ?";
         jdbcTemplate.update(updateSql, authKey, ownerId);
+    }
+    public String generateAuthKey(String username) {
+        // Generate JWT token as the auth_key
+        return jwtUtil.generateToken(username);
     }
 }

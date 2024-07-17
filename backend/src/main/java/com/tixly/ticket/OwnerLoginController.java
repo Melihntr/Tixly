@@ -39,12 +39,29 @@ public class OwnerLoginController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
-        if (token != null && jwtUtil.validateToken(token)) {
-            String username = jwtUtil.extractUsername(token);
-            authService.logoutOwner(username);
-            return ResponseEntity.ok(username + " logged out successfully.");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid token");
+        try {
+            if (token != null && token.startsWith("Bearer ")) {
+                // Extract JWT token from Authorization header
+                String jwtToken = token.substring(7); // Remove "Bearer " prefix
+                // Extract username from JWT token
+                String username = jwtUtil.extractUsername(jwtToken);
+    
+                // Check if the user is already logged out
+                if (!authService.isOwnerLoggedIn(username)) {
+                    return ResponseEntity.badRequest().body("No valid session available for user: " + username);
+                }
+    
+                authService.logoutOwner(username);
+                System.out.println("Logout successful for username: " + username);
+                return ResponseEntity.ok(username + " logged out successfully.");
+            } else {
+                return ResponseEntity.badRequest().body("Invalid token format");
+            }
+        } catch (Exception e) {
+            System.err.println("Error during logout: " + e.getMessage());
+            // Return an error response
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error during logout: " + e.getMessage());
         }
     }
 }

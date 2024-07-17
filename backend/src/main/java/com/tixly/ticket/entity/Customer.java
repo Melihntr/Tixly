@@ -7,7 +7,7 @@ import javax.persistence.Id;
 
 @Entity
 public class Customer {
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,12 +15,21 @@ public class Customer {
     private String password;
     private String mail;
     private String gender;
-    private String auth_key; // Using exact field name "auth_key"
+    private String authKey;
 
-    // Default constructor
-    public Customer() {}
+    // Constructors, getters, setters, toString() method
 
-    // Getters and setters
+    public Customer() {
+    }
+
+    public Customer(String username, String password, String mail, String gender, String authKey) {
+        this.username = username;
+        this.password = password;
+        this.mail = mail;
+        this.gender = gender;
+        this.authKey = authKey;
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,11 +54,11 @@ public class Customer {
         this.password = password;
     }
 
-    public String getMail() {
+    public String getmail() {
         return mail;
     }
 
-    public void setMail(String mail) {
+    public void setmail(String mail) {
         this.mail = mail;
     }
 
@@ -61,11 +70,23 @@ public class Customer {
         this.gender = gender;
     }
 
-    public String getAuth_key() {
-        return auth_key;
+    public String getAuthKey() {
+        return authKey;
     }
 
-    public void setAuth_key(String auth_key) {
-        this.auth_key = auth_key;
+    public void setAuthKey(String authKey) {
+        this.authKey = authKey;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", mail='" + mail + '\'' +
+                ", gender='" + gender + '\'' +
+                ", authKey='" + authKey + '\'' +
+                '}';
     }
 }
