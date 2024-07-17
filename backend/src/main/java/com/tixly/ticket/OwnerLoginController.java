@@ -1,5 +1,4 @@
 package com.tixly.ticket;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +14,8 @@ import com.tixly.ticket.services.AuthService;
 import com.tixly.ticket.utils.JwtUtil;
 
 @RestController
-@RequestMapping("/api")
-public class LoginController {
+@RequestMapping("/owner")
+public class OwnerLoginController {
 
     @Autowired
     private AuthService authService;
@@ -26,7 +25,11 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse response = authService.authenticateCustomer(loginRequest);
+        if (authService.isOwnerLoggedIn(loginRequest.getUsername())) {
+            return ResponseEntity.ok("User is already logged in.");
+        }
+
+        LoginResponse response = authService.authenticateOwner(loginRequest);
         if (response.getAuthKey() != null) {
             return ResponseEntity.ok(response);
         } else {
@@ -35,35 +38,14 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
-    try {
-        if (token != null && token.startsWith("Bearer ")) {
-            // Extract JWT token from Authorization header
-            String jwtToken = token.substring(7); // Remove "Bearer " prefix
-
-            // Extract username from JWT token
-            String username = jwtUtil.extractUsername(jwtToken);
-
-            // Perform logout logic
-            authService.logout(username);
-
-            // Print "Logout successful" to console
-            System.out.println("Logout successful for username: " + username);
-
-            // Return a response
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token) {
+        if (token != null && jwtUtil.validateToken(token)) {
+            String username = jwtUtil.extractUsername(token);
+            authService.logoutOwner(username);
             return ResponseEntity.ok(username + " logged out successfully.");
         } else {
-            return ResponseEntity.badRequest().body("Invalid token format");
+            return ResponseEntity.badRequest().body("Invalid token");
         }
-    } catch (Exception e) {
-        // Log the exception
-        System.err.println("Error during logout: " + e.getMessage());
-        e.printStackTrace(); // Print stack trace for detailed error analysis
-
-        // Return an error response
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                             .body("Error during logout: " + e.getMessage());
     }
 }
 
-}

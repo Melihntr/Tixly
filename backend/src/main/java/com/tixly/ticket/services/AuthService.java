@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tixly.ticket.entity.Customer;
+import com.tixly.ticket.entity.Owner;
 import com.tixly.ticket.models.request.LoginRequest;
 import com.tixly.ticket.models.response.LoginResponse;
 import com.tixly.ticket.utils.HashUtil;
@@ -23,8 +24,8 @@ public class AuthService {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Transactional
-    public LoginResponse authenticate(LoginRequest loginRequest) {
+    // Existing authenticate method for customer
+    public LoginResponse authenticateCustomer(LoginRequest loginRequest) {
         String username = loginRequest.getUsername();
         String password = loginRequest.getPassword();
 
@@ -54,6 +55,51 @@ public class AuthService {
             // Generate JWT token
             String jwtToken = jwtUtil.generateToken(username);
 
+            // Update auth_key in the database
+            updateAuthKeyForCustomer(customer.getId(), jwtToken);
+
+            // Return the JWT token in the response along with "Login successful"
+            return new LoginResponse(jwtToken, "Login successful. Hello " + username);
+        } else {
+            return new LoginResponse(null, "Invalid username or password");
+        }
+    }
+
+    // New authenticate method for owner
+    public LoginResponse authenticateOwner(LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        String password = loginRequest.getPassword();
+
+        // Validate username and password length
+        if (username.length() < 4 || username.length() > 50 || password.length() < 4 || password.length() > 50) {
+            return new LoginResponse(null, "Invalid username or password");
+        }
+
+        // Password hashing with SHA-256
+        String hashedPassword = HashUtil.sha256(password);
+
+        String sql = "SELECT id, username, companyid FROM owner WHERE username = ? AND password = ?";
+        Owner owner = null;
+        try {
+            owner = jdbcTemplate.queryForObject(sql, new Object[]{username, hashedPassword},
+                    (rs, rowNum) -> {
+                        Owner own = new Owner();
+                        own.setId(rs.getLong("id"));
+                        own.setUsername(rs.getString("username"));
+                        own.setCompanyid(rs.getString("companyid"));
+                        return own;
+                    });
+        } catch (EmptyResultDataAccessException e) {
+            return new LoginResponse(null, "Invalid username or password");
+        }
+
+        if (owner != null) {
+            // Generate JWT token
+            String jwtToken = jwtUtil.generateToken(username);
+
+            // Update auth_key in the database
+            updateAuthKeyForOwner(owner.getId(), jwtToken);
+
             // Return the JWT token in the response along with "Login successful"
             return new LoginResponse(jwtToken, "Login successful. Hello " + username);
         } else {
@@ -63,25 +109,37 @@ public class AuthService {
 
     @Transactional
     public void logout(String username) {
-        // Update auth_key to null in the database for the user
+        // Update auth_key to null in the database for the user (customer)
         String updateSql = "UPDATE customer SET auth_key = null WHERE username = ?";
         jdbcTemplate.update(updateSql, username);
     }
+
+    @Transactional
+    public void logoutOwner(String username) {
+        // Update auth_key to null in the database for the user (owner)
+        String updateSql = "UPDATE owner SET auth_key = null WHERE username = ?";
+        jdbcTemplate.update(updateSql, username);
+    }
+
     public boolean isUserLoggedIn(String username) {
         String sql = "SELECT COUNT(*) FROM customer WHERE username = ? AND auth_key IS NOT NULL";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username}, Integer.class);
         return count != null && count > 0;
     }
 
-    private String generateUniqueAuthKey(String username) {
-        // Generate a unique auth_key based on username and current timestamp or random value
-        // Example: Using SHA-256 hash of username and current timestamp
-        String uniqueValue = username;// + System.currentTimeMillis()
-        return HashUtil.sha256(uniqueValue);
+    public boolean isOwnerLoggedIn(String username) {
+        String sql = "SELECT COUNT(*) FROM owner WHERE username = ? AND auth_key IS NOT NULL";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username}, Integer.class);
+        return count != null && count > 0;
     }
 
-    private void updateAuthKey(Long customerId, String authKey) {
+    private void updateAuthKeyForCustomer(Long customerId, String authKey) {
         String updateSql = "UPDATE customer SET auth_key = ? WHERE id = ?";
         jdbcTemplate.update(updateSql, authKey, customerId);
+    }
+
+    private void updateAuthKeyForOwner(Long ownerId, String authKey) {
+        String updateSql = "UPDATE owner SET auth_key = ? WHERE id = ?";
+        jdbcTemplate.update(updateSql, authKey, ownerId);
     }
 }
