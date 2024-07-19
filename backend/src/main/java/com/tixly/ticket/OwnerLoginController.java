@@ -1,4 +1,4 @@
-package com.tixly.ticket;
+/*package com.tixly.ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,26 +10,27 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tixly.ticket.models.request.LoginRequest;
 import com.tixly.ticket.models.response.LoginResponse;
-import com.tixly.ticket.services.AuthService;
+
 import com.tixly.ticket.utils.JwtUtil;
+import com.tixly.ticket.entity.Owner;
 
 @RestController
 @RequestMapping("/owner")
 public class OwnerLoginController {
 
     @Autowired
-    private AuthService authService;
+    private Owner Owner;
 
     @Autowired
     private JwtUtil jwtUtil;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        if (authService.isOwnerLoggedIn(loginRequest.getUsername())) {
+        if (Owner.isOwnerLoggedIn(loginRequest.getUsername())) {
             return ResponseEntity.ok("User is already logged in.");
         }
 
-        LoginResponse response = authService.authenticateOwner(loginRequest);
+        LoginResponse response = Owner.authenticateOwner(loginRequest);
         if (response.getAuthKey() != null) {
             return ResponseEntity.ok(response);
         } else {
@@ -47,11 +48,11 @@ public class OwnerLoginController {
                 String username = jwtUtil.extractUsername(jwtToken);
     
                 // Check if the user is already logged out
-                if (!authService.isOwnerLoggedIn(username)) {
+                if (!Owner.isOwnerLoggedIn(username)) {
                     return ResponseEntity.badRequest().body("No valid session available for user: " + username);
                 }
     
-                authService.logoutOwner(username);
+                Owner.logoutOwner(username);
                 System.out.println("Logout successful for username: " + username);
                 return ResponseEntity.ok(username + " logged out successfully.");
             } else {
@@ -65,4 +66,4 @@ public class OwnerLoginController {
         }
     }
 }
-
+*/

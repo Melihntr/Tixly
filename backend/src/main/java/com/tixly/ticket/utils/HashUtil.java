@@ -5,6 +5,10 @@ import java.security.NoSuchAlgorithmException;
 
 public class HashUtil {
 
+    private HashUtil() {
+        // Private constructor to prevent instantiation
+    }
+
     public static String sha256(String original) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
