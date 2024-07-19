@@ -5,11 +5,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tixly.ticket.models.request.LoginRequest;
-import com.tixly.ticket.models.request.LogoutRequest;
 import com.tixly.ticket.models.response.LoginResponse;
 import com.tixly.ticket.services.AuthDomainService;
 
@@ -19,26 +19,25 @@ public class AuthController {
 
     @Autowired
     private AuthDomainService authDomainService;
+    
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
             String authKey = authDomainService.login(loginRequest.getUsername(), loginRequest.getPassword());
-            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(authKey, "ok"));
+            return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(authKey, "User Logged in Successfully"));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponse(null, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
     }
-
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestBody LogoutRequest logoutRequest) {
-        try {
-            authDomainService.logout(logoutRequest.getAuthKey());
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authKey) {
+        try {    
+            authDomainService.logout(authKey);
+            return ResponseEntity.status(HttpStatus.OK).body("Bye, user");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new LoginResponse(null, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
     }
 }

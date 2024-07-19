@@ -2,8 +2,10 @@ package com.tixly.ticket.utils;
 
 import java.util.Random;
 
+import org.springframework.stereotype.Component;
 
 
+@Component
 public class VerifyUtil {
 
     private String storedCode;

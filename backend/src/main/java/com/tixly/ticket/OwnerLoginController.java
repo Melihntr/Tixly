@@ -1,4 +1,16 @@
-/*package com.tixly.ticket;
+/*
+
+
+
+SABAHA KALDI
+BUNU DA DÜZELTECEĞİM
+
+
+
+
+
+
+package com.tixly.ticket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,11 +20,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tixly.ticket.entity.Owner;
 import com.tixly.ticket.models.request.LoginRequest;
 import com.tixly.ticket.models.response.LoginResponse;
-
 import com.tixly.ticket.utils.JwtUtil;
-import com.tixly.ticket.entity.Owner;
 
 @RestController
 @RequestMapping("/owner")
@@ -65,5 +76,5 @@ public class OwnerLoginController {
                     .body("Error during logout: " + e.getMessage());
         }
     }
-}
-*/
+}*/
+

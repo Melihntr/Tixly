@@ -30,4 +30,10 @@ public class ValidUtil {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, email}, Integer.class);
         return count != null && count > 0;
     }
+    public boolean isValid(String username, String password, String mail) {
+        return username != null && username.length() >= RuleBase.MIN_USERNAME_LENGTH && username.length() <= RuleBase.MAX_USERNAME_LENGTH
+                && isValidPassword(password)
+                && isEmailValid(mail)
+                && !doesUsernameOrEmailExist(username, mail);
+    }
 }

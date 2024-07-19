@@ -1,10 +1,20 @@
 package com.tixly.ticket.models.request;
 
 public class VerificationRequest {
-    private String username;
-    private String email;
 
-    // Getters and setters
+    private String username;
+    private String mail;
+
+    // Constructors
+    public VerificationRequest() {
+    }
+
+    public VerificationRequest(String username, String mail) {
+        this.username = username;
+        this.mail = mail;
+    }
+
+    // Getters and Setters
     public String getUsername() {
         return username;
     }
@@ -14,10 +24,10 @@ public class VerificationRequest {
     }
 
     public String getMail() {
-        return email;
+        return mail;
     }
 
-    public void setMail(String email) {
-        this.email = email;
+    public void setMail(String mail) {
+        this.mail = mail;
     }
 }

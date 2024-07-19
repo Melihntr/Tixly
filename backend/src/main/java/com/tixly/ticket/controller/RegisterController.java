@@ -1,6 +1,8 @@
 package com.tixly.ticket.controller;
 
-/*import org.springframework.beans.factory.annotation.Autowired;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,39 +10,49 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tixly.ticket.entity.Customer;
-import com.tixly.ticket.services.CustomerService;
+import com.tixly.ticket.models.request.RegisterRequest;
+import com.tixly.ticket.services.RegisterDomainService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/reg")
 public class RegisterController {
 @Autowired
-    private CustomerService customerService;
-
+    private RegisterDomainService registerDomainService;
+  
     @PostMapping("/register")
-    public ResponseEntity<String> registerCustomer(@RequestBody Customer customer) {
-        // Validate the input using CustomerService
-        if (!customerService.isValid(customer)) {
-            return new ResponseEntity<>("Invalid username, password, or email, or username/email already exists.", HttpStatus.BAD_REQUEST);
+    public ResponseEntity<String> registerCustomer(@RequestBody RegisterRequest registerRequest) {
+        try {
+            String responseMessage = registerDomainService.register(
+                registerRequest.getUsername(), 
+                registerRequest.getPassword(), 
+                registerRequest.getMail(),
+                registerRequest.getGender()
+        );
+            return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
 
-        // Save the customer and set the default status (e.g., pending)
-        customer.setStatus("PENDING"); // Set default status
-        customerService.createCustomer(customer);
-        
-        // Generate verification code and send/store it
-        String verificationCode = customerService.generateVerificationCode();
-        customerService.updateVerificationCode(customer.getUsername(),verificationCode);
-        
+    @PostMapping("/verifyCode")
+    public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> requestBody) {
+        try {
+            String userInput = requestBody.get("userInput");
 
-        // Store or send verificationCode to user
+            // Call the service method
+            String responseMessage = registerDomainService.verifyCode(userInput);
 
-        // Return a message indicating successful registration with the verification code
-        String responseMessage = String.format("Customer registered successfully. Your verification code is: %s."+ '\n' +"Your auth key is: %s",
-                verificationCode, customer.getAuthKey());
-
-        // Return response with CREATED status
-        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+            // Build and return the response entity based on the service result
+            return ResponseEntity.ok(responseMessage);
+            
+        } catch (Exception e) {
+            // Handle unexpected exceptions
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("An unexpected error occurred: " + e.getMessage());
+        }
     }
 }
-*/

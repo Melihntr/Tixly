@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.tixly.ticket.utils.HashUtil;
 import com.tixly.ticket.utils.JwtUtil;
-import com.tixly.ticket.utils.RuleBase;
 import com.tixly.ticket.utils.ValidUtil;
 
 import lombok.Data;
@@ -36,17 +35,14 @@ public class ECustomer {
         this.ValidUtil = ValidUtil;
     }
 
-    public void createCustomer(ECustomer customer) {
-        String hashedPassword = HashUtil.sha256(this.password);
-        this.password = hashedPassword;
+    public void createCustomer(String username, String password, String mail, String gender) {
+        String hashedPassword = HashUtil.sha256(password);
         String sql = "INSERT INTO customer (username, password, mail, gender, auth_key, account_status, verification_code) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-        // Generate verification code
-
-        customer.setAuthKey(jwtUtil.generateToken(this.username));
-        jdbcTemplate.update(sql, customer.getUsername(), this.password,
-                customer.getMail(), customer.getGender(), customer.getAuthKey(),
-                "PENDING", null);
+                
+                jdbcTemplate.update(sql, username, hashedPassword, mail, gender, authKey, "PENDING",null);
+                
+              
     }
 
     public void updateVerificationCode(String username, String verificationCode) {
@@ -76,7 +72,7 @@ public class ECustomer {
         int count = jdbcTemplate.queryForObject(sql, Integer.class, verificationCode);
         if (count > 0) {
             // Update account_status to "active" for the verified customer
-            sql = "UPDATE customer SET account_status = 'active' WHERE verification_code = ?";
+            sql = "UPDATE customer SET account_status = 'active', verification_code = NULL WHERE verification_code = ?";
             jdbcTemplate.update(sql, verificationCode);
             return true; // Verification successful
         }
@@ -98,42 +94,52 @@ public class ECustomer {
     }
     // Method to validate the customer details
 
-    public boolean isValid(ECustomer customer) {
-        return customer.getUsername() != null && customer.getUsername().length() >= RuleBase.MIN_USERNAME_LENGTH && customer.getUsername().length() <= RuleBase.MAX_USERNAME_LENGTH
-                && customer.getPassword() != null && customer.getPassword().length() >= RuleBase.MIN_PASSWORD_LENGTH && customer.getPassword().length() <= RuleBase.MAX_PASSWORD_LENGTH
-                && customer.getMail() != null && ValidUtil.isEmailValid(customer.getMail())
-                && !ValidUtil.doesUsernameOrEmailExist(customer.getUsername(), customer.getMail());
-    }
+    
 
     public String authenticateCustomer(String username, String password) {
+        
         // Password hashing with SHA-256
         String hashedPassword = HashUtil.sha256(password);
 
-        String sql = "SELECT authKey FROM customer WHERE username = ? AND password = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{username, hashedPassword}, String.class);
+        // Query to check username and hashed password
+        String sql = "SELECT id FROM customer WHERE username = ? AND password = ?";
+        Long customerId = jdbcTemplate.queryForObject(sql, new Object[]{username, hashedPassword}, Long.class);
+
+            // Generate JWT token if customer is found
+            String token = jwtUtil.generateToken(username);
+            updateAuthKey(username, token);
+            
+        return token;
+        
     }
-
-    
-
-    @Transactional
-    public void logout(String username) {
-        // Update auth_key to null in the database for the user (customer)
-        String updateSql = "UPDATE customer SET auth_key = null WHERE username = ?";
-        jdbcTemplate.update(updateSql, username);
+   
+    public void logout(String authKey) {
+        // Update auth_key to null in the database for the given authKey
+        
+        String updateSql = "UPDATE customer SET auth_key = null WHERE auth_key = ?";
+        jdbcTemplate.update(updateSql, authKey);
     }
-
     
     public boolean isUserLoggedIn(String username) {
         String sql = "SELECT COUNT(*) FROM customer WHERE username = ? AND auth_key IS NOT NULL";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username}, Integer.class);
         return count != null && count > 0;
     }
-
+    public boolean isAuthKeyValid(String authKey) {
+        String sql = "SELECT COUNT(*) FROM customer WHERE auth_key = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{authKey}, Integer.class);
+        return count != null && count > 0;
+    }
     
 
-    public void updateAuthKeyForCustomer(Long customerId, String authKey) {
-        String updateSql = "UPDATE customer SET auth_key = ? WHERE id = ?";
-        jdbcTemplate.update(updateSql, authKey, customerId);
+    public void updateAuthKey(String username, String authKey) {
+        String updateSql = "UPDATE customer SET auth_key = ? WHERE username = ?";
+        jdbcTemplate.update(updateSql, authKey, username);
+    }
+    public boolean doesUsernameAndEmailExist(String username, String email) {
+        String sql = "SELECT COUNT(*) FROM customer WHERE username = ? AND mail = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, email}, Integer.class);
+        return count != null && count > 0;
     }
 
     
