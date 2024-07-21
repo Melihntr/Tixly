@@ -15,13 +15,13 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtil {
 
-    private static final int SECRET_KEY_LENGTH = 64;
+    
     private final Key secretKey;
 
     // Constructor to generate the secret key
     public JwtUtil() {
         SecureRandom secureRandom = new SecureRandom();
-        byte[] keyBytes = new byte[SECRET_KEY_LENGTH];
+        byte[] keyBytes = new byte[RuleBase.SECRET_KEY_LENGTH];
         secureRandom.nextBytes(keyBytes);
         this.secretKey = new SecretKeySpec(keyBytes, SignatureAlgorithm.HS512.getJcaName());
     }

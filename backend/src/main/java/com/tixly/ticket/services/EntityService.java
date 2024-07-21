@@ -4,7 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.tixly.ticket.entity.ECustomer;
+import com.tixly.ticket.entity.AdminUser;
+import com.tixly.ticket.entity.User;
 import com.tixly.ticket.utils.JwtUtil;
 import com.tixly.ticket.utils.ValidUtil;
 
@@ -17,8 +18,13 @@ public class EntityService {
     @Autowired
     private ValidUtil ValidUtil;
 
-    ECustomer getCustomer(){
-        ECustomer entity = new ECustomer(jdbcTemplate, jwtUtil, ValidUtil);
+    User getCustomer(){
+        User entity = new User(jdbcTemplate, jwtUtil, ValidUtil);
+
+        return entity;
+    }
+    AdminUser getAdmin(){
+        AdminUser entity = new AdminUser(jdbcTemplate, jwtUtil, ValidUtil);
 
         return entity;
     }

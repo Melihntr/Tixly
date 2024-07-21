@@ -23,24 +23,32 @@ public class ResetPasswordController {
     @PostMapping("/password")
     public ResponseEntity<String> resetPassword(@RequestBody PasswordResetRequest request) {
         try {
-            String responseMessage = resetPasswordDomainService.resetPassword(
+            resetPasswordDomainService.resetPassword(
                     request.getUsername(),
                     request.getVerificationCode(),
                     request.getNewPassword()
             );
-            return ResponseEntity.ok(responseMessage);
+            return ResponseEntity.ok("Password reset successfully for " + request.getUsername());
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
+
     @PostMapping("/send-code")
     public ResponseEntity<String> generateVerificationCode(@RequestBody VerificationRequest request) {
         try {
             String responseMessage = resetPasswordDomainService.generateVerificationCode(
-                request.getUsername(), 
-                request.getMail()
+                    request.getUsername(),
+                    request.getMail()
             );
             return ResponseEntity.ok(responseMessage);
+        }catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");

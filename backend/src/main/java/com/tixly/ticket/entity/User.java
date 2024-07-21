@@ -14,7 +14,7 @@ import lombok.Data;
 
 @Entity
 @Data
-public class ECustomer {
+public class User {
     private JdbcTemplate jdbcTemplate;
     private JwtUtil jwtUtil;
     private ValidUtil ValidUtil;
@@ -29,7 +29,7 @@ public class ECustomer {
     private String status;
     private String verificationCode;
 
-    public ECustomer(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil,  ValidUtil ValidUtil){
+    public User(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil,  ValidUtil ValidUtil){
         this.jdbcTemplate = jdbcTemplate;
         this.jwtUtil = jwtUtil;
         this.ValidUtil = ValidUtil;
@@ -79,7 +79,7 @@ public class ECustomer {
         return false; // Verification failed
     }
 
-    public void activateCustomer(ECustomer customer) {
+    public void activateCustomer(User customer) {
         customer.setStatus("ACTIVE");
 
         String updateSql = "UPDATE customer SET account_status = ? WHERE id = ?";
@@ -136,11 +136,10 @@ public class ECustomer {
         String updateSql = "UPDATE customer SET auth_key = ? WHERE username = ?";
         jdbcTemplate.update(updateSql, authKey, username);
     }
-    public boolean doesUsernameAndEmailExist(String username, String email) {
+    public boolean IsUserExist(String username, String email) {
         String sql = "SELECT COUNT(*) FROM customer WHERE username = ? AND mail = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, email}, Integer.class);
         return count != null && count > 0;
     }
-
     
 }

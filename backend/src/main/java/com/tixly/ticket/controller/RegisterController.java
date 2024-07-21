@@ -16,18 +16,19 @@ import com.tixly.ticket.services.RegisterDomainService;
 @RestController
 @RequestMapping("/reg")
 public class RegisterController {
-@Autowired
+
+    @Autowired
     private RegisterDomainService registerDomainService;
-  
+
     @PostMapping("/register")
     public ResponseEntity<String> registerCustomer(@RequestBody RegisterRequest registerRequest) {
         try {
             String responseMessage = registerDomainService.register(
-                registerRequest.getUsername(), 
-                registerRequest.getPassword(), 
-                registerRequest.getMail(),
-                registerRequest.getGender()
-        );
+                    registerRequest.getUsername(),
+                    registerRequest.getPassword(),
+                    registerRequest.getMail(),
+                    registerRequest.getGender()
+            );
             return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -42,17 +43,14 @@ public class RegisterController {
     public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> requestBody) {
         try {
             String userInput = requestBody.get("userInput");
-
-            // Call the service method
             String responseMessage = registerDomainService.verifyCode(userInput);
-
-            // Build and return the response entity based on the service result
             return ResponseEntity.ok(responseMessage);
-            
+        }catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            // Handle unexpected exceptions
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                 .body("An unexpected error occurred: " + e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

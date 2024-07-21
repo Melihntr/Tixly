@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tixly.ticket.models.request.LoginRequest;
 import com.tixly.ticket.models.response.LoginResponse;
-import com.tixly.ticket.services.AuthDomainService;
+import com.tixly.ticket.services.AdminDomainService;
 
 @RestController
-@RequestMapping("/auth")
-public class AuthController {
+@RequestMapping("/admin")
+public class AdminController {
 
     @Autowired
-    private AuthDomainService authDomainService;
+    private AdminDomainService adminDomainService;
     
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            String authKey = authDomainService.login(loginRequest.getUsername(), loginRequest.getPassword());
+            String authKey = adminDomainService.login(loginRequest.getUsername(), loginRequest.getPassword());
             return ResponseEntity.status(HttpStatus.OK).body(new LoginResponse(authKey, "User Logged in Successfully"));
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
@@ -38,7 +38,7 @@ public class AuthController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authKey) {
         try {    
-            authDomainService.logout(authKey);
+            adminDomainService.logout(authKey);
             return ResponseEntity.status(HttpStatus.OK).body("Bye, user");
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
