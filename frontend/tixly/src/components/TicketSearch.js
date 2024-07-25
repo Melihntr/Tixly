@@ -4,25 +4,61 @@ import { Card, Form, Row, Col, Button } from 'react-bootstrap';
 import styles from './TicketSearch.module.css';
 
 const TicketSearch = () => {
+    const Statics = Object.freeze({
+        
+    })
+
     const [provinces, setProvinces] = useState([]);
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
-    const [date, setDate] = useState('');
+    const [date, setDate] = useState(Statics.DateString);
+    const [location, setLocation] = useState({
+        latitude: null,
+        longitude: null,
+        error: null,
+      });
 
     useEffect(() => {
-        const fetchProvinces = async () => {
-            try {
-                const response = await axios.get('http://localhost:8080/location/provinces');
-                console.log('Provinces fetched:', response.data); // Debug: Log the fetched data
-                setProvinces(response.data); // Set fetched data to state
-            } catch (error) {
-                console.error('Error fetching provinces:', error);
-            }
-        };
-
-        fetchProvinces(); // Call the fetch function
+        controller();
     }, []);
 
+    const controller = async () => {
+        const currentDateAsString = new Date().toISOString().split('T')[0];
+
+        await fetchProvinces(); 
+        await getLocation();
+        setDate(currentDateAsString);
+        console.debug(JSON.stringify(location));
+    }
+
+
+    const getLocation = async() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                setLocation({
+                  latitude: position.coords.latitude,
+                  longitude: position.coords.longitude,
+                  error: null,
+                });
+              },
+              (error) => {
+                console.error(error);
+                setLocation({
+                  latitude: null,
+                  longitude: null,
+                  error: error.message,
+                });
+              }
+            );
+          } else {
+            setLocation({
+              latitude: null,
+              longitude: null,
+              error: 'Geolocation is not supported by this browser.',
+            });
+          }
+    }
     const handleFromChange = (event) => {
         const selectedFrom = event.target.value;
         if (selectedFrom === to) {
@@ -30,6 +66,17 @@ const TicketSearch = () => {
             setTo('');
         }
         setFrom(selectedFrom);
+    };
+
+    const fetchProvinces = async () => {
+            
+        try {
+            const response = await axios.get('http://localhost:8080/location/provinces');
+            console.log('Provinces fetched:', response.data); // Debug: Log the fetched data
+            setProvinces(response.data); // Set fetched data to state
+        } catch (error) {
+            console.error('Error fetching provinces:', error);
+        }
     };
 
     const handleToChange = (event) => {
@@ -102,6 +149,7 @@ const TicketSearch = () => {
                                         <Form.Label>Tarih</Form.Label>
                                         <Form.Control
                                             type="date"
+                                            defaultValue={new Date()}
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
                                         />
