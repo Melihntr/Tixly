@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.AdminUser;
+import com.tixly.ticket.entity.Bus;
 import com.tixly.ticket.entity.User;
 import com.tixly.ticket.utils.JwtUtil;
 import com.tixly.ticket.utils.ValidUtil;
@@ -25,6 +26,11 @@ public class EntityService {
     }
     AdminUser getAdmin(){
         AdminUser entity = new AdminUser(jdbcTemplate, jwtUtil, ValidUtil);
+
+        return entity;
+    }
+    Bus getBus(){
+        Bus entity = new Bus(jdbcTemplate);
 
         return entity;
     }
