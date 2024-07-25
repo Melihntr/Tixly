@@ -1,0 +1,91 @@
+.header {
+    background-color: #fdb903;
+    /* Blue background for the header */
+    color: white;
+    /* White text color */
+    padding: 10px 20px;
+    /* Padding around the header */
+    display: flex;
+    /* Use flexbox to position items */
+    justify-content: space-between;
+    /* Space between logo and login button */
+    align-items: center;
+    /* Center items vertically */
+    display: flex;
+}
+
+
+.modal-login-button {
+    display: block;
+    width: 100%;
+    /* Make the button full width of the modal */
+    text-align: center;
+    /* Center the text inside the button */
+}
+
+.modal-body {
+    text-align: center;
+    /* Center the content inside the modal */
+}
+
+
+
+
+.logo {
+    font-size: 1.5em;
+    /* Larger font size for the logo */
+    font-weight: bold;
+    /* Bold font for the logo */
+}
+
+.loginButton {
+    width: 120px;
+    background-color: #10834d;
+    /* Green background for the login button */
+    border: none;
+    /* Remove border */
+    color: white;
+    /* White text color */
+    padding: 10px 20px;
+    /* Padding inside the button */
+    border-radius: 5px;
+    /* Rounded corners */
+    text-decoration: none;
+    /* Remove underline from link */
+    font-size: 1em;
+    /* Font size for the button text */
+}
+
+.loginButton:hover {
+    background-color: #146C43;
+    /* Darker green on hover */
+    transition: background-color 0.3s;
+    /* Smooth transition for hover effect */
+}
+
+.dropdownToggle {
+    width: 160px; /* Adjust width as needed */
+}
+.dropdownToggle {
+    width: 150px; /* Adjust width as needed */
+    background-color: #10834d; /* Default background color */
+    color: white; /* Default text color */
+    border: none; /* Remove border */
+}
+
+.dropdownToggle:hover {
+    background-color: #146C43; /* Background color on hover */
+    color: white; /* Text color on hover */
+    cursor: pointer; /* Show pointer cursor on hover */
+}
+.dropdownMenu {
+    background-color: #ffffff; /* Background color of dropdown menu */
+}
+
+.dropdownItem {
+    color: #000000;
+}
+
+.dropdownItem:hover {
+    background-color: #ffffff; /* Background color of dropdown items on hover */
+}

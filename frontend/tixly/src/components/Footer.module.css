@@ -1,0 +1,10 @@
+.footer {
+    background-color: #f8f9fa; /* Light background color */
+    text-align: center; /* Center-align text */
+    padding: 1rem 0; /* Vertical padding */
+    margin-top: auto; /* Push footer to the bottom of the flex container */
+  }
+  
+  .footer p {
+    margin: 0; /* Remove default margin from the paragraph */
+  }

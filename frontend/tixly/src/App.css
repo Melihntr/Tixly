@@ -1,0 +1,47 @@
+/* src/App.css */
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #fdb903;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4; /* Light gray background for the whole app */
+  color: #333; /* Dark gray text color */
+  line-height: 1.6;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+main {
+  flex: 1;
+  margin-bottom: 3rem; /* Adjust the bottom margin as needed */
+}
+
+footer {
+  background-color: #f8f9fa;
+}
