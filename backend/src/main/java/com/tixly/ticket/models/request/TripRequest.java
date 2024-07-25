@@ -1,4 +1,5 @@
 package com.tixly.ticket.models.request;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -12,4 +13,5 @@ public class TripRequest {
     private Double price;
     private int companyId;
     private Long busId;
+    private LocalDateTime departureTime;
 }
