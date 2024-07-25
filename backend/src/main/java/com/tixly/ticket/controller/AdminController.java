@@ -17,9 +17,13 @@ import com.tixly.ticket.services.AdminDomainService;
 @RequestMapping("/admin")
 public class AdminController {
 
+    private final AdminDomainService adminDomainService;
+
+    // Constructor injection
     @Autowired
-    private AdminDomainService adminDomainService;
-    
+    public AdminController(AdminDomainService adminDomainService) {
+        this.adminDomainService = adminDomainService;
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
@@ -33,11 +37,11 @@ public class AdminController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
     }
+
     @PostMapping("/logout")
     public ResponseEntity<?> logout(@RequestHeader("Authorization") String authKey) {
-        try {    
+        try {
             adminDomainService.logout(authKey);
             return ResponseEntity.status(HttpStatus.OK).body("Bye, user");
         } catch (IllegalArgumentException e) {
