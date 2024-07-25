@@ -1,6 +1,7 @@
 package com.tixly.ticket.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +25,16 @@ public class AdminUser {
     private JwtUtil jwtUtil;
     private ValidUtil ValidUtil;
 
+    @Id
     private Long id;
     private String username;
     private String password;
     private String companyid;
     private String authKey;
-
+    private String mail;
+    private String status;
+    private String verificationCode;
+    private String phoneNumber;
 
     public AdminUser(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil, ValidUtil validUtil) {
         this.jdbcTemplate = jdbcTemplate;
@@ -47,7 +52,6 @@ public class AdminUser {
         String sql = "SELECT id FROM owner WHERE username = ? AND password = ?";
         Long ownerId = jdbcTemplate.queryForObject(sql, new Object[]{username, hashedPassword}, Long.class);
 
-        // Generate JWT token if customer is found
         String token = jwtUtil.generateToken(username);
         updateAuthKey(username, token);
 
@@ -83,5 +87,34 @@ public class AdminUser {
         String updateSql = "UPDATE owner SET auth_key = ? WHERE username = ?";
         jdbcTemplate.update(updateSql, authKey, username);
     }
+    public void updateVerificationCode(String username, String verificationCode) {
+        String sql = "UPDATE owner SET verification_code = ? WHERE username = ?";
+        jdbcTemplate.update(sql, verificationCode, username);
+    }
+    public boolean IsOwnerExist(String username, String email) {
+        String sql = "SELECT COUNT(*) FROM owner WHERE username = ? AND mail = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, email}, Integer.class);
+        return count != null && count > 0;
+    }
+    public boolean verifyCode(String verificationCode) {
+        String sql = "SELECT COUNT(*) FROM owner WHERE verification_code = ?";
+        int count = jdbcTemplate.queryForObject(sql, Integer.class, verificationCode);
+        if (count > 0) {  
+            return true; // Verification successful
+        }
+        return false; // Verification failed
+    }
+    public void updatePassword(String username, String newPassword) {
+        String hashedPassword = HashUtil.sha256(newPassword);
+        String sql = "UPDATE owner SET password = ? WHERE username = ?";
+        jdbcTemplate.update(sql, hashedPassword, username);
+    }
+    public boolean isCompanyIdExist(String username) {
+        String sql = "SELECT COUNT(*) FROM owner WHERE username = ? AND companyid IS NOT NULL";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username}, Integer.class);
+        return count != null && count > 0;
+    }
 
 }
+
+

@@ -20,16 +20,17 @@ public class AdminDomainService {
      */
     public String login(String username, String password) {
         AdminUser userEntity = entityService.getAdmin();
-        if(userEntity.isOwnerLoggedIn(username))
-        {
+        if(userEntity.isOwnerLoggedIn(username)) {
             throw new IllegalStateException(username + " is already logged in.");
         }
-        
+        if(!userEntity.isCompanyIdExist(username)){
+            throw new IllegalStateException("Lütfen sistem yöneticiniz ile görüşün.");
+        }
         String authCode = userEntity.authenticateOwner(username, password);
 
         return authCode;
-
     }
+
 
     /**
      * {@summary}: username password alır, authKey döndürür
