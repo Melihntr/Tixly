@@ -34,13 +34,10 @@ public class RegisterDomainService {
         userEntity.createCustomer(username, password, mail, gender);
         String verificationCode = verifyutil.generateVerificationCode();
         userEntity.updateVerificationCode(username, verificationCode);
-        // Store or send verification code to user
-        // You might want to send an email or SMS here, but for simplicity, we'll assume it's stored
-        // Return a message indicating successful registration with the verification code
         String jwtToken = jwtUtil.generateToken(username);
         userEntity.updateAuthKey(username, jwtToken);
+        
         System.out.println("Your verification code is " + verificationCode);
-
         return String.format("Customer registered successfully.\nYour auth key is: %s", jwtToken);
     }
 

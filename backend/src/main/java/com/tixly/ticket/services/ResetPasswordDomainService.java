@@ -19,7 +19,7 @@ public class ResetPasswordDomainService {
 
     public void resetPassword(String username, String verificationCode, String newPassword) {
 
-        if (username == null || username.isEmpty() || verificationCode == null || verificationCode.isEmpty() || newPassword == null || newPassword.isEmpty()) {
+        if (!ValidUtil.isValidUsername(username) || !ValidUtil.isValidPassword(newPassword)|| verificationCode == null || verificationCode.isEmpty() ) {
             throw new IllegalArgumentException("Username, verification code, and new password are required.");
         }
         User userEntity = entityService.getCustomer();
@@ -49,6 +49,7 @@ public class ResetPasswordDomainService {
 
         String verificationCode = verifyUtil.generateVerificationCode();
         userEntity.updateVerificationCode(username, verificationCode);
-        return String.format("Verification code generated successfully for %s. Code: %s", username, verificationCode);
+        System.out.println("Code for user: " +verificationCode );
+        return String.format("Verification code generated successfully for %s.", username);
     }
 }

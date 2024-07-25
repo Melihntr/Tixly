@@ -28,6 +28,7 @@ public class User {
     private String authKey;
     private String status;
     private String verificationCode;
+    private String phoneNumber;
 
     public User(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil,  ValidUtil ValidUtil){
         this.jdbcTemplate = jdbcTemplate;
@@ -92,8 +93,6 @@ public class User {
         String sql = "UPDATE customer SET password = ? WHERE username = ?";
         jdbcTemplate.update(sql, hashedPassword, username);
     }
-    // Method to validate the customer details
-
     
 
     public String authenticateCustomer(String username, String password) {

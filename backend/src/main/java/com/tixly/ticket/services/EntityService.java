@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.AdminUser;
+import com.tixly.ticket.entity.Bus;
 import com.tixly.ticket.entity.User;
 import com.tixly.ticket.utils.JwtUtil;
 import com.tixly.ticket.utils.ValidUtil;
@@ -28,6 +29,15 @@ public class EntityService {
 
         return entity;
     }
+    Bus getBus(){
+        Bus entity = new Bus(jdbcTemplate);
 
+        return entity;
+    }
+    /*Province getProvince(){
+        Province entity = new Province(jdbcTemplate);
+
+        return entity;
+    }*/
     
 }
