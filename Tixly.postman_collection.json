@@ -16,28 +16,19 @@
 				"header": [
 					{
 						"key": "Authorization",
-						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lcjEiLCJpYXQiOjE3MjExMzk0OTV9.RxJUY8geCzQxOGO_fLWQSK-FjR-DG7WrK4SKIJaf3m_oIo915FNXOiHGm3bZSXD9RUj1ju89ek00q-iJjqJr9g",
+						"value": "Be eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjdXN0b21lcjEiLCJpYXQiOjE3MjEzOTU1ODZ9.vf20pyTAol4p-tK4M74TUPRNv-XO3vkqxmFXu_fCONeSizCkLGImtUofLcak6C6zlNLshYLZnpBM7FxE59iDAw",
 						"type": "text"
 					}
 				],
-				"body": {
-					"mode": "raw",
-					"raw": "\r\n\r\n",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
 				"url": {
-					"raw": "http://localhost:8080/api/logout",
+					"raw": "http://localhost:8080/auth/logout",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "8080",
 					"path": [
-						"api",
+						"auth",
 						"logout"
 					]
 				}
@@ -51,7 +42,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "\r\n",
+					"raw": "{\r\n    \"username\": \"customer1\",\r\n    \"password\": \"password1\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -59,7 +50,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8080/api/logout",
+					"raw": "http://127.0.0.1:8080/auth/login",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -69,8 +60,184 @@
 					],
 					"port": "8080",
 					"path": [
-						"api",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Owner Logout",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvd25lcjEiLCJpYXQiOjE3MjEyMDExNjF9.-zVC3BCZOgR-5Po2ENHDXHCwdxswiRowP1qwWR2kq9Nax3Bj02yXT9rMngEj382BDj53afJka6BFM7MsRb_2OA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/owner/logout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"owner",
 						"logout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Owner Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{auth_token}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"owner1\",\r\n    \"password\": \"password1\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/owner/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"owner",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"jdsawefrwgtteh345j6j46tyew\",\r\n    \"password\": \"securepassword\",\r\n    \"mail\": \"johdddddn.doe@example.com\",\r\n    \"gender\": \"male\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Validate SMS",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"john_doleeee\",\r\n    \"password\": \"securepassword\",\r\n    \"mail\": \"john.doe@example.com\",\r\n    \"gender\": \"male\"\r\n    \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/customer/verify-code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"verify-code"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteByID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/customer/30",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"customer",
+						"30"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send Code",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Reset Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"customer1\",\r\n  \"verificationCode\": \"207665\",\r\n  \"newPassword\": \"password1\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/reset/password",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"reset",
+						"password"
 					]
 				}
 			},
