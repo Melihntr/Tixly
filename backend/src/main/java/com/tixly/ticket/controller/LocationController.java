@@ -1,6 +1,5 @@
 package com.tixly.ticket.controller;
-/* 
-import java.util.Collections;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,25 +17,19 @@ import com.tixly.ticket.services.LocationDomainService;
 @RequestMapping("/location")
 public class LocationController {
 
+    private final LocationDomainService locationDomainService;
 
     @Autowired
-    private LocationDomainService locationDomainService;
-    
-        public LocationController(LocationDomainService locationDomainService) {
-            this.locationDomainService = locationDomainService;
-        }
+    public LocationController(LocationDomainService locationDomainService) {
+        this.locationDomainService = locationDomainService;
+    }
 
     @GetMapping("/provinces")
-    public ResponseEntity<List<Province>> getProvinces() {
-        try {
-            List<Province> provinces = locationDomainService.getAllProvinces();
-            return ResponseEntity.ok(provinces);
-        } catch (Exception e) {
-            // Handle error
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Collections.emptyList());
-        }
+    public List<Province> getAllProvinces() {
+        return locationDomainService.getAllProvinces();
     }
+
+
     
     @GetMapping("/districts")
     public ResponseEntity<?> getDistricts() {
@@ -47,4 +40,4 @@ public class LocationController {
             return new ResponseEntity<>("An error occurred while retrieving districts: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-}*/
+}

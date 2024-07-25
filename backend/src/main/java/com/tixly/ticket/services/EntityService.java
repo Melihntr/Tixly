@@ -34,10 +34,6 @@ public class EntityService {
 
         return entity;
     }
-    /*Province getProvince(){
-        Province entity = new Province(jdbcTemplate);
-
-        return entity;
-    }*/
+    
     
 }

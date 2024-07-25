@@ -22,21 +22,14 @@ public class Province {
     private Long id;
     private String name;
 
-    private  JdbcTemplate jdbcTemplate;
-    
-    // Constructor for creating instances
-    public Province(Long id, String name) {
-        this.id = id;
-        this.name = name;
+    private static JdbcTemplate jdbcTemplate;
+
+    // Static method for setting JdbcTemplate
+    public static void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        Province.jdbcTemplate = jdbcTemplate;
     }
 
-    // Constructor for initializing with JdbcTemplate
-    public Province(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
-
-    // Method to retrieve all provinces
-    public List<Province> getAllProvinces() {
+    public static List<Province> getAllProvinces() {
         String sql = "SELECT * FROM iller";
         return jdbcTemplate.query(sql, (rs, rowNum) -> new Province(
             rs.getLong("id"),
