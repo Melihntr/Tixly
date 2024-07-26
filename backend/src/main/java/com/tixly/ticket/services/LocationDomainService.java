@@ -3,29 +3,23 @@ package com.tixly.ticket.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import com.tixly.ticket.entity.District;
 import com.tixly.ticket.entity.Province;
+import com.tixly.ticket.models.dto.ProvinceModel;
 
 @Service
 public class LocationDomainService {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final EntityService entityService;
 
     @Autowired
-    public LocationDomainService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-        Province.setJdbcTemplate(jdbcTemplate);  // Set JdbcTemplate in Province class
+    public LocationDomainService(EntityService entityService) {
+        this.entityService = entityService;
     }
 
-    public List<Province> getAllProvinces() {
-        return Province.getAllProvinces();
+    public List<ProvinceModel> getAllProvinces() {
+        Province provinceEntity = entityService.getProvince();
+        return provinceEntity.getAllProvinces();
     }
-
-    public List<District> getAllDistricts() {
-        return District.getAllDistricts();
-    }
-
 }

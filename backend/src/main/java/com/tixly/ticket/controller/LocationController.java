@@ -3,14 +3,14 @@ package com.tixly.ticket.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tixly.ticket.entity.District;
-import com.tixly.ticket.entity.Province;
+import com.tixly.ticket.models.dto.ProvinceModel;
 import com.tixly.ticket.services.LocationDomainService;
 
 @RestController
@@ -25,19 +25,16 @@ public class LocationController {
     }
 
     @GetMapping("/provinces")
-    public List<Province> getAllProvinces() {
-        return locationDomainService.getAllProvinces();
-    }
-
-
-    
-    @GetMapping("/districts")
-    public ResponseEntity<?> getDistricts() {
+    public ResponseEntity<Object> getAllProvinces() {
         try {
-            List<District> districts = locationDomainService.getAllDistricts();
-            return new ResponseEntity<>(districts, HttpStatus.OK);
+            List<ProvinceModel> provinces = locationDomainService.getAllProvinces();
+            return new ResponseEntity<>(provinces, HttpStatus.OK);
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Database error occurred while fetching provinces.", HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
-            return new ResponseEntity<>("An error occurred while retrieving districts: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            e.printStackTrace();
+            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

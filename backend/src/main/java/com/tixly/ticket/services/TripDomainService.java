@@ -31,7 +31,7 @@ public class TripDomainService {
         Trip trip = entityService.getTrip();
         LocalDateTime currentTime = LocalDateTime.now();
         Duration duration = Duration.between(currentTime,trip.getDepartureTime(tripId));
-        if (duration.toHours() < 12) {
+        if (duration.toHours() <= 12) {
             throw new IllegalArgumentException("Cannot cancel trip within 12 hours of departure");
         }
         trip.cancelTrip(tripId);

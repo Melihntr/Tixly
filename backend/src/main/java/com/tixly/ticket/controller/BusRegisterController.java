@@ -1,6 +1,7 @@
 package com.tixly.ticket.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,7 +21,7 @@ public class BusRegisterController {
     @Autowired
     private BusCreationDomainService busService;
 
-    @PostMapping("/register")
+    @PostMapping()
     public ResponseEntity<?> registerBus(@RequestBody BusRequest busRequest) {
         try {
             busService.registerBus(
@@ -31,18 +32,30 @@ public class BusRegisterController {
             return ResponseEntity.ok("Bus registered successfully."); // Return the created bus details
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            return ResponseEntity.badRequest().body(e.getMessage()); // Return error message
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Data integrity error: " + e.getMessage(), HttpStatus.CONFLICT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/delete/{plateNo}")
+    @DeleteMapping("/{plateNo}")
     public ResponseEntity<String> deleteBus(@PathVariable String plateNo) {
         try {
             busService.deleteBus(plateNo);
             return ResponseEntity.ok("Bus deleted successfully.");
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>("Data integrity error: " + e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

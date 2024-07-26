@@ -14,23 +14,23 @@ public class BusCreationDomainService {
 
 
     public void registerBus(String plateNo, int companyId, String busType,int seatNo){
-        //AdminUser userEntity = entityService.getAdmin();
-        Bus bus = entityService.getBus();
-        Seat seat = entityService.getSeat();
-        if(bus.isBusExist(plateNo)){
+        Bus busEntity = entityService.getBus();
+        Seat seatEntity = entityService.getSeat();
+        if(busEntity.isBusExist(plateNo)){
             throw new IllegalStateException("a Bus with given plateNo already exists");
         }
-            bus.createBus(plateNo,companyId,busType,seatNo);
-            seat.registerSeat(seatNo, bus.getBusIdByPlateNo(plateNo));
+        busEntity.createBus(plateNo,companyId,busType,seatNo);
+            seatEntity.registerSeat(seatNo, busEntity.getBusIdByPlateNo(plateNo));
     }
     public void deleteBus(String plateNo){
-        Bus bus = entityService.getBus();
-        Seat seat = entityService.getSeat();
-        Trip trip = entityService.getTrip();
-        if(trip.isBusInActiveOrFutureTrips(bus.getBusIdByPlateNo(plateNo))){
+        Bus busEntity = entityService.getBus();
+        Seat seatEntity = entityService.getSeat();
+        Trip tripEntity = entityService.getTrip();
+        Long busId =busEntity.getBusIdByPlateNo(plateNo); 
+        if(tripEntity.isBusInActiveOrFutureTrips(busId)){
             throw new IllegalStateException("The deletion of this bus is not permitted as it is associated with upcoming trips.");
         }
-        bus.deleteBus(plateNo);
-        seat.deleteSeats(bus.getBusIdByPlateNo(plateNo));
+        seatEntity.deleteSeats(busId);
+        busEntity.deleteBus(plateNo);  
     }
 }

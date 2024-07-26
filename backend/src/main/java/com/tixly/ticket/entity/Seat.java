@@ -1,5 +1,8 @@
 package com.tixly.ticket.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -24,12 +27,15 @@ public class Seat {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-   public void registerSeat(int seatNo,Long busid) {
-        String insertSeatSql = "INSERT INTO seatS (no, busid) VALUES (?, ?)";
+    public void registerSeat(int seatNo, Long busId) {
+        String insertSeatSql = "INSERT INTO seats (no, busid) VALUES (?, ?)";
+        
+        List<Object[]> batchArgs = new ArrayList<>();
         for (int i = 1; i <= seatNo; i++) {
-            jdbcTemplate.update(insertSeatSql, i, busid);
-
+            batchArgs.add(new Object[] { i, busId });
         }
+        
+        jdbcTemplate.batchUpdate(insertSeatSql, batchArgs);
     }
     public void deleteSeats(Long busId) {
         String deleteSeatsSql = "DELETE FROM seats WHERE busid = ?";
