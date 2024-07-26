@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.District;
 import com.tixly.ticket.entity.Province;
+
 @Service
 public class LocationDomainService {
-   
-private final JdbcTemplate jdbcTemplate;
+
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
     public LocationDomainService(JdbcTemplate jdbcTemplate) {
@@ -23,13 +24,8 @@ private final JdbcTemplate jdbcTemplate;
         return Province.getAllProvinces();
     }
 
-public List<District> getAllDistricts() {
+    public List<District> getAllDistricts() {
         return District.getAllDistricts();
-}
+    }
 
-
-
-
-
-    
 }

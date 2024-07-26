@@ -23,19 +23,22 @@ public class Bus {
     private int companyId;
     private String busType;
     private int seatNo;
-    
+
     public Bus(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-    }   
-    
-    public void createBus(String plateNo, int companyId, String busType,int seatNo) {
-        validateBus(busType,seatNo);
-        String sql = "INSERT INTO bus (plateno, companyid, bustype, seatno) VALUES (?, ?, ?, ?)";
-        jdbcTemplate.update(sql, plateNo, companyId, busType, seatNo);
     }
 
-    private void validateBus(String busType,int seatNo) {
-        if (!busType.equals("2s1")&&!busType.equals("2s2")) {
+    public void createBus(String plateNo, int companyId, String busType, int seatNo) {
+        validateBus(busType, seatNo);
+        String sql = "INSERT INTO bus (plateno, companyid, bustype, seatno) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, plateNo, companyId, busType, seatNo); 
+    }
+    public Long getBusIdByPlateNo(String plateNo) {
+        String sql = "SELECT id FROM bus WHERE plateno = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Long.class);
+    }
+    private void validateBus(String busType, int seatNo) {
+        if (!busType.equals("2s1") && !busType.equals("2s2")) {
             throw new IllegalArgumentException("Invalid bus type. Must be '2s1' or '2s2'.");
         }
 
@@ -43,6 +46,7 @@ public class Bus {
             throw new IllegalArgumentException("Invalid seat number. Must be divisible by 3 or 4.");
         }
     }
+
     public String deleteBus(String plateNo) {
         String sql = "DELETE FROM bus WHERE plateno = ?";
         int rowsAffected = jdbcTemplate.update(sql, plateNo);
@@ -51,5 +55,11 @@ public class Bus {
         } else {
             throw new IllegalArgumentException("Bus not found.");
         }
+    }
+
+    public boolean isBusExist(String plateNo) {
+        String sql = "SELECT COUNT(*) FROM bus WHERE plateno = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Integer.class);
+        return count != null && count > 0;
     }
 }
