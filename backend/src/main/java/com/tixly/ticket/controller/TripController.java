@@ -2,12 +2,13 @@ package com.tixly.ticket.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,13 +23,10 @@ public class TripController {
     private TripDomainService tripDomainService;
 
     @PostMapping()
-    public ResponseEntity<String> registerTrip(@RequestBody TripRequest tripRequest) {
+    public ResponseEntity<String> registerTrip(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authKey, // Add authKey header
+            @RequestBody TripRequest tripRequest) {
         try {
-            // Validate input (if applicable)
-            if (tripRequest == null) {
-                return new ResponseEntity<>("Invalid input", HttpStatus.BAD_REQUEST);
-            }
-
             tripDomainService.registerTrip(
                     tripRequest.getPeronNo(),
                     tripRequest.getDepartureLocationId(),
@@ -37,7 +35,8 @@ public class TripController {
                     tripRequest.getPrice(),
                     tripRequest.getCompanyId(),
                     tripRequest.getBusId(),
-                    tripRequest.getDepartureTime()
+                    tripRequest.getDepartureTime(),
+                    authKey
             );
 
             return new ResponseEntity<>("Trip registered successfully", HttpStatus.CREATED);
@@ -47,27 +46,29 @@ public class TripController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Data integrity error: " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @DeleteMapping("/{tripId}")
-    public ResponseEntity<String> cancelTrip(@PathVariable Long tripId) {
+    @PostMapping("/{id}")
+    public ResponseEntity<?> cancelTrip(
+            @PathVariable("id") Long tripId,
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authKey) {
         try {
-            tripDomainService.cancelTrip(tripId);
+            tripDomainService.cancelTrip(tripId, authKey);
             return new ResponseEntity<>("Trip canceled successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Data integrity error: " + e.getMessage(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("An unexpected error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

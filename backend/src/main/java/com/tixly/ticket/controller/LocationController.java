@@ -31,10 +31,10 @@ public class LocationController {
             return new ResponseEntity<>(provinces, HttpStatus.OK);
         } catch (DataAccessException e) {
             e.printStackTrace();
-            return new ResponseEntity<>("Database error occurred while fetching provinces.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (Exception e) {
             e.printStackTrace();
-            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

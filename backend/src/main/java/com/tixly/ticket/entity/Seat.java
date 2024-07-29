@@ -18,7 +18,6 @@ public class Seat {
 
     @Id
     private Long id;
-
     private Integer no;
     private Long busId;
     private JdbcTemplate jdbcTemplate;
@@ -27,11 +26,11 @@ public class Seat {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void registerSeat(int seatNo, Long busId) {
+    public void registerSeats(int seatCount, Long busId) {
         String insertSeatSql = "INSERT INTO seats (no, busid) VALUES (?, ?)";
         
         List<Object[]> batchArgs = new ArrayList<>();
-        for (int i = 1; i <= seatNo; i++) {
+        for (int i = 1; i <= seatCount; i++) {
             batchArgs.add(new Object[] { i, busId });
         }
         

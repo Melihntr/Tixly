@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class Trip {
     private int arrivalLocationId;
     private int estimatedTime;
     private Double price;
-    private int companyId; 
+    private Long companyId; 
     private Long busId;
     private LocalDateTime departureTime;
     private String state;
@@ -38,13 +39,13 @@ public class Trip {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{busId}, Integer.class);
         return count != null && count > 0;
     }
-    public boolean isCompanyExist(Integer companyId) {
+    public boolean isCompanyExist(Long companyId) {
         String sql = "SELECT COUNT(*) FROM companies WHERE id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{companyId}, Integer.class);
         return count != null && count > 0;
     }
 
-    public void registerTrip(String peronNo,int departureLocationId,int arrivalLocationId,int estimatedTime, Double price,int companyId, Long busId, LocalDateTime departureTime) {
+    public void registerTrip(String peronNo,int departureLocationId,int arrivalLocationId,int estimatedTime, Double price,Long companyId, Long busId, LocalDateTime departureTime) {
         
         String sql = "INSERT INTO trips (peronno, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime, state) " +
                  "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif')";
@@ -84,4 +85,12 @@ public class Trip {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{departureTime}, Integer.class);
         return count != null && count > 0;
     }
+    public Long getCompanyIdByTripId(Long tripId) {
+    String sql = "SELECT companyid FROM trips WHERE id = ?";
+    try {
+        return jdbcTemplate.queryForObject(sql, new Object[]{tripId}, Long.class);
+    } catch (EmptyResultDataAccessException e) {
+        throw new IllegalArgumentException("No company found for the provided tripId: " + tripId, e);
+    }
+}
 }

@@ -11,7 +11,7 @@ public class TripRequest {
     private int arrivalLocationId;
     private int estimatedTime;
     private Double price;
-    private int companyId;
+    private Long companyId;
     private Long busId;
     private LocalDateTime departureTime;
 }

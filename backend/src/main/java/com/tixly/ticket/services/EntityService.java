@@ -24,34 +24,22 @@ public class EntityService {
     private ValidUtil ValidUtil;
 
     User getCustomer(){
-        User entity = new User(jdbcTemplate, jwtUtil, ValidUtil);
-
-        return entity;
+        return new User(jdbcTemplate, jwtUtil, ValidUtil);    
     }
     AdminUser getAdmin(){
-        AdminUser entity = new AdminUser(jdbcTemplate, jwtUtil, ValidUtil);
-
-        return entity;
+        return new AdminUser(jdbcTemplate, jwtUtil, ValidUtil);
     }
     Bus getBus(){
-        Bus entity = new Bus(jdbcTemplate);
-
-        return entity;
+        return new Bus(jdbcTemplate,ValidUtil);
     }
     Trip getTrip(){
-        Trip entity = new Trip(jdbcTemplate);
-
-        return entity;
+        return new Trip(jdbcTemplate);
     }
     Seat getSeat(){
-        Seat entity = new Seat(jdbcTemplate);
-
-        return entity;
+        return new Seat(jdbcTemplate);
     }
     Province getProvince(){
-        Province entity = new Province(jdbcTemplate);
-
-        return entity;
+        return new Province(jdbcTemplate);
     }
 
     

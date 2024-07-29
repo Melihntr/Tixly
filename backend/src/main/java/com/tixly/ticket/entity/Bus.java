@@ -5,31 +5,32 @@ import javax.persistence.Id;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.tixly.ticket.utils.ValidUtil;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class Bus {
+public class Bus {  
 
     private JdbcTemplate jdbcTemplate;
+    private final ValidUtil validUtil;
 
     @Id
     private Long id;
     private String plateNo;
-    private int companyId;
+    private Long companyId;
     private String busType;
     private int seatNo;
 
-    public Bus(JdbcTemplate jdbcTemplate) {
+    public Bus(JdbcTemplate jdbcTemplate,ValidUtil validUtil) {
         this.jdbcTemplate = jdbcTemplate;
+        this.validUtil = validUtil;
     }
 
-    public void createBus(String plateNo, int companyId, String busType, int seatNo) {
-        validateBus(busType, seatNo);
+    public void createBus(String plateNo, Long companyId, String busType, int seatNo) {
         String sql = "INSERT INTO bus (plateno, companyid, bustype, seatno) VALUES (?, ?, ?, ?)";
         jdbcTemplate.update(sql, plateNo, companyId, busType, seatNo); 
     }
@@ -37,14 +38,19 @@ public class Bus {
         String sql = "SELECT id FROM bus WHERE plateno = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Long.class);
     }
-    private void validateBus(String busType, int seatNo) {
-        if (!busType.equals("2s1") && !busType.equals("2s2")) {
-            throw new IllegalArgumentException("Invalid bus type. Must be '2s1' or '2s2'.");
+    public Long getCompanyIdbyBusId(Long id) {
+        String sql = "SELECT companyid FROM bus WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
+    }
+    public void validateBus(String plateNo, String busType, int seatNo) {
+        validUtil.validateBusType(busType,seatNo,plateNo);
+        String sql = "SELECT COUNT(*) FROM bus WHERE plateno = ?";
+        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Integer.class);
+        if (count == null || count > 0) {
+            throw new IllegalStateException("A bus with the given plate number already exists.");
         }
+        
 
-        if (seatNo % 3 != 0 && seatNo % 4 != 0) {
-            throw new IllegalArgumentException("Invalid seat number. Must be divisible by 3 or 4.");
-        }
     }
 
     public String deleteBus(String plateNo) {
@@ -61,5 +67,9 @@ public class Bus {
         String sql = "SELECT COUNT(*) FROM bus WHERE plateno = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Integer.class);
         return count != null && count > 0;
+    }
+    public Long getCompanyIdbyPlateNo(String plateNo) {
+        String sql = "SELECT companyid FROM bus WHERE plateno = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Long.class);
     }
 }
