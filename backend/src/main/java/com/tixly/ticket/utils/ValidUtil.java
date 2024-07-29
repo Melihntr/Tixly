@@ -1,5 +1,6 @@
 package com.tixly.ticket.utils;
 
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,19 +14,19 @@ public class ValidUtil {
 
     public boolean isValidPlate(String plateNo) {
         Matcher matcher = PLATE_PATTERN.matcher(plateNo);
-        if (matcher.matches()) {
-            int firstPart = Integer.parseInt(matcher.group(1));
-
-            if (firstPart > 81 || firstPart<01) {
-                return false;
-            }
-            return true;
+        
+        if (!matcher.matches()) {
+            return false;
         }
-        return false;
+        int firstPart = Integer.parseInt(matcher.group(1));
+        if (firstPart > 81 || firstPart < 1) {
+            return false;
+        }
+        return true;
     }
     public void validateBusType(String busType,int seatNo,String plateNo) {
-        if (!busType.equals(RuleBase.TYPE_2S1) && !busType.equals(RuleBase.TYPE_2S2)) {
-            throw new IllegalArgumentException("Invalid bus type. Must be '" + RuleBase.TYPE_2S1 + "' or '" + RuleBase.TYPE_2S2 + "'.");
+        if (!isValidBusType(busType)) {
+            throw new IllegalArgumentException("Invalid bus type. Must be one of " + Arrays.toString(RuleBase.BUS_TYPES) + ".");
         }
         if (seatNo % 3 != 0 && seatNo % 4 != 0) {
             throw new IllegalArgumentException("Invalid seat number. Must be a multiple of 3 or 4.");
@@ -45,5 +46,13 @@ public class ValidUtil {
     
     public boolean isValidUsername(String username) {
         return username != null && username.length() >= RuleBase.MIN_USERNAME_LENGTH && username.length() <= RuleBase.MAX_USERNAME_LENGTH;         
+    }
+    private boolean isValidBusType(String busType) {
+        for (String validType : RuleBase.BUS_TYPES) {
+            if (validType.equals(busType)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

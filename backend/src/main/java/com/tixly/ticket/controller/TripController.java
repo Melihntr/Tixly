@@ -33,7 +33,6 @@ public class TripController {
                     tripRequest.getArrivalLocationId(),
                     tripRequest.getEstimatedTime(),
                     tripRequest.getPrice(),
-                    tripRequest.getCompanyId(),
                     tripRequest.getBusId(),
                     tripRequest.getDepartureTime(),
                     authKey

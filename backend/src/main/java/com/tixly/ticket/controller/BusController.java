@@ -30,7 +30,6 @@ public class BusController {
         try {
             busService.registerBus(
                     busRequest.getPlateNo(),
-                    busRequest.getCompanyId(),
                     busRequest.getBusType(),
                     busRequest.getSeatNo(),
                     authKey); // Pass authKey to service

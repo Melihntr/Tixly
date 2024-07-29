@@ -42,16 +42,6 @@ public class Bus {
         String sql = "SELECT companyid FROM bus WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
     }
-    public void validateBus(String plateNo, String busType, int seatNo) {
-        validUtil.validateBusType(busType,seatNo,plateNo);
-        String sql = "SELECT COUNT(*) FROM bus WHERE plateno = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Integer.class);
-        if (count == null || count > 0) {
-            throw new IllegalStateException("A bus with the given plate number already exists.");
-        }
-        
-
-    }
 
     public String deleteBus(String plateNo) {
         String sql = "DELETE FROM bus WHERE plateno = ?";
@@ -68,8 +58,12 @@ public class Bus {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Integer.class);
         return count != null && count > 0;
     }
-    public Long getCompanyIdbyPlateNo(String plateNo) {
-        String sql = "SELECT companyid FROM bus WHERE plateno = ?";
+    public Long getCompanyIdbyId(Long Id) {
+        String sql = "SELECT companyid FROM bus WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
+    }
+    public Long getIdbyPlateNo(String plateNo) {
+        String sql = "SELECT id FROM bus WHERE plateno = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Long.class);
     }
 }

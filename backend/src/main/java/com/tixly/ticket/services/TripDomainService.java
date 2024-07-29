@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.AdminUser;
 import com.tixly.ticket.entity.Bus;
+import com.tixly.ticket.entity.Company;
 import com.tixly.ticket.entity.Trip;
 import com.tixly.ticket.utils.BearerUtil;
 
@@ -18,14 +19,12 @@ public class TripDomainService {
     @Autowired
     private EntityService entityService;
 
-    public void registerTrip(String peronNo, int departureLocationId, int arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime, String authKey) {
+    public void registerTrip(String peronNo, int departureLocationId, int arrivalLocationId, int estimatedTime, Double price, Long busId, LocalDateTime departureTime, String authKey) {
         String jwtToken = BearerUtil.extractToken(authKey);
         AdminUser admin = entityService.getAdmin();
         Long userId=admin.getUserIdByAuthKey(jwtToken);
        
-        if(!admin.getCompanyIdByUserId(userId).equals(companyId)){
-            throw new IllegalArgumentException("Company ID from authKey does not match the provided company ID.");
-        }
+        Long companyId=admin.getCompanyIdByUserId(userId);
 
         Trip trip = entityService.getTrip();
         if(trip.isPeronNoExist(peronNo) && trip.isDepartureLocationExist(departureLocationId)&&trip.isDepartureTimeExist(departureTime)){
@@ -33,11 +32,11 @@ public class TripDomainService {
         }
 
         Bus bus = entityService.getBus();
-        if(companyId != bus.getCompanyIdbyBusId(busId)){
+        if(!companyId.equals(bus.getCompanyIdbyBusId(busId))){
             throw new IllegalArgumentException("Bus ID does not exist for the given company");
         }
-
-        if (!trip.isCompanyExist(companyId)) {
+        Company companyEntity = entityService.getCompany();
+        if (!companyEntity.isCompanyExist(companyId)) {
             throw new IllegalArgumentException("Company does not exist");
         }
 
@@ -47,12 +46,10 @@ public class TripDomainService {
     public void cancelTrip(Long tripId,String authKey){
         String jwtToken = BearerUtil.extractToken(authKey);
         AdminUser admin = entityService.getAdmin();
-        if(!admin.isAuthKeyValid(jwtToken))
-        {
-            throw new IllegalStateException("Invalid session for authKey: " + jwtToken);
-        }
-       
         Long userId=admin.getUserIdByAuthKey(jwtToken);
+        if (userId == null) {
+            throw new IllegalArgumentException("Token doesn't exist");
+        }
         Trip trip = entityService.getTrip();
         if(!admin.getCompanyIdByUserId(userId).equals(trip.getCompanyIdByTripId(tripId))){
             throw new IllegalArgumentException("Admin companyId doesnt match");

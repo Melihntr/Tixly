@@ -34,16 +34,7 @@ public class Trip {
     public Trip(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     } 
-    public boolean isBusExist(Long busId) {
-        String sql = "SELECT COUNT(*) FROM bus WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{busId}, Integer.class);
-        return count != null && count > 0;
-    }
-    public boolean isCompanyExist(Long companyId) {
-        String sql = "SELECT COUNT(*) FROM companies WHERE id = ?";
-        Integer count = jdbcTemplate.queryForObject(sql, new Object[]{companyId}, Integer.class);
-        return count != null && count > 0;
-    }
+    
 
     public void registerTrip(String peronNo,int departureLocationId,int arrivalLocationId,int estimatedTime, Double price,Long companyId, Long busId, LocalDateTime departureTime) {
         

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.AdminUser;
 import com.tixly.ticket.entity.Bus;
+import com.tixly.ticket.entity.Company;
 import com.tixly.ticket.entity.Province;
 import com.tixly.ticket.entity.Seat;
 import com.tixly.ticket.entity.Trip;
@@ -41,5 +42,7 @@ public class EntityService {
     Province getProvince(){
         return new Province(jdbcTemplate);
     }
-    
+    Company getCompany(){
+        return new Company(jdbcTemplate);
+    }
 }

@@ -18,14 +18,11 @@ public class BusDomainService {
     @Autowired
     private ValidUtil validUtil;
 
-    public void registerBus(String plateNo, Long companyId, String busType,int seatCount,String authKey){
+    public void registerBus(String plateNo, String busType,int seatCount,String authKey){
         String jwtToken = BearerUtil.extractToken(authKey);
         AdminUser admin = entityService.getAdmin();
         Long userId=admin.getUserIdByAuthKey(jwtToken);
-        if(!admin.getCompanyIdByUserId(userId).equals(companyId)){
-            throw new IllegalArgumentException("Company ID from authKey does not match the provided company ID.");
-        }
-
+        Long companyId=admin.getCompanyIdByUserId(userId);
         Bus busEntity = entityService.getBus();
         busEntity.validateBus(plateNo,busType,seatCount);
         if(busEntity.isBusExist(plateNo)){
@@ -41,7 +38,7 @@ public class BusDomainService {
         AdminUser admin = entityService.getAdmin();
         Bus busEntity = entityService.getBus();
         Long userId=admin.getUserIdByAuthKey(jwtToken);
-        
+
         if(!admin.getCompanyIdByUserId(userId).equals(busEntity.getCompanyIdbyPlateNo(plateNo))){
             throw new IllegalArgumentException("Company ID from authKey does not match the provided company ID.");
         }
