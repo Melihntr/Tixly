@@ -24,7 +24,7 @@ public class BusDomainService {
         Long userId=admin.getUserIdByAuthKey(jwtToken);
         Long companyId=admin.getCompanyIdByUserId(userId);
         Bus busEntity = entityService.getBus();
-        busEntity.validateBus(plateNo,busType,seatCount);
+        validUtil.validateBusType(busType,seatCount,plateNo);
         if(busEntity.isBusExist(plateNo)){
             throw new IllegalStateException("a Bus with given plateNo already exists");
         }
@@ -38,8 +38,9 @@ public class BusDomainService {
         AdminUser admin = entityService.getAdmin();
         Bus busEntity = entityService.getBus();
         Long userId=admin.getUserIdByAuthKey(jwtToken);
+        Long busId =busEntity.getBusIdByPlateNo(plateNo);
 
-        if(!admin.getCompanyIdByUserId(userId).equals(busEntity.getCompanyIdbyPlateNo(plateNo))){
+        if(!admin.getCompanyIdByUserId(userId).equals(busEntity.getCompanyIdbyBusId(busId))){
             throw new IllegalArgumentException("Company ID from authKey does not match the provided company ID.");
         }
         if (!validUtil.isValidPlate(plateNo)) {
@@ -47,7 +48,6 @@ public class BusDomainService {
         }
        
         Trip tripEntity = entityService.getTrip();
-        Long busId =busEntity.getBusIdByPlateNo(plateNo); 
         if(tripEntity.isBusInActiveOrFutureTrips(busId)){
             throw new IllegalStateException("The deletion of this bus is not permitted as it is associated with upcoming trips.");
         }
