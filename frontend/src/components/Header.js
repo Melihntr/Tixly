@@ -79,21 +79,30 @@ const Header = () => {
     return (
         <header className={styles.header}>
             <div className={styles.logo}>Tixly</div>
-            {loggedInUser ? (
-                <Dropdown>
-                    <Dropdown.Toggle variant="success" id="dropdown-basic" className={styles.dropdownToggle}>
-                        {loggedInUser}
-                    </Dropdown.Toggle>
+            <nav className={styles.navMenu}>
+                <a href="/my-trips" className={styles.navItem}>Seyahatlerim</a>
+                &nbsp;&nbsp;
+                <a href="/my-tickets" className={styles.navItem}>Biletlerim</a>
+                &nbsp;&nbsp;
+                <a href="/account" className={styles.navItem}>Hesap</a>
+            </nav>
+            <div className={styles.headerActions}>
+                {loggedInUser ? (
+                    <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic" className={styles.dropdownToggle}>
+                            {loggedInUser}
+                        </Dropdown.Toggle>
 
-                    <Dropdown.Menu>
-                        <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
-            ) : (
-                <Button variant="primary" onClick={handleShow} className={styles.loginButton}>
-                    Giriş Yap
-                </Button>
-            )}
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                ) : (
+                    <Button variant="primary" onClick={handleShow} className={styles.loginButton}>
+                        Giriş Yap
+                    </Button>
+                )}
+            </div>
 
             <LoginModal
                 showModal={showModal}
