@@ -1,16 +1,10 @@
 .header {
     background-color: #fdb903;
-    /* Blue background for the header */
     color: white;
-    /* White text color */
     padding: 10px 20px;
-    /* Padding around the header */
     display: flex;
-    /* Use flexbox to position items */
     justify-content: space-between;
-    /* Space between logo and login button */
     align-items: center;
-    /* Center items vertically */
     display: flex;
 }
 
@@ -32,7 +26,7 @@
 
 
 .logo {
-    font-size: 1.5em;
+    font-size: 2em;
     /* Larger font size for the logo */
     font-weight: bold;
     /* Bold font for the logo */
@@ -88,4 +82,51 @@
 
 .dropdownItem:hover {
     background-color: #ffffff; /* Background color of dropdown items on hover */
+}
+
+.navMenu {
+    display: flex;
+    gap: 1rem;
+    margin-right: auto;
+    padding-left: 1rem;
+}
+
+.navMenu {
+    display: flex;
+    gap: 0; /* Remove the default gap between items */
+    margin-right: auto;
+}
+
+.navItem {
+    color: white; /* Set text color to white */
+    font-size: 1rem;
+    text-decoration: none;
+    position: relative; /* Needed for the separator line */
+    padding: 0 0.5rem; /* Add horizontal padding */
+    transition: color 0.3s ease; /* Smooth color transition */
+}
+
+.navItem::after {
+    content: '| '; /* Separator character */
+    color: white; /* Separator color */
+    position: absolute;
+    right: -0.5rem; /* Adjust the position of the separator */
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.navItem:last-child::after {
+    content: ''; /* Remove separator for the last item */
+}
+
+.navItem:hover {
+    color: #d0d0d0; /* Change text color on hover */
+}
+
+.navItem:hover::before {
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    font-size: 1.2rem;
+    color: white;
 }
