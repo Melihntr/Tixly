@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 public class BusRequest {
     private String plateNo;
     private int seatNo;
-    private int companyId;
     private String busType;
 }

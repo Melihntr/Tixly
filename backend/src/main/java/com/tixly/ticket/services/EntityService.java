@@ -6,9 +6,14 @@ import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.AdminUser;
 import com.tixly.ticket.entity.Bus;
+import com.tixly.ticket.entity.Company;
+import com.tixly.ticket.entity.Province;
+import com.tixly.ticket.entity.Seat;
+import com.tixly.ticket.entity.Trip;
 import com.tixly.ticket.entity.User;
 import com.tixly.ticket.utils.JwtUtil;
 import com.tixly.ticket.utils.ValidUtil;
+
 
 @Service
 public class EntityService {
@@ -20,20 +25,24 @@ public class EntityService {
     private ValidUtil ValidUtil;
 
     User getCustomer(){
-        User entity = new User(jdbcTemplate, jwtUtil, ValidUtil);
-
-        return entity;
+        return new User(jdbcTemplate, jwtUtil, ValidUtil);    
     }
     AdminUser getAdmin(){
-        AdminUser entity = new AdminUser(jdbcTemplate, jwtUtil, ValidUtil);
-
-        return entity;
+        return new AdminUser(jdbcTemplate, jwtUtil, ValidUtil);
     }
     Bus getBus(){
-        Bus entity = new Bus(jdbcTemplate);
-
-        return entity;
+        return new Bus(jdbcTemplate,ValidUtil);
     }
-
-    
+    Trip getTrip(){
+        return new Trip(jdbcTemplate);
+    }
+    Seat getSeat(){
+        return new Seat(jdbcTemplate);
+    }
+    Province getProvince(){
+        return new Province(jdbcTemplate);
+    }
+    Company getCompany(){
+        return new Company(jdbcTemplate);
+    }
 }
