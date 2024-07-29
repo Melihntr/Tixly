@@ -20,7 +20,7 @@ public class RegisterDomainService {
     @Autowired
     private ValidUtil ValidUtil;
 
-    public String register(String username, String password, String mail, String gender) throws IllegalArgumentException {
+    public String register(String username, String password, String mail, String gender, String tcNo, String phoneNumber) throws IllegalArgumentException {
 
         if (!ValidUtil.isValidUsername(username) || !ValidUtil.isValidPassword(password) || !ValidUtil.isEmailValid(mail)) {
             throw new IllegalArgumentException("Invalid username, password, or email.");
@@ -30,8 +30,8 @@ public class RegisterDomainService {
         if (userEntity.IsUserExist(username, mail)) {
             throw new IllegalArgumentException("Username or email already exists.");
         }
-
-        userEntity.createCustomer(username, password, mail, gender);
+    
+        userEntity.createCustomer(username, password, mail, gender, tcNo, phoneNumber); 
         String verificationCode = verifyutil.generateVerificationCode();
         userEntity.updateVerificationCode(username, verificationCode);
         String jwtToken = jwtUtil.generateToken(username);
@@ -40,6 +40,7 @@ public class RegisterDomainService {
         System.out.println("Your verification code is " + verificationCode);
         return String.format("Customer registered successfully.\nYour auth key is: %s", jwtToken);
     }
+
 
     public String verifyCode(String userInput) {
         if (userInput == null || userInput.isEmpty()) {

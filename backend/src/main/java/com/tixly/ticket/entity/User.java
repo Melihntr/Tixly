@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tixly.ticket.models.dto.UserInfo;
 import com.tixly.ticket.utils.HashUtil;
 import com.tixly.ticket.utils.JwtUtil;
 import com.tixly.ticket.utils.ValidUtil;
@@ -29,6 +30,7 @@ public class User {
     private String status;
     private String verificationCode;
     private String phoneNumber;
+    private String tcNo;
 
     public User(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil,  ValidUtil ValidUtil){
         this.jdbcTemplate = jdbcTemplate;
@@ -36,16 +38,14 @@ public class User {
         this.ValidUtil = ValidUtil;
     }
 
-    public void createCustomer(String username, String password, String mail, String gender) {
+    public void createCustomer(String username, String password, String mail, String gender, String tcNo, String phoneNumber) {
         String hashedPassword = HashUtil.sha256(password);
-        String sql = "INSERT INTO customer (username, password, mail, gender, auth_key, account_status, verification_code) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO customer (username, password, mail, gender, auth_key, account_status, verification_code, tc_no, phonenumber) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 
-                jdbcTemplate.update(sql, username, hashedPassword, mail, gender, authKey, "PENDING",null);
-                
-              
+        jdbcTemplate.update(sql, username, hashedPassword, mail, gender, authKey, "PENDING", null, tcNo, phoneNumber);
     }
-
+    
     public void updateVerificationCode(String username, String verificationCode) {
         String sql = "UPDATE customer SET verification_code = ? WHERE username = ?";
         jdbcTemplate.update(sql, verificationCode, username);
@@ -140,5 +140,17 @@ public class User {
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, email}, Integer.class);
         return count != null && count > 0;
     }
-    
+    public UserInfo getUserInfoByAuthKey(String authKey) {
+        String sql = "SELECT mail, gender, account_status, phoneNumber, tc_no FROM customer WHERE auth_key = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{authKey},
+            (rs, rowNum) -> {
+                UserInfo userInfo = new UserInfo();
+                userInfo.setEmail(rs.getString("mail"));
+                userInfo.setGender(rs.getString("gender"));
+                userInfo.setAccountStatus(rs.getString("account_status"));
+                userInfo.setPhoneNumber(rs.getString("phoneNumber")); // Ensure the name matches the column in your DB
+                userInfo.setTcNo(rs.getString("tc_no")); // Add this line
+                return userInfo;
+            });
+    }
 }
