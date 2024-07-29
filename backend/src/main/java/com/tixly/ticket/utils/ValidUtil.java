@@ -25,8 +25,8 @@ public class ValidUtil {
         return true;
     }
     public void validateBusType(String busType,int seatNo,String plateNo) {
-        if (!isValidBusType(busType)) {
-            throw new IllegalArgumentException("Invalid bus type. Must be one of " + Arrays.toString(RuleBase.BUS_TYPES) + ".");
+        if (!Arrays.asList(RuleBase.VALID_BUS_TYPES).contains(busType)) {
+            throw new IllegalArgumentException("Invalid bus type. Must be one of " + Arrays.toString(RuleBase.VALID_BUS_TYPES) + ".");
         }
         if (seatNo % 3 != 0 && seatNo % 4 != 0) {
             throw new IllegalArgumentException("Invalid seat number. Must be a multiple of 3 or 4.");
@@ -46,13 +46,5 @@ public class ValidUtil {
     
     public boolean isValidUsername(String username) {
         return username != null && username.length() >= RuleBase.MIN_USERNAME_LENGTH && username.length() <= RuleBase.MAX_USERNAME_LENGTH;         
-    }
-    private boolean isValidBusType(String busType) {
-        for (String validType : RuleBase.BUS_TYPES) {
-            if (validType.equals(busType)) {
-                return true;
-            }
-        }
-        return false;
     }
 }

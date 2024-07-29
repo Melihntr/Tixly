@@ -62,8 +62,4 @@ public class Bus {
         String sql = "SELECT companyid FROM bus WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
     }
-    public Long getIdbyPlateNo(String plateNo) {
-        String sql = "SELECT id FROM bus WHERE plateno = ?";
-        return jdbcTemplate.queryForObject(sql, new Object[]{plateNo}, Long.class);
-    }
 }
