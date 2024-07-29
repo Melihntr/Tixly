@@ -68,7 +68,7 @@
 			"response": []
 		},
 		{
-			"name": "Owner Logout",
+			"name": "Admin Logout",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -94,7 +94,7 @@
 			"response": []
 		},
 		{
-			"name": "Owner Login",
+			"name": "Admin Login",
 			"request": {
 				"method": "POST",
 				"header": [
@@ -238,6 +238,175 @@
 					"path": [
 						"reset",
 						"password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin SMS",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/send-code",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"send-code"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Admin Reset Password",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/admin/reset",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"admin",
+						"reset"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Bus Register",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvd25lcjIiLCJpYXQiOjE3MjE4MjY3NDl9.fCuMqXzVxE-W1iUIU6MaOVuErAvxRDU1dvo6lIWQ_jrKmjZvifWrObfb3a_T-3St4ii2_mHpNmQZ3ueTXy1UaA",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"plateNo\": \"34 AB 123\",\r\n    \"companyId\": 1,\r\n    \"busType\": \"2s1\",\r\n    \"seatNo\": 3\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bus",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bus"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Bus",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bus/07CVH423",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bus",
+						"07CVH423"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Provinces",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/location/provinces",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"location",
+						"provinces"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Register Trip",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"peronNo\": \"P123\",\r\n    \"departureLocationId\": 2,\r\n    \"arrivalLocationId\": 3,\r\n    \"estimatedTime\": 120,\r\n    \"price\": 29.99,\r\n    \"companyId\": 1,\r\n    \"busId\": 1,\r\n    \"departureTime\": \"2024-07-30T15:30:00\"\r\n}\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/trip/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"trip",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel Trip",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJvd25lcjIiLCJpYXQiOjE3MjE4MjY3NDl9.fCuMqXzVxE-W1iUIU6MaOVuErAvxRDU1dvo6lIWQ_jrKmjZvifWrObfb3a_T-3St4ii2_mHpNmQZ3ueTXy1UaA",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/trip/14",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"trip",
+						"14"
 					]
 				}
 			},
