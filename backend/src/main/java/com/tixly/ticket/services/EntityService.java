@@ -41,6 +41,5 @@ public class EntityService {
     Province getProvince(){
         return new Province(jdbcTemplate);
     }
-
     
 }
