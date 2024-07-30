@@ -1,1 +1,1 @@
-melih mergelemişin yine fırsattan istifade :D 
+# melih mergelemişin yine fırsattan istifade :D 
