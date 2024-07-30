@@ -1,0 +1,54 @@
+/* MyTrips.module.css */
+
+.container {
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+.noTrips {
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+}
+
+.tripList {
+    margin-top: 20px;
+}
+
+.tripItem {
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.tripDetails {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.activeStar {
+    color: #007bff; /* Mavi renk */
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+
+.statusLabel {
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.tripItem strong {
+    color: #333;
+}

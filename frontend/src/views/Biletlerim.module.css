@@ -1,0 +1,104 @@
+/* Biletlerim.module.css */
+.body {
+    padding: 20px;
+}
+
+.button {
+    margin-bottom: 20px;
+}
+
+.ticket {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.ticket__head-url h1 {
+    font-size: 20px;
+    color: #333;
+}
+
+.ticket__head-holo span {
+    font-size: 14px;
+    color: #888;
+}
+
+.ticket__body {
+    margin-top: 20px;
+}
+
+.ticket__body-code {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.barcode {
+    flex: 1;
+}
+
+.code span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+    background: #eee;
+    border-radius: 50%;
+}
+
+.ticket__body-data {
+    margin-top: 10px;
+}
+
+.data-title {
+    margin-bottom: 15px;
+}
+
+.data-title .big {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.data-event,
+.data-date,
+.data-reservation,
+.data-price {
+    margin-bottom: 10px;
+}
+
+.data-event .big,
+.data-date .big {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.data-reservation .small,
+.data-price .small {
+    font-size: 14px;
+    color: #555;
+}
+
+.data-reservation .big,
+.data-price .big {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.price-tag {
+    display: flex;
+    justify-content: space-between;
+}
+
+.price-cat {
+    margin-top: 5px;
+}
+
+.example-tickets {
+    margin-top: 40px;
+}

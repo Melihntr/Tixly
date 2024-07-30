@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import styles from './UserProfile.module.css'; // Ensure you are using CSS modules
 
 const UserProfile = () => {
@@ -9,22 +10,16 @@ const UserProfile = () => {
     useEffect(() => {
         const fetchUserInfo = async () => {
             try {
-                const response = await fetch('http://localhost:8080/user', {
-                    method: 'GET',
+                const response = await axios.get('http://localhost:8080/account', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
                         'Content-Type': 'application/json'
                     }
                 });
-                
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
 
-                const data = await response.json();
-                setUserInfo(data);
+                setUserInfo(response.data);
             } catch (error) {
-                setError(error.message);
+                setError(error.response?.data?.message || 'Error fetching user info');
                 console.error('Error fetching user info:', error);
             } finally {
                 setLoading(false);
@@ -45,9 +40,9 @@ const UserProfile = () => {
     return (
         <div className={styles.userProfile}>
             <h2>Hesap Detayları</h2>
-            <p><strong>Name:</strong> {userInfo?.name}</p>
-            <p><strong>Gender:</strong> {userInfo?.gender}</p>
             <p><strong>Email:</strong> {userInfo?.email}</p>
+            <p><strong>Gender:</strong> {userInfo?.gender}</p>
+            <p><strong>Account Status:</strong> {userInfo?.accountStatus}</p>
             <p><strong>Phone Number:</strong> {userInfo?.phoneNumber}</p>
             <p><strong>TCKN:</strong> {userInfo?.tcNo}</p>
         </div>

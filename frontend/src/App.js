@@ -7,9 +7,11 @@ import Register from './views/Register';
 import ForgotPassword from './views/ForgotPassword';
 import OwnerLogin from './views/OwnerLogin';
 import MainPage from './views/MainPage';
+import MyTrips from './views/MyTrips';
 import Hesap from './views/Hesap';
 import Footer from './components/Footer'; // Import Footer component
 import OwnerDashboard from './views/OwnerDashboard';
+import Biletlerim from './views/Biletlerim';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <main className="flex-fill">
           <Routes>
             <Route path="/" element={<MainPage />} />
+            <Route path="/myTrips" element={<MyTrips />} />
+            <Route path="/biletlerim" element={Biletlerim} />
             <Route path="/hesap" element={<Hesap />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />

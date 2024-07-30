@@ -50,7 +50,7 @@ const Header = () => {
             if (error.response && error.response.data) {
                 alert(error.response.data.message);
             } else {
-                alert('An unexpected error occurred.');
+                alert('Bir hata oluştu.');
             }
         }
     };
@@ -76,15 +76,23 @@ const Header = () => {
         }
     };
 
+    const handleNavClick = (path) => {
+        if (!loggedInUser) {
+            handleShow();
+        } else {
+            navigate(path);
+        }
+    };
+
     return (
         <header className={styles.header}>
             <div className={styles.logo}>Tixly</div>
             <nav className={styles.navMenu}>
-                <a href="/my-trips" className={styles.navItem}>Seyahatlerim</a>
+                <a href onClick={() => handleNavClick('/myTrips')} className={styles.navItem}>Seyahatlerim</a>
                 &nbsp;&nbsp;
-                <a href="/my-tickets" className={styles.navItem}>Biletlerim</a>
+                <a href onClick={() => handleNavClick('/biletlerim')} className={styles.navItem}>Biletlerim</a>
                 &nbsp;&nbsp;
-                <a href="/hesap" className={styles.navItem}>Hesap</a>
+                <a href onClick={() => handleNavClick('/hesap')} className={styles.navItem}>Hesap</a>
             </nav>
             <div className={styles.headerActions}>
                 {loggedInUser ? (
@@ -94,7 +102,7 @@ const Header = () => {
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item onClick={handleLogout}>Logout</Dropdown.Item>
+                            <Dropdown.Item onClick={handleLogout}>Çıkış Yap</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                 ) : (

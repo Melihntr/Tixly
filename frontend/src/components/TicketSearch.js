@@ -69,11 +69,14 @@ const TicketSearch = () => {
     };
 
     const fetchProvinces = async () => {
-            
         try {
             const response = await axios.get('http://localhost:8080/location/provinces');
             console.log('Provinces fetched:', response.data); // Debug: Log the fetched data
-            setProvinces(response.data); // Set fetched data to state
+            // Update state with the correct field names from your data
+            setProvinces(response.data.map(province => ({
+                id: province.id,
+                name: province.il_adi
+            })));
         } catch (error) {
             console.error('Error fetching provinces:', error);
         }
