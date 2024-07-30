@@ -84,7 +84,7 @@ const Header = () => {
                 &nbsp;&nbsp;
                 <a href="/my-tickets" className={styles.navItem}>Biletlerim</a>
                 &nbsp;&nbsp;
-                <a href="/account" className={styles.navItem}>Hesap</a>
+                <a href="/hesap" className={styles.navItem}>Hesap</a>
             </nav>
             <div className={styles.headerActions}>
                 {loggedInUser ? (

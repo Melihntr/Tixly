@@ -7,6 +7,7 @@ import Register from './views/Register';
 import ForgotPassword from './views/ForgotPassword';
 import OwnerLogin from './views/OwnerLogin';
 import MainPage from './views/MainPage';
+import Hesap from './views/Hesap';
 import Footer from './components/Footer'; // Import Footer component
 import OwnerDashboard from './views/OwnerDashboard';
 
@@ -17,6 +18,7 @@ function App() {
         <main className="flex-fill">
           <Routes>
             <Route path="/" element={<MainPage />} />
+            <Route path="/hesap" element={<Hesap />} />
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/owner-login" element={<OwnerLogin />} />
