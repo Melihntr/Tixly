@@ -1,6 +1,17 @@
 .customButton {
-    font-size: 1rem; /* Adjust font size */
-    padding: 0.5rem 2rem; /* Adjust padding for height and width */
-    height: 40px; /* Adjust height */
-    width: 300px; /* Adjust width */
+    font-size: 1rem;
+    padding: 0.5rem 2rem;
+    height: 40px;
+    width: 300px;
+    background-color: #fdb903;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.customButton:hover {
+    background-color: #fcb500;
+    transform: scale(1.05);
 }

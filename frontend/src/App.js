@@ -13,6 +13,7 @@ import Footer from './components/Footer'; // Import Footer component
 import OwnerDashboard from './views/OwnerDashboard';
 import Biletlerim from './views/Biletlerim';
 import Header from './components/Header';
+import ActiveTrips from './views/ActiveTrips';
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/biletlerim" element={<Biletlerim />} />
             <Route path="/hesap" element={<Hesap />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/trips" element={<ActiveTrips />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/owner-login" element={<OwnerLogin />} />
             <Route path="/owner-dashboard" element={<OwnerDashboard />} />

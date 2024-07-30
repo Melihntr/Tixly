@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 import axios from 'axios';
-import { Card, Form, Row, Col, Button } from 'react-bootstrap';
-import styles from './TicketSearch.module.css';
+import styles from './TicketSearch.module.css'; // Import your styles if needed
 
 const TicketSearch = () => {
-    const Statics = Object.freeze({
-        
-    })
+    const navigate = useNavigate(); // Create a navigate function
 
     const [provinces, setProvinces] = useState([]);
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
-    const [date, setDate] = useState(Statics.DateString);
+    const [date, setDate] = useState('');
     const [location, setLocation] = useState({
         latitude: null,
         longitude: null,
         error: null,
-      });
+    });
 
     useEffect(() => {
         controller();
@@ -31,48 +30,38 @@ const TicketSearch = () => {
         console.debug(JSON.stringify(location));
     }
 
-
     const getLocation = async() => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
-              (position) => {
-                setLocation({
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  error: null,
-                });
-              },
-              (error) => {
-                console.error(error);
-                setLocation({
-                  latitude: null,
-                  longitude: null,
-                  error: error.message,
-                });
-              }
+                (position) => {
+                    setLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        error: null,
+                    });
+                },
+                (error) => {
+                    console.error(error);
+                    setLocation({
+                        latitude: null,
+                        longitude: null,
+                        error: error.message,
+                    });
+                }
             );
-          } else {
+        } else {
             setLocation({
-              latitude: null,
-              longitude: null,
-              error: 'Geolocation is not supported by this browser.',
+                latitude: null,
+                longitude: null,
+                error: 'Geolocation is not supported by this browser.',
             });
-          }
-    }
-    const handleFromChange = (event) => {
-        const selectedFrom = event.target.value;
-        if (selectedFrom === to) {
-            // If selected 'from' is the same as 'to', clear 'to' value
-            setTo('');
         }
-        setFrom(selectedFrom);
-    };
+    }
 
     const fetchProvinces = async () => {
         try {
             const response = await axios.get('http://localhost:8080/location/provinces');
-            console.log('Provinces fetched:', response.data); // Debug: Log the fetched data
-            // Update state with the correct field names from your data
+            console.log('Provinces fetched:', response.data);
             setProvinces(response.data.map(province => ({
                 id: province.id,
                 name: province.il_adi
@@ -82,19 +71,27 @@ const TicketSearch = () => {
         }
     };
 
+    const handleFromChange = (event) => {
+        const selectedFrom = event.target.value;
+        if (selectedFrom === to) {
+            setTo('');
+        }
+        setFrom(selectedFrom);
+    };
+
     const handleToChange = (event) => {
         const selectedTo = event.target.value;
         if (selectedTo === from) {
-            // If selected 'to' is the same as 'from', clear 'from' value
             setFrom('');
         }
         setTo(selectedTo);
     };
 
+    // Define handleNavClick function
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Handle form submission
-        console.log({ from, to, date });
+        // Use navigate to redirect to the '/trips' page
+        navigate('/trips');
     };
 
     return (
@@ -159,7 +156,11 @@ const TicketSearch = () => {
                                     </Form.Group>
                                 </Col>
                                 <Col style={{ display: 'flex', alignItems: 'flex-end' }}>
-                                    <Button variant="primary" type="submit" className={styles.customButton}>
+                                    <Button
+                                        variant="primary"
+                                        type="submit"
+                                        className={styles.customButton}
+                                    >
                                         Ara
                                     </Button>
                                 </Col>

@@ -34,7 +34,7 @@
 
 .loginButton {
     width: 120px;
-    background-color: #10834d;
+    background-color: #000000;
     /* Green background for the login button */
     border: none;
     /* Remove border */
@@ -51,7 +51,7 @@
 }
 
 .loginButton:hover {
-    background-color: #146C43;
+    background-color: #000000;
     /* Darker green on hover */
     transition: background-color 0.3s;
     /* Smooth transition for hover effect */
@@ -62,13 +62,13 @@
 }
 .dropdownToggle {
     width: 150px; /* Adjust width as needed */
-    background-color: #10834d; /* Default background color */
+    background-color: #000000; /* Default background color */
     color: white; /* Default text color */
     border: none; /* Remove border */
 }
 
 .dropdownToggle:hover {
-    background-color: #146C43; /* Background color on hover */
+    background-color: #000000; /* Background color on hover */
     color: white; /* Text color on hover */
     cursor: pointer; /* Show pointer cursor on hover */
 }
