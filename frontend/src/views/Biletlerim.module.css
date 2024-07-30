@@ -1,104 +1,119 @@
-/* Biletlerim.module.css */
-.body {
-    padding: 20px;
+/* Global styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-.button {
-    margin-bottom: 20px;
+html, body {
+    width: 100%;
+    height: 100%;
 }
 
-.ticket {
-    border: 1px solid #ddd;
-    padding: 20px;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+.ticketbody {
+    background: linear-gradient(0deg, rgba(135, 206, 235, 0.5), rgba(255, 0, 150, 0.3)), url("https://images.unsplash.com/photo-1606768666853-403c90a981ad?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1742&q=80");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.ticket__head-url h1 {
-    font-size: 20px;
-    color: #333;
+/* Card styles */
+.card {
+    display: flex;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    max-width: 800px;
+    width: 100%;
 }
 
-.ticket__head-holo span {
-    font-size: 14px;
-    color: #888;
+.cardLeft {
+    background-color: #ffffff;
+    border-radius: 10px;
+    width: 450px;
+    padding: 20px 0 20px 40px;
 }
 
-.ticket__body {
-    margin-top: 20px;
+.cardRight {
+    width: 200px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    border-left: 1px dashed #ccc;
+    padding: 20px 15px 0 10px;
 }
 
-.ticket__body-code {
+.header {
+    padding: 10px 15px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
-}
-
-.barcode {
-    flex: 1;
-}
-
-.code span {
-    font-size: 18px;
-    font-weight: bold;
-    color: #333;
-}
-
-.logo {
-    width: 50px;
-    height: 50px;
-    background: #eee;
-    border-radius: 50%;
-}
-
-.ticket__body-data {
-    margin-top: 10px;
-}
-
-.data-title {
-    margin-bottom: 15px;
-}
-
-.data-title .big {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.data-event,
-.data-date,
-.data-reservation,
-.data-price {
-    margin-bottom: 10px;
-}
-
-.data-event .big,
-.data-date .big {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.data-reservation .small,
-.data-price .small {
-    font-size: 14px;
-    color: #555;
-}
-
-.data-reservation .big,
-.data-price .big {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.price-tag {
-    display: flex;
     justify-content: space-between;
 }
 
-.price-cat {
-    margin-top: 5px;
+.header img {
+    width: 150px;
 }
 
-.example-tickets {
-    margin-top: 40px;
+.header h5 {
+    text-align: right;
+    text-transform: uppercase;
 }
+
+.barcode {
+    margin-top: 50px;
+    margin-left: -50px;
+}
+
+.barcode img {
+    height: 50px;
+    width: 150px;
+    transform: rotate(90deg);
+}
+
+.mainDetails {
+    margin: 0 10px 0 -20px;
+}
+
+.flightDetails {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.main {
+    padding: 10px;
+}
+
+.heading {
+    font-size: 12px;
+    color: #ACADAF;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.centered p {
+    padding: 0 10px;
+}
+
+.centered p:first-child {
+    padding-left: 0;
+}
+.logo {
+    font-size: 36px; /* Larger font size for a prominent logo appearance */
+    font-weight: 900; /* Thicker font weight */
+    color: #000; /* Adjust color as needed */
+    text-transform: uppercase; /* Uppercase text */
+    font-style: italic; /* Italicize text */
+    letter-spacing: 4px; /* Add spacing between letters for a more logo-like appearance */
+  }

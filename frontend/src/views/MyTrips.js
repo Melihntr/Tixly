@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { ListGroup } from 'react-bootstrap';
-import styles from './MyTrips.module.css'; // Özel stilleri ekle
+import React, { useState, useEffect } from 'react';
+import styles from './MyTrips.module.css'; // Import the CSS module
+import Header from '../components/Header'; // Assuming Header is in this path
 
 const MyTrips = () => {
     const [trips, setTrips] = useState([]);
 
-    // Duruma göre renkleri tanımla
     const statusColors = {
-        ACTIVE: 'lightblue',   // Aktif seyahat için açık mavi
-        PAST: '#fdb913',   // Geçmiş seyahat için açık sarı
-        CANCELED: 'lightcoral' // İptal edilen seyahat için açık mercan rengi
+        ACTIVE: 'lightblue',
+        PAST: '#fdb913',
+        CANCELED: 'lightcoral'
     };
 
-    // Örnek veri
     const sampleTrips = [
         {
             id: 1,
@@ -35,12 +33,9 @@ const MyTrips = () => {
     ];
 
     useEffect(() => {
-        // Seyahatleri almak için simüle et
         const fetchTrips = async () => {
             try {
-                // Simüle edilmiş veri kullanımı
                 const data = sampleTrips;
-                // Seyahatleri ayrılış zamanına göre azalan sırada sırala
                 const sortedTrips = data.sort((a, b) => new Date(b.departureTime) - new Date(a.departureTime));
                 setTrips(sortedTrips);
             } catch (error) {
@@ -52,33 +47,36 @@ const MyTrips = () => {
     }, []);
 
     return (
-        <div>
-            <h1>Seyahatlerim</h1>
-            <ListGroup>
-                {trips.map(trip => (
-                    <ListGroup.Item
-                        key={trip.id}
-                        className={styles.tripItem}
-                        style={{ backgroundColor: statusColors[trip.status] }}
-                    >
-                        <div className={styles.tripStatus}>
-                            {trip.status === 'ACTIVE' && (
-                                <span className={styles.activeStar}>★</span>
-                            )}
-                            <span className={styles.statusLabel}>
-                                {trip.status === 'ACTIVE' && 'Aktif'}
-                                {trip.status === 'PAST' && 'Geçmiş'}
-                                {trip.status === 'CANCELED' && 'İptal Edildi'}
-                            </span>
-                        </div>
-                        <div>
-                            <strong>Varış Yeri:</strong> {trip.destination}
-                            <br />
-                            <strong>Ayrılış Zamanı:</strong> {new Date(trip.departureTime).toLocaleString()}
-                        </div>
-                    </ListGroup.Item>
-                ))}
-            </ListGroup>
+        <div className={styles.myTripsContainer}>
+            <Header /> {/* Your custom header */}
+            <div className={styles.card}>
+                <h1 className={styles.cardHeader}>Seyahatlerim</h1>
+                <ul className={styles.tripList}>
+                    {trips.map(trip => (
+                        <li
+                            key={trip.id}
+                            className={styles.tripItem}
+                            style={{ backgroundColor: statusColors[trip.status] }}
+                        >
+                            <div className={styles.tripStatus}>
+                                {trip.status === 'ACTIVE' && (
+                                    <span className={styles.activeStar}>★</span>
+                                )}
+                                <span className={styles.statusLabel}>
+                                    {trip.status === 'ACTIVE' && 'Aktif'}
+                                    {trip.status === 'PAST' && 'Geçmiş'}
+                                    {trip.status === 'CANCELED' && 'İptal Edildi'}
+                                </span>
+                            </div>
+                            <div>
+                                <strong>Varış Yeri:</strong> {trip.destination}
+                                <br />
+                                <strong>Ayrılış Zamanı:</strong> {new Date(trip.departureTime).toLocaleString()}
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

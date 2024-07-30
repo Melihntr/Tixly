@@ -86,7 +86,7 @@ const Header = () => {
 
     return (
         <header className={styles.header}>
-            <div className={styles.logo}>Tixly</div>
+            <div className={styles.logo} onClick={() => handleNavClick('/')}>Tixly</div>
             <nav className={styles.navMenu}>
                 <a href onClick={() => handleNavClick('/myTrips')} className={styles.navItem}>Seyahatlerim</a>
                 &nbsp;&nbsp;

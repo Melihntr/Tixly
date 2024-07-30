@@ -1,179 +1,55 @@
 import React from 'react';
-import './Biletlerim.module.css'; // Import your CSS file
+import styles from './Biletlerim.module.css'; // Import the CSS module
+import Header from '../components/Header';
+
 
 const Biletlerim = () => {
     return (
-        <div className="body">
-            <div className="button">
-                <input type="button" value="Rumple / Revert" />
-            </div>
-            <div className="ticket">
-                <div className="ticket__head">
-                    <div className="ticket__head-url">
-                        <h1>otobusticket.com</h1>
-                    </div>
-                    <div className="ticket__head-holo">
-                        <span>OTOBÜSTICKET.COM</span>
-                    </div>
+        <div className={styles.biletlerimContainer}>
+            <Header /> {/* Your custom header */}
+            <div className={styles.card}>
+                <div className={styles.cardLeft}>
+                    <header className={styles.header}>
+                        <span className={styles.logo}>Tixly</span>
+                    </header>
+                    <main>
+                        <div className={styles.barcode}>
+                            <img src="https://www.freepnglogos.com/uploads/barcode-png/barcode-laser-code-vector-graphic-pixabay-3.png" alt="Barkod" />
+                        </div>
+                        <section className={styles.mainDetails}>
+                            <div className={styles.centered}>
+                                <p><span className={styles.heading}>Nereden</span><br />IST</p> &#8594;
+                                <p><span className={styles.heading}>Nereye</span><br />ADA</p>
+                                <p><span className={styles.heading}>Tarih</span><br />15AĞU2024</p>
+                            </div>
+                            <div className={styles.flightDetails}>
+                                <p><span className={styles.heading}>Seyahat</span><br />TK0123</p>
+                                <p><span className={styles.heading}>Kalkış</span><br />10:00</p>
+                                <p><span className={styles.heading}>Peron No</span><br />G04</p>
+                                <p><span className={styles.heading}>Koltuk</span><br />23A</p>
+                            </div>
+                            <h5>Kalkıştan 20 dakika önce peronda olunuz.</h5>
+                        </section>
+                    </main>
                 </div>
-                <div className="ticket__body">
-                    <div className="ticket__body-code">
-                        <div className="barcode">
-                            <div className="code">
-                                <span>AB1234</span>
-                            </div>
+                <div className={styles.cardRight}>
+                    <header className={styles.header}>
+                        <span className={styles.logo}>Tixly</span>
+                    </header>
+                    <main className={styles.main}>
+                        <div className={styles.centered}>
+                            <p><span className={styles.heading}>Yolcu</span><br />Customer 5</p>
+                            <p><span className={styles.heading}>Koltuk</span><br />23A</p>
                         </div>
-                        <div className="logo"></div>
-                    </div>
-                    <div className="ticket__body-data">
-                        <div className="data-title">
-                            <span className="small">OTOBÜS BİLETİ</span>
-                            <span className="big">İSTANBUL - ANKARA</span>
-                            <span className="small">SEYAHAT TARİHİ</span>
+                        <div className={styles.centered}>
+                            <p><span className={styles.heading}>Nereden</span><br />İstanbul</p> &#8594;
+                            <p><span className={styles.heading}>Nereye</span><br />Adana</p>
                         </div>
-                        <div className="data-event">
-                            <span className="big">GÜN: CUMA</span>
-                            <span className="small">TARİH: 01.09.2024</span>
+                        <div className={styles.centered}>
+                            <p><span className={styles.heading}>Seyahat</span><br />TK0123</p>
+                            <p><span className={styles.heading}>Tarih</span><br />15AĞU2024</p>
                         </div>
-                        <div className="data-date">
-                            <span className="big">SAAT: 15:00</span>
-                        </div>
-                        <div className="data-reservation">
-                            <div className="reservation-seat">
-                                <span className="small">Koltuk No</span>
-                                <span className="big">32A</span>
-                            </div>
-                            <div className="reservation-bus">
-                                <span className="small">Otobüs No</span>
-                                <span className="big">1234</span>
-                            </div>
-                        </div>
-                        <div className="data-price">
-                            <div className="price-tag">
-                                <span className="big">₺250,00</span>
-                            </div>
-                            <div className="price-cat">
-                                <span className="small">Standart Bilet</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="ticket__body-logo">
-                        <div className="logo"></div>
-                    </div>
-                </div>
-            </div>
-            {/* Example Inputs */}
-            <div className="example-tickets">
-                <div className="ticket">
-                    <div className="ticket__head">
-                        <div className="ticket__head-url">
-                            <h1>otobusticket.com</h1>
-                        </div>
-                        <div className="ticket__head-holo">
-                            <span>OTOBÜSTICKET.COM</span>
-                        </div>
-                    </div>
-                    <div className="ticket__body">
-                        <div className="ticket__body-code">
-                            <div className="barcode">
-                                <div className="code">
-                                    <span>CD5678</span>
-                                </div>
-                            </div>
-                            <div className="logo"></div>
-                        </div>
-                        <div className="ticket__body-data">
-                            <div className="data-title">
-                                <span className="small">OTOBÜS BİLETİ</span>
-                                <span className="big">İSTANBUL - İZMİR</span>
-                                <span className="small">SEYAHAT TARİHİ</span>
-                            </div>
-                            <div className="data-event">
-                                <span className="big">GÜN: PAZARTESİ</span>
-                                <span className="small">TARİH: 04.09.2024</span>
-                            </div>
-                            <div className="data-date">
-                                <span className="big">SAAT: 10:00</span>
-                            </div>
-                            <div className="data-reservation">
-                                <div className="reservation-seat">
-                                    <span className="small">Koltuk No</span>
-                                    <span className="big">15B</span>
-                                </div>
-                                <div className="reservation-bus">
-                                    <span className="small">Otobüs No</span>
-                                    <span className="big">5678</span>
-                                </div>
-                            </div>
-                            <div className="data-price">
-                                <div className="price-tag">
-                                    <span className="big">₺180,00</span>
-                                </div>
-                                <div className="price-cat">
-                                    <span className="small">Standart Bilet</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="ticket__body-logo">
-                            <div className="logo"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="ticket">
-                    <div className="ticket__head">
-                        <div className="ticket__head-url">
-                            <h1>otobusticket.com</h1>
-                        </div>
-                        <div className="ticket__head-holo">
-                            <span>OTOBÜSTICKET.COM</span>
-                        </div>
-                    </div>
-                    <div className="ticket__body">
-                        <div className="ticket__body-code">
-                            <div className="barcode">
-                                <div className="code">
-                                    <span>EF9012</span>
-                                </div>
-                            </div>
-                            <div className="logo"></div>
-                        </div>
-                        <div className="ticket__body-data">
-                            <div className="data-title">
-                                <span className="small">OTOBÜS BİLETİ</span>
-                                <span className="big">ANKARA - ANTALYA</span>
-                                <span className="small">SEYAHAT TARİHİ</span>
-                            </div>
-                            <div className="data-event">
-                                <span className="big">GÜN: PERŞEMBE</span>
-                                <span className="small">TARİH: 07.09.2024</span>
-                            </div>
-                            <div className="data-date">
-                                <span className="big">SAAT: 08:00</span>
-                            </div>
-                            <div className="data-reservation">
-                                <div className="reservation-seat">
-                                    <span className="small">Koltuk No</span>
-                                    <span className="big">22C</span>
-                                </div>
-                                <div className="reservation-bus">
-                                    <span className="small">Otobüs No</span>
-                                    <span className="big">9012</span>
-                                </div>
-                            </div>
-                            <div className="data-price">
-                                <div className="price-tag">
-                                    <span className="big">₺220,00</span>
-                                </div>
-                                <div className="price-cat">
-                                    <span className="small">Standart Bilet</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="ticket__body-logo">
-                            <div className="logo"></div>
-                        </div>
-                    </div>
+                    </main>
                 </div>
             </div>
         </div>
