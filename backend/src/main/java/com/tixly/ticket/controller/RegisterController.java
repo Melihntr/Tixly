@@ -14,30 +14,32 @@ import com.tixly.ticket.models.request.RegisterRequest;
 import com.tixly.ticket.services.RegisterDomainService;
 
 @RestController
-@RequestMapping("/reg")
+@RequestMapping("/register")
 public class RegisterController {
 
     @Autowired
     private RegisterDomainService registerDomainService;
 
-    @PostMapping("/register")
-    public ResponseEntity<String> registerCustomer(@RequestBody RegisterRequest registerRequest) {
-        try {
-            String responseMessage = registerDomainService.register(
-                    registerRequest.getUsername(),
-                    registerRequest.getPassword(),
-                    registerRequest.getMail(),
-                    registerRequest.getGender()
-            );
-            return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    @PostMapping()
+public ResponseEntity<String> registerCustomer(@RequestBody RegisterRequest registerRequest) {
+    try {
+        String responseMessage = registerDomainService.register(
+                registerRequest.getUsername(),
+                registerRequest.getPassword(),
+                registerRequest.getMail(),
+                registerRequest.getGender(),
+                registerRequest.getTcNo(), 
+                registerRequest.getPhoneNumber()
+        );
+        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+    } catch (IllegalArgumentException e) {
+        e.printStackTrace();
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>("An unexpected error occurred.", HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 
     @PostMapping("/verifyCode")
     public ResponseEntity<String> verifyCode(@RequestBody Map<String, String> requestBody) {
