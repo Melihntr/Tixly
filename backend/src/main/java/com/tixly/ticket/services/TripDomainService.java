@@ -89,8 +89,8 @@ public class TripDomainService {
         }
         Trip trip = entityService.getTrip();
 
-        List<TripModel> faggots = trip.getTripsByIds(tripIds);
+        List<TripModel> trips = trip.getTripsByIds(tripIds);
 
-        return faggots;
+        return trips;
     }
 }
