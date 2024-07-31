@@ -2,6 +2,7 @@ package com.tixly.ticket.services;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,9 +10,12 @@ import org.springframework.stereotype.Service;
 import com.tixly.ticket.entity.AdminUser;
 import com.tixly.ticket.entity.Bus;
 import com.tixly.ticket.entity.Company;
+import com.tixly.ticket.entity.Passenger;
+import com.tixly.ticket.entity.Ticket;
 import com.tixly.ticket.entity.Trip;
+import com.tixly.ticket.entity.User;
+import com.tixly.ticket.models.dto.TripModel;
 import com.tixly.ticket.utils.BearerUtil;
-
 
 @Service
 public class TripDomainService {
@@ -61,5 +65,32 @@ public class TripDomainService {
             throw new IllegalArgumentException("Cannot cancel trip within 12 hours of departure");
         }
         trip.cancelTrip(tripId);
+    }
+    
+    public List<TripModel> getTripIdsByAuthKey(String authKey) {
+        String jwtToken = BearerUtil.extractToken(authKey);
+        User user = entityService.getCustomer();
+        Long customerId = user.getCustomerIdByAuthKey(jwtToken);
+        Ticket ticket = entityService.getTicket();
+        List<Long> ticketIds =ticket.getTicketIdsByCustomerId(customerId);
+        Passenger passenger = entityService.getPassenger();
+        if (ticketIds.isEmpty()) {
+            throw new IllegalArgumentException("No tickets found for the customer.");
+        }
+        // Step 2: Get all passenger IDs for the ticket IDs
+        List<Long> passengerIds = passenger.getPassengerIdsByTicketIds(ticketIds);
+        if (passengerIds.isEmpty()) {
+            throw new IllegalArgumentException("No passengers found for the tickets.");
+        }
+        // Step 3: Get all trip IDs for the passenger IDs
+        List<Long> tripIds = passenger.getTripIdsByPassengerIds(passengerIds);
+        if (tripIds.isEmpty()) {
+            throw new IllegalArgumentException("No trips found for the passengers.");
+        }
+        Trip trip = entityService.getTrip();
+
+        List<TripModel> faggots = trip.getTripsByIds(tripIds);
+
+        return faggots;
     }
 }
