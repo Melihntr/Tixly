@@ -1,0 +1,71 @@
+/* Sidebar styles */
+.dashboardContainer {
+    display: flex;
+}
+
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    height: 100vh; /* Full viewport height */
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #fdb913; /* Sidebar background color */
+    padding: 0; /* Remove padding to ensure links touch */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow for better separation */
+    z-index: 1000; /* Ensure the sidebar stays above other content */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Logo text styles */
+.logoText {
+    font-size: 3em; /* Increase the size of the logo text */
+    font-style: italic; /* Italicize text */
+    color: #fff; /* Adjust color as needed */
+    text-align: center; /* Center the logo text */
+    padding: 20px 0; /* Add padding above and below the logo text */
+    margin-bottom: 0; /* Remove margin to ensure no space below */
+    border-bottom: 2px solid #333; /* Bottom border for the logo text */
+}
+
+/* Logo link styles */
+.logoLink {
+    text-decoration: none; /* Remove underline from link */
+}
+
+/* Box styles for nav items */
+.navLink {
+    width: 100%; /* Full width of the sidebar */
+    padding: 15px; /* Padding inside the box */
+    background-color: #fdb913; /* Background color for the box */
+    border-radius: 5px; /* Rounded corners for the box */
+    border: 1px solid #333; /* Border around the box */
+    text-align: center; /* Center text inside the box */
+    color: #000; /* Text color set to black */
+    text-decoration: none; /* Remove underline */
+    display: block; /* Make each link occupy the full width */
+    margin: 0; /* Remove margin to ensure no space between buttons */
+    border-top: 0; /* No top border */
+}
+
+/* Ensure the first button touches the bottom border of the logo */
+.navLinkTop {
+    border-top: 2px solid #333; /* Top border for the first item */
+}
+
+.navLinkMiddle {
+    border-top: 1px solid #333; /* Top border for middle items */
+    border-bottom: 1px solid #333; /* Bottom border for middle items */
+}
+
+.navLinkBottom {
+    border-top: 1px solid #333; /* Top border for the bottom item */
+}
+
+/* Hover effects */
+.navLink:hover {
+    background-color: #fdb913; /* Keep the background color same on hover */
+    color: #007bff; /* Text color on hover (blue) */
+    border-color: #007bff; /* Border color on hover (blue) */
+}

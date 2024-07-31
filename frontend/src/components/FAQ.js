@@ -17,13 +17,13 @@ const FAQ = () => (
                         <Accordion.Item eventKey="1">
                             <Accordion.Header>Bilet nasıl alırım?</Accordion.Header>
                             <Accordion.Body>
-                                Bilet almak için hesabınıza giriş yapabilir ve etkinlikler bölümüne giderek biletlerinizi satın alabilirsiniz.
+                                Bilet almak için hesabınıza giriş yapabilir ve arama bölümüne giderek biletlerinizi satın alabilirsiniz.
                             </Accordion.Body>
                         </Accordion.Item>
                         <Accordion.Item eventKey="2">
                             <Accordion.Header>İade alabilir miyim?</Accordion.Header>
                             <Accordion.Body>
-                                İade işlemleri etkinlik düzenleyicisinin politikalarına tabidir. Daha fazla bilgi için destek ile iletişime geçebilirsiniz.
+                                İade işlemleri seyahat düzenleyicisinin politikalarına tabidir. Daha fazla bilgi için destek ile iletişime geçebilirsiniz.
                             </Accordion.Body>
                         </Accordion.Item>
                     </Accordion>

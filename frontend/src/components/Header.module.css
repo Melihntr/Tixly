@@ -24,12 +24,20 @@
 
 
 
-
 .logo {
-    font-size: 2em;
-    /* Larger font size for the logo */
-    font-weight: bold;
-    /* Bold font for the logo */
+    font-size: 2em; /* Larger font size for the logo */
+    font-weight: bold; /* Bold font for the logo */
+    cursor: pointer;
+}
+
+.logoText {
+    color: #fff; /* White color for the logo text */
+    text-decoration: none; /* Remove underline from link */
+}
+
+/* Ensure no other styles override the logo text color */
+.logoText:hover {
+    color: #fff !important; /* Maintain white color on hover */
 }
 
 .loginButton {
@@ -55,6 +63,17 @@
     /* Darker green on hover */
     transition: background-color 0.3s;
     /* Smooth transition for hover effect */
+}
+.loginButton:focus {
+    box-shadow: none; /* Remove default focus shadow */
+    outline: none; /* Remove default focus outline */
+}
+
+/* Active state for the button */
+.loginButton:active {
+    background-color: #947d44; /* Maintain background color on active */
+    color: black; /* Ensure text color remains black on active */
+    box-shadow: none; /* Remove default active shadow */
 }
 
 .dropdownToggle {
@@ -104,6 +123,7 @@
     position: relative; /* Needed for the separator line */
     padding: 0 0.5rem; /* Add horizontal padding */
     transition: color 0.3s ease; /* Smooth color transition */
+    cursor: pointer;
 }
 
 .navItem::after {

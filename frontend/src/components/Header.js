@@ -106,7 +106,7 @@ const Header = () => {
                         </Dropdown.Menu>
                     </Dropdown>
                 ) : (
-                    <Button variant="primary" onClick={handleShow} className={styles.loginButton}>
+                    <Button onClick={handleShow} className={styles.loginButton}>
                         Giriş Yap
                     </Button>
                 )}

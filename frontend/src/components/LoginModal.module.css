@@ -8,3 +8,31 @@
     display: flex;
     justify-content: center;
 }
+/* Login button styles */
+.loginButton {
+    background-color: #fdb913; /* Background color for the button */
+    border: none; /* Remove border */
+    color: black; /* Text color */
+    padding: 10px 20px; /* Padding around the button */
+    font-size: 1em; /* Font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and text color */
+}
+
+/* Hover effect for the button */
+.loginButton:hover {
+    background-color: #ffcc00; /* Lighter background color on hover */
+    color: #000; /* Ensure text color remains black on hover */
+}
+
+/* Link styles inside the modal */
+.modal-links a {
+    color: #007bff; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+/* Hover effect for links */
+.modal-links a:hover {
+    text-decoration: underline; /* Underline on hover */
+}

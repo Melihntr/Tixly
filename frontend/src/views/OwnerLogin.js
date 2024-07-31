@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { Form, Button, Container, Alert } from 'react-bootstrap';
+import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginSuccess, loginFailure } from '../components/authSlice';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
-import styles from './OwnerLogin.module.css'; // If you have custom styles
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import styles from './OwnerLogin.module.css'; // Import your CSS module
+import { loginSuccess, loginFailure } from '../components/authSlice'; // Update the import path as necessary
 
 const OwnerLogin = () => {
     const [username, setUsername] = useState('');
@@ -28,6 +28,9 @@ const OwnerLogin = () => {
             });
 
             if (response.status === 200) {
+                // Store the authKey in localStorage
+                localStorage.setItem('authKey', response.data.authKey);
+
                 dispatch(loginSuccess({
                     authKey: response.data.authKey,
                     username
@@ -35,44 +38,44 @@ const OwnerLogin = () => {
                 setError('');
                 navigate('/owner-dashboard'); // Redirect to the dashboard
             } else {
-                dispatch(loginFailure('Login failed. Please check your credentials.'));
-                setError('Login failed. Please check your credentials.');
+                dispatch(loginFailure('Giriş başarısız oldu. Lütfen bilgilerinizi kontrol edin.'));
+                setError('Giriş başarısız oldu. Lütfen bilgilerinizi kontrol edin.');
             }
         } catch (error) {
-            console.error('Login error:', error);
-            dispatch(loginFailure('An error occurred. Please try again later.'));
-            setError('An error occurred. Please try again later.');
+            console.error('Giriş hatası:', error);
+            dispatch(loginFailure('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.'));
+            setError('Bir hata oluştu. Lütfen daha sonra tekrar deneyin.');
         }
     };
 
     return (
         <Container className={styles.container}>
-            <h2>Owner Login</h2>
-            {authStatus === 'succeeded' && <Alert variant="success">Login successful!</Alert>}
+            <h2>Yönetici Girişi</h2>
+            {authStatus === 'succeeded' && <Alert variant="success">Giriş başarılı!</Alert>}
             {error && <Alert variant="danger">{error}</Alert>}
             <Form onSubmit={handleLogin}>
                 <Form.Group controlId="formUsername">
-                    <Form.Label>Username</Form.Label>
+                    <Form.Label>Kullanıcı Adı</Form.Label>
                     <Form.Control
                         type="text"
-                        placeholder="Enter username"
+                        placeholder="Kullanıcı adınızı girin"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         required
                     />
                 </Form.Group>
                 <Form.Group controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
+                    <Form.Label>Şifre</Form.Label>
                     <Form.Control
                         type="password"
-                        placeholder="Password"
+                        placeholder="Şifrenizi girin"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
                     />
                 </Form.Group>
                 <Button variant="primary" type="submit" className={styles.button}>
-                    Login
+                    Giriş Yap
                 </Button>
             </Form>
         </Container>
