@@ -1,11 +1,12 @@
 package com.tixly.ticket.models.dto;
 
-import com.tixly.ticket.entity.Trip;
-import org.springframework.jdbc.core.RowMapper;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+
+import org.springframework.jdbc.core.RowMapper;
+
+import com.tixly.ticket.entity.Trip;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

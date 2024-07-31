@@ -25,4 +25,9 @@ public List<TicketModel> getTicketsByAuthKey(String authKey) {
 
         return ticket.getTicketsByCustomerId(customerId);
     }
+
+    public void addTicket(TicketModel ticketModel) {
+        Ticket ticket = entityService.getTicket();
+        ticket.addTicket(ticketModel);  
+    }
 }

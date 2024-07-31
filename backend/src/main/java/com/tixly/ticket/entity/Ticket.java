@@ -6,7 +6,6 @@ import java.util.UUID;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,15 +26,19 @@ import lombok.NoArgsConstructor;
 public class Ticket {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
     private Long customerId;
     private Long tripId;
+    private String from; // New field
+    private String to;   // New field
+    private Long seatId; // New field
     private Date printDate;
     private Date checkoutDate;
     private Date purchaseDate;
-    private UUID invoiceId; // UUID for invoiceId
+    private UUID invoiceId;
+
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -50,6 +53,9 @@ public class Ticket {
             rs.getLong("id"),
             rs.getLong("customerid"),
             rs.getLong("tripid"),
+            rs.getString("from"), 
+            rs.getString("to"),    
+            rs.getLong("seatid"),  
             rs.getDate("printdate"),
             rs.getDate("checkoutdate"),
             rs.getDate("purchasedate"),
@@ -59,5 +65,20 @@ public class Ticket {
     public List<Long> getTicketIdsByCustomerId(Long customerId) {
         String sql = "SELECT id FROM tickets WHERE customerid = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{customerId}, Long.class);
+    }
+    public void addTicket(TicketModel ticketModel) {
+        String sql = "INSERT INTO tickets (customerid, tripid, \"from\", \"to\", seatid, printdate, checkoutdate, purchasedate, invoiceid) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql,
+                ticketModel.getCustomerId(),
+                ticketModel.getTripId(),
+                ticketModel.getFrom(),
+                ticketModel.getTo(),
+                ticketModel.getSeatId(),
+                ticketModel.getPrintDate(),
+                ticketModel.getCheckoutDate(),
+                ticketModel.getPurchaseDate(),
+                ticketModel.getInvoiceId()
+        );
     }
 }
