@@ -23,7 +23,7 @@ public class TripDomainService {
     @Autowired
     private EntityService entityService;
 
-    public void registerTrip(String peronNo, int departureLocationId, int arrivalLocationId, int estimatedTime, Double price, Long busId, LocalDateTime departureTime, String authKey) {
+    public void registerTrip(String peronNo, String departureLocationId, String arrivalLocationId, int estimatedTime, Double price, Long busId, LocalDateTime departureTime, String authKey) {
         String jwtToken = BearerUtil.extractToken(authKey);
         AdminUser admin = entityService.getAdmin();
         Long userId=admin.getUserIdByAuthKey(jwtToken);
@@ -91,6 +91,11 @@ public class TripDomainService {
 
         List<TripModel> trips = trip.getTripsByIds(tripIds);
 
+        return trips;
+    }
+    public List<TripModel>getActiveTrips( String departureLocation,String arrivalLocation){
+        Trip trip = entityService.getTrip();
+        List<TripModel> trips=trip.getActiveTrips(departureLocation, arrivalLocation);
         return trips;
     }
 }

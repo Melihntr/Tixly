@@ -26,8 +26,11 @@ public List<TicketModel> getTicketsByAuthKey(String authKey) {
         return ticket.getTicketsByCustomerId(customerId);
     }
 
-    public void addTicket(TicketModel ticketModel) {
+    public void addTicket(String authKey,TicketModel ticketModel) {
+        String jwtToken = BearerUtil.extractToken(authKey);
         Ticket ticket = entityService.getTicket();
-        ticket.addTicket(ticketModel);  
+        User user = entityService.getCustomer();
+        Long customerId = user.getCustomerIdByAuthKey(jwtToken);
+        ticket.addTicket(customerId,ticketModel);  
     }
 }

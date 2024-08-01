@@ -1,6 +1,6 @@
 package com.tixly.ticket.entity;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -34,9 +34,9 @@ public class Ticket {
     private String from; // New field
     private String to;   // New field
     private Long seatId; // New field
-    private Date printDate;
-    private Date checkoutDate;
-    private Date purchaseDate;
+    private LocalDateTime printDate;
+    private LocalDateTime checkoutDate;
+    private LocalDateTime purchaseDate;
     private UUID invoiceId;
 
 
@@ -56,21 +56,23 @@ public class Ticket {
             rs.getString("from"), 
             rs.getString("to"),    
             rs.getLong("seatid"),  
-            rs.getDate("printdate"),
-            rs.getDate("checkoutdate"),
-            rs.getDate("purchasedate"),
+            rs.getTimestamp("printdate").toLocalDateTime(),
+            rs.getTimestamp("checkoutdate").toLocalDateTime(),
+            rs.getTimestamp("purchasedate").toLocalDateTime(),
             (UUID) rs.getObject("invoiceid")
         ));
     }
+    
     public List<Long> getTicketIdsByCustomerId(Long customerId) {
         String sql = "SELECT id FROM tickets WHERE customerid = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{customerId}, Long.class);
     }
-    public void addTicket(TicketModel ticketModel) {
+    public void addTicket(Long customerId,TicketModel ticketModel) {
+        UUID invoice = UUID.randomUUID();
         String sql = "INSERT INTO tickets (customerid, tripid, \"from\", \"to\", seatid, printdate, checkoutdate, purchasedate, invoiceid) " +
-                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(sql,
-                ticketModel.getCustomerId(),
+                customerId,
                 ticketModel.getTripId(),
                 ticketModel.getFrom(),
                 ticketModel.getTo(),
@@ -78,7 +80,7 @@ public class Ticket {
                 ticketModel.getPrintDate(),
                 ticketModel.getCheckoutDate(),
                 ticketModel.getPurchaseDate(),
-                ticketModel.getInvoiceId()
+                invoice
         );
     }
 }

@@ -34,13 +34,15 @@ public class TicketController {
         }
     }
     @PostMapping("/add")
-    public ResponseEntity<String> addTicket(@RequestBody TicketModel ticketModel) {
-        try {
-            ticketDomainService.addTicket(ticketModel);
-            return new ResponseEntity<>("Ticket added successfully.", HttpStatus.CREATED);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return new ResponseEntity<>("Failed to add ticket: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<String> addTicket(
+        @RequestHeader("Authorization") String authKey,
+        @RequestBody TicketModel ticketModel) {
+    try {
+        ticketDomainService.addTicket(authKey, ticketModel);
+        return new ResponseEntity<>("Ticket added successfully.", HttpStatus.CREATED);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>("Failed to add ticket: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
 }

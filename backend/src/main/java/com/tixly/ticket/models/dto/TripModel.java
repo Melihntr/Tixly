@@ -9,35 +9,38 @@ import org.springframework.jdbc.core.RowMapper;
 import com.tixly.ticket.entity.Trip;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Builder
+@Data
+@NoArgsConstructor
 @AllArgsConstructor
 public class TripModel implements RowMapper<Trip> {
+
+    private Long id;
+    private String peronNo;  
+    private String departureLocationId; 
+    private String arrivalLocationId; 
+    private int estimatedTime;          
+    private Double price;
+    private Long companyId;
+    private Long busId;
+    private LocalDateTime departureTime;
+    private String state;
     
-        private Long id;
-        private String peronNo;
-        private int departureLocationId;
-        private int arrivalLocationId;
-        private int estimatedTime;
-        private Double price;
-        private Long companyId;
-        private Long busId;
-        private LocalDateTime departureTime;
-        private String state;
-    
+
     @Override
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Trip.builder()
                 .id(rs.getLong("id"))
-                .peronNo(rs.getString("peronNo"))
-                .departureLocationId(rs.getInt("departureLocationId"))
-                .arrivalLocationId(rs.getInt("arrivalLocationId"))
-                .estimatedTime(rs.getInt("estimatedTime"))
+                .peronNo(rs.getString("peron_no"))  
+                .departureLocationId(rs.getString("departure_location_id")) 
+                .arrivalLocationId(rs.getString("arrival_location_id"))   
+                .estimatedTime(rs.getInt("estimated_time")) 
                 .price(rs.getDouble("price"))
-                .companyId(rs.getLong("companyId"))
-                .busId(rs.getLong("busId"))
-                .departureTime(rs.getObject("departureTime", LocalDateTime.class))
+                .companyId(rs.getLong("company_id"))
+                .busId(rs.getLong("bus_id"))
+                .departureTime(rs.getObject("departure_time", LocalDateTime.class))
                 .state(rs.getString("state"))
                 .build();
     }

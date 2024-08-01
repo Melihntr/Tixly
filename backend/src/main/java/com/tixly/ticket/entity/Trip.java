@@ -1,6 +1,7 @@
 package com.tixly.ticket.entity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,8 +25,8 @@ public class Trip {
     @Id
     private Long id;
     private String peronNo;
-    private int departureLocationId;
-    private int arrivalLocationId;
+    private String departureLocationId;
+    private String arrivalLocationId;
     private int estimatedTime;
     private Double price;
     private Long companyId;
@@ -39,9 +40,9 @@ public class Trip {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void registerTrip(String peronNo, int departureLocationId, int arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime) {
+    public void registerTrip(String peronNo, String departureLocationId, String arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime) {
 
-        String sql = "INSERT INTO trips (peronno, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime, state) "
+        String sql = "INSERT INTO trips (peronno, departure_location_id, arrival_location_id, estimatedTime, price, companyId, busId, departureTime, state) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif')";
 
         jdbcTemplate.update(sql, peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime);
@@ -70,8 +71,8 @@ public class Trip {
         return count != null && count > 0;
     }
 
-    public boolean isDepartureLocationExist(int departureLocationId) {
-        String sql = "SELECT COUNT(*) FROM trips WHERE departureLocationId = ?";
+    public boolean isDepartureLocationExist(String departureLocationId) {
+        String sql = "SELECT COUNT(*) FROM trips WHERE departure_location_id = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{departureLocationId}, Integer.class);
         return count != null && count > 0;
     }
@@ -102,8 +103,40 @@ public class Trip {
         return jdbcTemplate.query(sql, ids.toArray(), (rs, rowNum) -> new TripModel(
             rs.getLong("id"),
             rs.getString("peronNo"),
-            rs.getInt("departureLocationId"),
-            rs.getInt("arrivalLocationId"),
+            rs.getString("departureLocationId"),
+            rs.getString("arrivalLocationId"),
+            rs.getInt("estimatedTime"),
+            rs.getDouble("price"),
+            rs.getLong("companyId"),
+            rs.getLong("busId"),
+            rs.getObject("departureTime", LocalDateTime.class),
+            rs.getString("state")
+        ));
+    }
+    public List<TripModel> getActiveTrips(String departureLocation, String arrivalLocation) {
+        // Base SQL query
+        StringBuilder sql = new StringBuilder("SELECT * FROM trips WHERE state = 'Aktif'");
+
+        // List to hold parameters
+        List<Object> params = new ArrayList<>();
+
+        // Add filters based on provided parameters
+        if (departureLocation != null && !departureLocation.isEmpty()) {
+            sql.append(" AND departure_location_id = ?");
+            params.add(departureLocation);
+        }
+
+        if (arrivalLocation != null && !arrivalLocation.isEmpty()) {
+            sql.append(" AND arrival_location_id = ?");
+            params.add(arrivalLocation);
+        }
+
+        // Execute query
+        return jdbcTemplate.query(sql.toString(), params.toArray(), (rs, rowNum) -> new TripModel(
+            rs.getLong("id"),
+            rs.getString("peronNo"),
+            rs.getString("departure_location_id"),
+            rs.getString("arrival_location_id"),
             rs.getInt("estimatedTime"),
             rs.getDouble("price"),
             rs.getLong("companyId"),
@@ -113,3 +146,5 @@ public class Trip {
         ));
     }
 }
+
+
