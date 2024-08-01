@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import styles from './Register.module.css'; // Import the CSS module
 
 const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+    const [gender, setGender] = useState('Male');
+    const [tcNo, setTcNo] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
@@ -13,55 +17,100 @@ const Register = () => {
     const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/auth/register', {
+            const response = await axios.post('http://localhost:8080/register', {
                 username,
                 password,
-                email,
+                mail: email,
+                gender,
+                tcNo,
+                phoneNumber,
             });
-            console.log('Registration successful:', response.data);
-            setMessage('Registration successful. Please login.');
-            // Redirect to login page
-            navigate('/');
+
+            if (response.status === 201) {
+                // Extract username and authKey from response
+                const { authKey } = response.data;
+                
+                // Store username and authKey in localStorage
+                localStorage.setItem('authKey', authKey);
+                localStorage.setItem('username', username);
+
+                setMessage('Registration successful. Redirecting to the main page...');
+                navigate('/'); // Redirect to the main page
+            }
         } catch (err) {
             setError('Registration failed. Please try again.');
         }
     };
 
     return (
-        <div className="register-container">
-            <h2>Create Account</h2>
-            <form onSubmit={handleRegister}>
-                <div>
-                    <label>Username:</label>
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Password:</label>
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </div>
-                <div>
-                    <label>Email:</label>
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                    />
-                </div>
-                {error && <p className="error">{error}</p>}
-                {message && <p className="message">{message}</p>}
-                <button type="submit">Register</button>
-            </form>
+        <div className={styles.container}>
+            <header className={styles.header}>
+                <span className={styles.logo} onClick={() => navigate('/')}>Tixly</span>
+            </header>
+            <div className={styles.card}>
+                <h1 className={styles.title}>Create Account</h1>
+                <form onSubmit={handleRegister}>
+                    <div className={styles.formGroup}>
+                        <label>Username:</label>
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Password:</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Email:</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Gender:</label>
+                        <select
+                            value={gender}
+                            onChange={(e) => setGender(e.target.value)}
+                            required
+                        >
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                        </select>
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>TC Number:</label>
+                        <input
+                            type="text"
+                            value={tcNo}
+                            onChange={(e) => setTcNo(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className={styles.formGroup}>
+                        <label>Phone Number:</label>
+                        <input
+                            type="text"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                        />
+                    </div>
+                    {error && <p className={styles.error}>{error}</p>}
+                    {message && <p className={styles.message}>{message}</p>}
+                    <button type="submit" className={styles.submitButton}>Register</button>
+                </form>
+            </div>
         </div>
     );
 };

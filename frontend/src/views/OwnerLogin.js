@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, Form, Button, Alert } from 'react-bootstrap';
+import { Container, Form, Button, Alert, Card } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -49,36 +49,47 @@ const OwnerLogin = () => {
     };
 
     return (
-        <Container className={styles.container}>
-            <h2>Yönetici Girişi</h2>
-            {authStatus === 'succeeded' && <Alert variant="success">Giriş başarılı!</Alert>}
-            {error && <Alert variant="danger">{error}</Alert>}
-            <Form onSubmit={handleLogin}>
-                <Form.Group controlId="formUsername">
-                    <Form.Label>Kullanıcı Adı</Form.Label>
-                    <Form.Control
-                        type="text"
-                        placeholder="Kullanıcı adınızı girin"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Form.Group controlId="formPassword">
-                    <Form.Label>Şifre</Form.Label>
-                    <Form.Control
-                        type="password"
-                        placeholder="Şifrenizi girin"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    />
-                </Form.Group>
-                <Button variant="primary" type="submit" className={styles.button}>
-                    Giriş Yap
-                </Button>
-            </Form>
-        </Container>
+        <div>
+            <header className={styles.header}>
+                <a href="/" className={styles.logo}>Tixly</a>
+            </header>
+            <Container className={styles.container}>
+                <Card className={styles.card}>
+                    <Card.Body>
+                        <h2 className={styles.cardTitle}>Yönetici Girişi</h2>
+                        {authStatus === 'succeeded' && <Alert variant="success">Giriş başarılı!</Alert>}
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        <Form onSubmit={handleLogin}>
+                            <Form.Group controlId="formUsername">
+                                <Form.Label>Kullanıcı Adı</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Kullanıcı adınızı girin"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    required
+                                />
+                            </Form.Group>
+                            <Form.Group controlId="formPassword">
+                                <Form.Label>Şifre</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    placeholder="Şifrenizi girin"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                />
+                            </Form.Group>
+                            <div className={styles.buttonContainer}>
+                                <Button variant="warning" type="submit" className={styles.button}>
+                                    Giriş Yap
+                                </Button>
+                            </div>
+                        </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </div>
     );
 };
 

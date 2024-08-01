@@ -1,0 +1,45 @@
+/* src/components/AddTripModal.module.css */
+
+.modalBody {
+    padding: 20px;
+    background-color: #fff;
+}
+
+.formGroup {
+    margin-bottom: 15px;
+}
+
+.formLabel {
+    font-weight: bold;
+}
+
+.formControl {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+}
+
+.alert {
+    margin-bottom: 15px;
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end;
+    padding: 15px;
+    background-color: #f8f9fa;
+}
+
+.submitButton {
+    background-color: #fdb913;
+    border: none;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submitButton:hover {
+    background-color: #f0a000;
+}

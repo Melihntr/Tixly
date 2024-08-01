@@ -28,11 +28,13 @@
     font-size: 2em; /* Larger font size for the logo */
     font-weight: bold; /* Bold font for the logo */
     cursor: pointer;
+    font-style: italic;
 }
 
 .logoText {
     color: #fff; /* White color for the logo text */
     text-decoration: none; /* Remove underline from link */
+    
 }
 
 /* Ensure no other styles override the logo text color */

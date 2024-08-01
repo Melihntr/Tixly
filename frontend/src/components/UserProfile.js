@@ -2,11 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom'; // Ensure you have react-router-dom installed
 import styles from './UserProfile.module.css'; // Ensure you are using CSS modules
+import VerificationModal from './VerificationModal'; // Import the modal component
 
 const UserProfile = () => {
     const [userInfo, setUserInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
     const authKey = localStorage.getItem('authKey');
     console.log('Auth Key:', authKey);
 
@@ -33,6 +35,14 @@ const UserProfile = () => {
         fetchUserInfo();
     }, [authKey]);
 
+    const handleOpenModal = () => {
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+    };
+
     if (loading) {
         return <div className={styles.loading}>Loading...</div>;
     }
@@ -42,7 +52,6 @@ const UserProfile = () => {
     }
 
     return (
-
         <div className={styles.userProfile}>
             <h2>Hesap Detayları</h2>
             <div className={styles.infoCard}>
@@ -53,9 +62,13 @@ const UserProfile = () => {
                 <p><strong>TCKN:</strong> {userInfo?.tcNo}</p>
             </div>
             <div className={styles.links}>
-                <Link to="/reset-password" className={styles.link}>Şifreni Yenile</Link>
-                <Link to="/verify-account" className={styles.link}>Hesabı Doğrula</Link>
+                <button onClick={handleOpenModal} className={styles.link}>
+                    Hesabı Doğrula
+                </button>
             </div>
+            {showModal && (
+                <VerificationModal onClose={handleCloseModal} userInfo={userInfo} />
+            )}
         </div>
     );
 };

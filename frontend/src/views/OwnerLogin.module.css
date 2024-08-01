@@ -1,20 +1,57 @@
+.header {
+    width: 100%;
+    padding: 10px;
+    background-color: #fdb913;
+    border-bottom: 1px solid #fdb913;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 32px;
+    font-style: italic;
+    font-weight: bold;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.headerTitle {
+    font-size: 24px;
+    font-weight: bold;
+    color: #fff;
+    margin: 0;
+    text-align: center;
+}
+
 .container {
-    max-width: 500px;
-    margin: auto;
+    margin-top: 80px;
+    justify-content: center; 
+}
+
+.card {
     padding: 20px;
 }
 
-.button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-}
-
-.alert {
-    margin-bottom: 20px;
-}
-
-h2 {
-    margin-bottom: 20px;
+.cardTitle {
     text-align: center;
+    margin-bottom: 20px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button {
+    background-color: #fdb913; /* Set the button color to match the header */
+    border: none;
+    width: 100%; /* Make the button full width */
+    max-width: 400px; /* Limit the maximum width */
 }

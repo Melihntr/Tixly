@@ -1,7 +1,7 @@
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Register from './views/Register';
 import ForgotPassword from './views/ForgotPassword';
@@ -14,7 +14,13 @@ import OwnerDashboard from './views/OwnerDashboard';
 import Biletlerim from './views/Biletlerim';
 import Header from './components/Header';
 import ActiveTrips from './views/ActiveTrips';
+
+
 function App() {
+  useEffect(() => {
+    // Clear local storage when the app starts
+    localStorage.clear();
+  }, []);
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100">

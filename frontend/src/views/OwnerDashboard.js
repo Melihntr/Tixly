@@ -1,51 +1,31 @@
 import React, { useState } from 'react';
-import { Container, Button, Modal, Form, Alert, Nav } from 'react-bootstrap';
+import { Container, Nav } from 'react-bootstrap';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link, useNavigate } from 'react-router-dom';
+import AddBusModal from '../components/AddBusModal';
+import AddTripModal from '../components/AddTripModal';
+import CancelTripModal from '../components/CancelTripModal'; // Import CancelTripModal
+import DeleteBusModal from '../components/DeleteBusModal'; // Import DeleteBusModal
 import styles from './OwnerDashboard.module.css'; // Import CSS module
-import { Link, useNavigate } from 'react-router-dom'; // Import Link and useNavigate
 
 const OwnerDashboard = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [plateNo, setPlateNo] = useState('');
-    const [companyId, setCompanyId] = useState('');
-    const [busType, setBusType] = useState('');
-    const [seatNo, setSeatNo] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-    const navigate = useNavigate(); // Initialize useNavigate
+    const [showBusModal, setShowBusModal] = useState(false);
+    const [showTripModal, setShowTripModal] = useState(false);
+    const [showCancelTripModal, setShowCancelTripModal] = useState(false); // State for CancelTripModal
+    const [showDeleteBusModal, setShowDeleteBusModal] = useState(false); // State for DeleteBusModal
+    const navigate = useNavigate();
 
-    const handleShow = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
+    const handleShowBusModal = () => setShowBusModal(true);
+    const handleCloseBusModal = () => setShowBusModal(false);
 
-    const handleAddBus = async (e) => {
-        e.preventDefault();
+    const handleShowTripModal = () => setShowTripModal(true);
+    const handleCloseTripModal = () => setShowTripModal(false);
 
-        const busData = {
-            plateNo,
-            companyId,
-            busType,
-            seatNo
-        };
+    const handleShowCancelTripModal = () => setShowCancelTripModal(true); // Show CancelTripModal
+    const handleCloseCancelTripModal = () => setShowCancelTripModal(false); // Close CancelTripModal
 
-        try {
-            const response = await axios.post('http://localhost:8080/buses', busData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
-
-            if (response.status === 200) {
-                setSuccess('Otobüs başarıyla eklendi!');
-                setError('');
-                handleClose(); // Close the modal on success
-            }
-        } catch (error) {
-            console.error('Otobüs ekleme hatası:', error);
-            setError('Otobüs eklenemedi. Lütfen tekrar deneyin.');
-            setSuccess('');
-        }
-    };
+    const handleShowDeleteBusModal = () => setShowDeleteBusModal(true); // Show DeleteBusModal
+    const handleCloseDeleteBusModal = () => setShowDeleteBusModal(false); // Close DeleteBusModal
 
     const handleLogout = async () => {
         const authKey = localStorage.getItem('authKey');
@@ -58,15 +38,12 @@ const OwnerDashboard = () => {
                     }
                 });
 
-                // Clear authKey from localStorage and redirect to login
                 localStorage.removeItem('authKey');
-                navigate('/owner-login'); // Redirect to login page
+                navigate('/owner-login');
             } catch (error) {
                 console.error('Çıkış yapma hatası:', error);
-                // Optionally handle error (e.g., show an alert)
             }
         } else {
-            // Handle case where authKey is not present
             console.warn('Auth key not found in localStorage.');
         }
     };
@@ -75,7 +52,6 @@ const OwnerDashboard = () => {
         <div className={styles.dashboardContainer}>
             {/* Sidebar */}
             <div className={styles.sidebar}>
-                {/* Logo Text with Link */}
                 <Link to="/" className={styles.logoLink}>
                     <div className={styles.logoText}>Tixly</div> 
                 </Link>
@@ -84,8 +60,10 @@ const OwnerDashboard = () => {
                     <Nav.Link href="#companyInfo" className={`${styles.navLink} ${styles.navLinkTop}`}>Şirket Bilgileri</Nav.Link>
                     <Nav.Link href="#tripInfo" className={`${styles.navLink} ${styles.navLinkMiddle}`}>Sefer Bilgileri</Nav.Link>
                     <Nav.Link href="#busInfo" className={`${styles.navLink} ${styles.navLinkMiddle}`}>Otobüs Bilgileri</Nav.Link>
-                    <Nav.Link onClick={handleShow} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Otobüs Ekle</Nav.Link>
-                    <Nav.Link href="#addTrip" className={`${styles.navLink} ${styles.navLinkMiddle}`}>Sefer Ekle</Nav.Link>
+                    <Nav.Link onClick={handleShowBusModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Otobüs Ekle</Nav.Link>
+                    <Nav.Link onClick={handleShowTripModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Seyahat Ekle</Nav.Link>
+                    <Nav.Link onClick={handleShowDeleteBusModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Otobüs Sil</Nav.Link> {/* Add Otobüs Sil link */}
+                    <Nav.Link onClick={handleShowCancelTripModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Seyahat İptali</Nav.Link> {/* Add Seyahat İptali link */}
                     <Nav.Link onClick={handleLogout} className={`${styles.navLink} ${styles.navLinkBottom}`}>Çıkış Yap</Nav.Link>
                 </Nav>
             </div>
@@ -95,60 +73,10 @@ const OwnerDashboard = () => {
                 <h2>Yönetici Panosu</h2>
                 <p>Yönetici Panosuna Hoşgeldiniz!</p>
 
-                <Modal show={showModal} onHide={handleClose}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>Otobüs Ekle</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        {error && <Alert variant="danger">{error}</Alert>}
-                        {success && <Alert variant="success">{success}</Alert>}
-                        <Form onSubmit={handleAddBus}>
-                            <Form.Group controlId="formPlateNo">
-                                <Form.Label>Plaka Numarası</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Plaka numarasını girin"
-                                    value={plateNo}
-                                    onChange={(e) => setPlateNo(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="formCompanyId">
-                                <Form.Label>Şirket ID</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="Şirket ID'sini girin"
-                                    value={companyId}
-                                    onChange={(e) => setCompanyId(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="formBusType">
-                                <Form.Label>Otobüs Türü</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="Otobüs türünü girin"
-                                    value={busType}
-                                    onChange={(e) => setBusType(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
-                            <Form.Group controlId="formSeatNo">
-                                <Form.Label>Koltuk Sayısı</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    placeholder="Koltuk sayısını girin"
-                                    value={seatNo}
-                                    onChange={(e) => setSeatNo(e.target.value)}
-                                    required
-                                />
-                            </Form.Group>
-                            <Button variant="primary" type="submit" className="mt-3">
-                                Otobüs Ekle
-                            </Button>
-                        </Form>
-                    </Modal.Body>
-                </Modal>
+                <AddBusModal show={showBusModal} handleClose={handleCloseBusModal} />
+                <AddTripModal show={showTripModal} handleClose={handleCloseTripModal} />
+                <CancelTripModal show={showCancelTripModal} handleClose={handleCloseCancelTripModal} /> {/* Add CancelTripModal */}
+                <DeleteBusModal show={showDeleteBusModal} handleClose={handleCloseDeleteBusModal} /> {/* Add DeleteBusModal */}
             </Container>
         </div>
     );
