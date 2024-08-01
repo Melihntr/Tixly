@@ -1,55 +1,38 @@
+// ActiveTrips.js
 import React, { useState, useEffect } from 'react';
-import { Accordion, Card, Button, Form } from 'react-bootstrap'; // Import Bootstrap components
+import { Accordion, Card, Button, Form } from 'react-bootstrap';
 import styles from './ActiveTrips.module.css';
 import Header from '../components/Header';
-import axios from 'axios'; // Import axios for HTTP requests
+import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 
 const ActiveTrips = () => {
     const [trips, setTrips] = useState([]);
     const [selectedTrip, setSelectedTrip] = useState(null);
     const [selectedSeat, setSelectedSeat] = useState('');
     const [selectedGender, setSelectedGender] = useState('Male');
-    
+    const location = useLocation(); // Use location object to get state
+
+    const { state } = location; // Destructure the state
+    const departureLocation = state?.departureLocation || '';
+    const arrivalLocation = state?.arrivalLocation || '';
+
     const statusColors = {
         ACTIVE: 'lightblue',
         PAST: '#fdb913',
         CANCELED: 'lightcoral'
     };
 
-    // Sample trips data
-    const sampleTrips = [
-        {
-            id: 1,
-            status: 'ACTIVE',
-            destination: 'İstanbul',
-            departureTime: '2024-08-01T15:00:00Z',
-            from: 'Ankara',
-            to: 'İstanbul'
-        },
-        {
-            id: 2,
-            status: 'ACTIVE',
-            destination: 'Ankara',
-            departureTime: '2024-07-20T10:00:00Z',
-            from: 'İstanbul',
-            to: 'Ankara'
-        },
-        {
-            id: 3,
-            status: 'ACTIVE',
-            destination: 'İzmir',
-            departureTime: '2024-08-10T12:00:00Z',
-            from: 'Bursa',
-            to: 'İzmir'
-        }
-    ];
-
     useEffect(() => {
         const fetchTrips = async () => {
             try {
-                // Replace this with actual API call in production
-                const data = sampleTrips;
-                const sortedTrips = data.sort((a, b) => new Date(b.departureTime) - new Date(a.departureTime));
+                const response = await axios.get('http://localhost:8080/trip/active', {
+                    params: {
+                        departureLocation: departureLocation,
+                        arrivalLocation: arrivalLocation
+                    }
+                });
+                const sortedTrips = response.data.sort((a, b) => new Date(b.departureTime) - new Date(a.departureTime));
                 setTrips(sortedTrips);
             } catch (error) {
                 console.error('Seyahatleri alırken bir hata oluştu:', error);
@@ -57,7 +40,7 @@ const ActiveTrips = () => {
         };
 
         fetchTrips();
-    }, []);
+    }, [departureLocation, arrivalLocation]);
 
     const handleSeatSelect = (seat) => {
         setSelectedSeat(seat);
@@ -78,21 +61,23 @@ const ActiveTrips = () => {
         }
 
         try {
+            const authKey = localStorage.getItem('authKey'); // Retrieve the authKey from localStorage
+    
             const response = await axios.post('http://localhost:8080/tickets/add', {
-                customerId: 5, // Replace with actual customer ID from auth context
                 tripId: selectedTrip.id,
-                from: selectedTrip.from,
-                to: selectedTrip.to,
-                seatId: 1,
+                from: selectedTrip.departureLocationId,
+                to: selectedTrip.arrivalLocationId,
                 seatId: selectedSeat,
                 printDate: new Date().toISOString(),
-                checkoutDate: new Date().toISOString(),
+                checkoutDate: new Date(selectedTrip.departureTime).toISOString(),
                 purchaseDate: new Date().toISOString(),
-                invoiceId: 'c9eb0f7b-4d6c-41c5-9c12-3c6e9d63b3d0' // Replace with actual invoice ID
+            }, {
+                headers: {
+                    'Authorization': `Bearer ${authKey}` // Add the authKey to the Authorization header
+                }
             });
 
             alert('Ticket successfully purchased!');
-            // Reset state or update UI as needed
             setSelectedTrip(null);
             setSelectedSeat('');
         } catch (error) {
@@ -108,19 +93,19 @@ const ActiveTrips = () => {
                 <h1 className={styles.cardHeader}>Aktif Seyahatler</h1>
                 <Accordion defaultActiveKey="0">
                     {trips
-                        .filter(trip => trip.status === 'ACTIVE')
+                        .filter(trip => trip.state === 'Aktif')
                         .map(trip => (
                             <Card key={trip.id}>
                                 <Accordion.Item eventKey={trip.id.toString()}>
                                     <Accordion.Header onClick={() => handleTripSelect(trip)}>
-                                        {trip.destination} - {new Date(trip.departureTime).toLocaleString()}
+                                        {trip.departureLocationId} - {trip.arrivalLocationId} - {new Date(trip.departureTime).toLocaleString()}
                                     </Accordion.Header>
                                     <Accordion.Body>
-                                        <div style={{ backgroundColor: statusColors[trip.status], padding: '10px' }}>
-                                            <p><strong>Varış Yeri:</strong> {trip.destination}</p>
+                                        <div style={{ backgroundColor: statusColors[trip.state], padding: '10px' }}>
+                                            <p><strong>Varış Yeri:</strong> {trip.arrivalLocationId}</p>
                                             <p><strong>Ayrılış Zamanı:</strong> {new Date(trip.departureTime).toLocaleString()}</p>
-                                            <p><strong>Nereden:</strong> {trip.from}</p>
-                                            <p><strong>Nereye:</strong> {trip.to}</p>
+                                            <p><strong>Kalkış Yeri:</strong> {trip.departureLocationId}</p>
+                                            <p><strong>Fiyat:</strong> {trip.price} TL</p> {/* Added price display */}
                                             <Form.Group controlId="formSeat">
                                                 <Form.Label>Koltuk Seç</Form.Label>
                                                 <Form.Control

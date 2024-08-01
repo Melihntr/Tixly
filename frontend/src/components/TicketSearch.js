@@ -1,67 +1,26 @@
+// TicketSearch.js
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Card, Form, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
+import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-import styles from './TicketSearch.module.css'; // Import your styles if needed
+import styles from './TicketSearch.module.css';
 
 const TicketSearch = () => {
-    const navigate = useNavigate(); // Create a navigate function
+    const navigate = useNavigate();
 
     const [provinces, setProvinces] = useState([]);
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
     const [date, setDate] = useState('');
-    const [location, setLocation] = useState({
-        latitude: null,
-        longitude: null,
-        error: null,
-    });
 
     useEffect(() => {
-        controller();
+        fetchProvinces();
+        setDate(new Date().toISOString().split('T')[0]);
     }, []);
-
-    const controller = async () => {
-        const currentDateAsString = new Date().toISOString().split('T')[0];
-
-        await fetchProvinces(); 
-        await getLocation();
-        setDate(currentDateAsString);
-        console.debug(JSON.stringify(location));
-    }
-
-    const getLocation = async() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    setLocation({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        error: null,
-                    });
-                },
-                (error) => {
-                    console.error(error);
-                    setLocation({
-                        latitude: null,
-                        longitude: null,
-                        error: error.message,
-                    });
-                }
-            );
-        } else {
-            setLocation({
-                latitude: null,
-                longitude: null,
-                error: 'Geolocation is not supported by this browser.',
-            });
-        }
-    }
 
     const fetchProvinces = async () => {
         try {
             const response = await axios.get('http://localhost:8080/location/provinces');
-            console.log('Provinces fetched:', response.data);
             setProvinces(response.data.map(province => ({
                 id: province.id,
                 name: province.il_adi
@@ -71,27 +30,14 @@ const TicketSearch = () => {
         }
     };
 
-    const handleFromChange = (event) => {
-        const selectedFrom = event.target.value;
-        if (selectedFrom === to) {
-            setTo('');
-        }
-        setFrom(selectedFrom);
-    };
+    const handleFromChange = (event) => setFrom(event.target.value);
+    const handleToChange = (event) => setTo(event.target.value);
 
-    const handleToChange = (event) => {
-        const selectedTo = event.target.value;
-        if (selectedTo === from) {
-            setFrom('');
-        }
-        setTo(selectedTo);
-    };
-
-    // Define handleNavClick function
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Use navigate to redirect to the '/trips' page
-        navigate('/trips');
+        navigate('/trips', {
+            state: { departureLocation: from, arrivalLocation: to }
+        });
     };
 
     return (
@@ -149,7 +95,7 @@ const TicketSearch = () => {
                                         <Form.Label>Tarih</Form.Label>
                                         <Form.Control
                                             type="date"
-                                            defaultValue={new Date()}
+                                            defaultValue={date}
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
                                         />
