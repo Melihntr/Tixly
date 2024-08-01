@@ -38,7 +38,7 @@ public class RegisterDomainService {
         userEntity.updateAuthKey(username, jwtToken);
         
         System.out.println("Your verification code is " + verificationCode);
-        return String.format("Customer registered successfully.\nYour auth key is: %s", jwtToken);
+        return String.format( jwtToken);
     }
 
 
