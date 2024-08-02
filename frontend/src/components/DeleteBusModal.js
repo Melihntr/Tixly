@@ -30,10 +30,10 @@ const DeleteBusModal = ({ show, handleClose }) => {
 
     return (
         <Modal show={show} onHide={handleClose} className={styles.modal}>
-            <Modal.Header closeButton>
-                <Modal.Title>Otobüs Sil</Modal.Title>
+            <Modal.Header closeButton className={styles['modal-header']}>
+                <Modal.Title className={styles['modal-title']}>Otobüs Sil</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={styles['modal-body']}>
                 <Form.Group controlId="formPlateNo">
                     <Form.Label>Plaka No</Form.Label>
                     <Form.Control
@@ -41,18 +41,20 @@ const DeleteBusModal = ({ show, handleClose }) => {
                         placeholder="Plaka No girin"
                         value={plateNo}
                         onChange={(e) => setPlateNo(e.target.value)}
+                        className={styles['form-control']}
                     />
                 </Form.Group>
             </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>
+            <Modal.Footer className={styles['modal-footer']}>
+                <Button variant="secondary" onClick={handleClose} className={styles['btn-secondary']}>
                     Kapat
                 </Button>
-                <Button variant="danger" onClick={handleDelete}>
+                <Button variant="danger" onClick={handleDelete} className={styles['btn-danger']}>
                     Sil
                 </Button>
             </Modal.Footer>
         </Modal>
+
     );
 };
 

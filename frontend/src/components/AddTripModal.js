@@ -1,8 +1,7 @@
-// src/components/AddTripModal.js
 import React, { useState } from 'react';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import styles from './AddTripModal.module.css'; // Import CSS module if needed
+import styles from './AddTripModal.module.css'; // Import the CSS module
 
 const AddTripModal = ({ show, handleClose }) => {
     const [peronNo, setPeronNo] = useState('');
@@ -52,10 +51,10 @@ const AddTripModal = ({ show, handleClose }) => {
 
     return (
         <Modal show={show} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Seyahat Ekle</Modal.Title>
+            <Modal.Header closeButton className={styles.modalHeader}>
+                <Modal.Title className={styles.modalTitle}>Seyahat Ekle</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={styles.modalBody}>
                 {error && <Alert variant="danger">{error}</Alert>}
                 {success && <Alert variant="success">{success}</Alert>}
                 <Form onSubmit={handleAddTrip}>
@@ -130,9 +129,11 @@ const AddTripModal = ({ show, handleClose }) => {
                             required
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit" className="mt-3">
-                        Seyahat Ekle
-                    </Button>
+                    <div className={styles.submitButtonContainer}>
+                        <Button variant="primary" type="submit" className={styles.submitButton}>
+                            Seyahat Ekle
+                        </Button>
+                    </div>
                 </Form>
             </Modal.Body>
         </Modal>

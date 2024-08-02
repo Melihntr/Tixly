@@ -1,0 +1,29 @@
+/* SeatingComponent.css */
+.bus-layout {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .left-side, .right-side {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+  }
+  
+  .seat {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    cursor: pointer;
+  }
+  
+  .seat:hover {
+    background-color: #ddd;
+  }
+  
+  .seating-container {
+    display: flex;
+    justify-content: center;
+  }
+  

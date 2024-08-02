@@ -60,16 +60,10 @@ const UserProfile = () => {
                 <p><strong>Hesap Durumu:</strong> {userInfo?.accountStatus}</p>
                 <p><strong>Telefon Numarası:</strong> {userInfo?.phoneNumber}</p>
                 <p><strong>TCKN:</strong> {userInfo?.tcNo}</p>
+            </div>   
             </div>
-            <div className={styles.links}>
-                <button onClick={handleOpenModal} className={styles.link}>
-                    Hesabı Doğrula
-                </button>
-            </div>
-            {showModal && (
-                <VerificationModal onClose={handleCloseModal} userInfo={userInfo} />
-            )}
-        </div>
+           
+        
     );
 };
 

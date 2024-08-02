@@ -1,10 +1,10 @@
-// ActiveTrips.js
 import React, { useState, useEffect } from 'react';
 import { Accordion, Card, Button, Form } from 'react-bootstrap';
 import styles from './ActiveTrips.module.css';
 import Header from '../components/Header';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import BusSeatingComponent from '../components/BusSeatingComponent'; // Import the BusSeatingComponent
 
 const ActiveTrips = () => {
     const [trips, setTrips] = useState([]);
@@ -16,12 +16,6 @@ const ActiveTrips = () => {
     const { state } = location; // Destructure the state
     const departureLocation = state?.departureLocation || '';
     const arrivalLocation = state?.arrivalLocation || '';
-
-    const statusColors = {
-        ACTIVE: 'lightblue',
-        PAST: '#fdb913',
-        CANCELED: 'lightcoral'
-    };
 
     useEffect(() => {
         const fetchTrips = async () => {
@@ -42,48 +36,8 @@ const ActiveTrips = () => {
         fetchTrips();
     }, [departureLocation, arrivalLocation]);
 
-    const handleSeatSelect = (seat) => {
-        setSelectedSeat(seat);
-    };
-
-    const handleGenderChange = (event) => {
-        setSelectedGender(event.target.value);
-    };
-
     const handleTripSelect = (trip) => {
         setSelectedTrip(trip);
-    };
-
-    const handlePurchase = async () => {
-        if (!selectedTrip || !selectedSeat) {
-            alert('Please select a trip and seat.');
-            return;
-        }
-
-        try {
-            const authKey = localStorage.getItem('authKey'); // Retrieve the authKey from localStorage
-    
-            const response = await axios.post('http://localhost:8080/tickets/add', {
-                tripId: selectedTrip.id,
-                from: selectedTrip.departureLocationId,
-                to: selectedTrip.arrivalLocationId,
-                seatId: selectedSeat,
-                printDate: new Date().toISOString(),
-                checkoutDate: new Date(selectedTrip.departureTime).toISOString(),
-                purchaseDate: new Date().toISOString(),
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${authKey}` // Add the authKey to the Authorization header
-                }
-            });
-
-            alert('Ticket successfully purchased!');
-            setSelectedTrip(null);
-            setSelectedSeat('');
-        } catch (error) {
-            console.error('Failed to purchase ticket:', error);
-            alert('Failed to purchase ticket.');
-        }
     };
 
     return (
@@ -92,47 +46,49 @@ const ActiveTrips = () => {
             <div className={styles.card}>
                 <h1 className={styles.cardHeader}>Aktif Seyahatler</h1>
                 <Accordion defaultActiveKey="0">
-                    {trips
-                        .filter(trip => trip.state === 'Aktif')
-                        .map(trip => (
-                            <Card key={trip.id}>
-                                <Accordion.Item eventKey={trip.id.toString()}>
-                                    <Accordion.Header onClick={() => handleTripSelect(trip)}>
-                                        {trip.departureLocationId} - {trip.arrivalLocationId} - {new Date(trip.departureTime).toLocaleString()}
-                                    </Accordion.Header>
-                                    <Accordion.Body>
-                                        <div style={{ backgroundColor: statusColors[trip.state], padding: '10px' }}>
+                    {trips.map(trip => (
+                        <Card key={trip.id}>
+                            <Accordion.Item eventKey={trip.id.toString()}>
+                                <Accordion.Header onClick={() => handleTripSelect(trip)}>
+                                    {trip.departureLocationId} - {trip.arrivalLocationId} - {new Date(trip.departureTime).toLocaleString()}
+                                </Accordion.Header>
+                                <Accordion.Body>
+                                    {selectedTrip && selectedTrip.id === trip.id && (
+                                        <div style={{ padding: '10px' }}>
                                             <p><strong>Varış Yeri:</strong> {trip.arrivalLocationId}</p>
                                             <p><strong>Ayrılış Zamanı:</strong> {new Date(trip.departureTime).toLocaleString()}</p>
                                             <p><strong>Kalkış Yeri:</strong> {trip.departureLocationId}</p>
-                                            <p><strong>Fiyat:</strong> {trip.price} TL</p> {/* Added price display */}
+                                            <p><strong>Fiyat:</strong> {trip.price} TL</p>
+                                            <BusSeatingComponent
+                                                busType={trip.busType} // Pass the bus type from the trip object
+                                                selectedSeat={selectedSeat}
+                                                onSeatSelect={setSelectedSeat} // Directly pass the setter function
+                                            />
                                             <Form.Group controlId="formSeat">
                                                 <Form.Label>Koltuk Seç</Form.Label>
                                                 <Form.Control
                                                     type="text"
                                                     placeholder="Koltuk Numarası"
                                                     value={selectedSeat}
-                                                    onChange={(e) => handleSeatSelect(e.target.value)}
+                                                    onChange={(e) => setSelectedSeat(e.target.value)}
                                                 />
                                             </Form.Group>
                                             <Form.Group controlId="formGender">
                                                 <Form.Label>Cinsiyet</Form.Label>
-                                                <Form.Control as="select" value={selectedGender} onChange={handleGenderChange}>
+                                                <Form.Control as="select" value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
                                                     <option value="Male">Erkek</option>
                                                     <option value="Female">Kadın</option>
                                                 </Form.Control>
                                             </Form.Group>
-                                            <Button 
-                                                variant="primary"
-                                                onClick={handlePurchase}
-                                            >
+                                            <Button variant="primary" onClick={() => {/* Handle purchase */}}>
                                                 Satın al
                                             </Button>
                                         </div>
-                                    </Accordion.Body>
-                                </Accordion.Item>
-                            </Card>
-                        ))}
+                                    )}
+                                </Accordion.Body>
+                            </Accordion.Item>
+                        </Card>
+                    ))}
                 </Accordion>
             </div>
         </div>

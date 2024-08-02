@@ -1,4 +1,4 @@
-/* AddTripModal.module.css */
+/* AddBusModal.module.css */
 
 .modalHeader {
     background-color: #fdb913; /* Background color for the header */
@@ -13,8 +13,7 @@
 }
 
 .submitButtonContainer {
-    display: flex; /* Use flexbox to center the button */
-    justify-content: center; /* Center the button horizontally */
+    text-align: center; /* Center-align the button container */
     margin-top: 1rem; /* Add margin to the top */
 }
 

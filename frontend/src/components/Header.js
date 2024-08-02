@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Dropdown } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
-import LoginModal from './LoginModal'; // Import the LoginModal component
+import axios from 'axios';
+import LoginModal from './LoginModal';
+import VerificationModal from './VerificationModal';
 import styles from './Header.module.css';
 
 const Header = () => {
-    const [showModal, setShowModal] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showVerificationModal, setShowVerificationModal] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [loggedInUser, setLoggedInUser] = useState('');
     const navigate = useNavigate();
 
@@ -22,8 +25,11 @@ const Header = () => {
         }
     }, []);
 
-    const handleShow = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
+    const handleLoginShow = () => setShowLoginModal(true);
+    const handleLoginClose = () => setShowLoginModal(false);
+
+    const handleVerificationShow = () => setShowVerificationModal(true);
+    const handleVerificationClose = () => setShowVerificationModal(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
@@ -41,7 +47,7 @@ const Header = () => {
                 localStorage.setItem('authKey', data.authKey);
                 localStorage.setItem('username', username);
                 setLoggedInUser(username);
-                handleClose();
+                handleLoginClose();
             } else {
                 alert(data.message);
             }
@@ -78,7 +84,7 @@ const Header = () => {
 
     const handleNavClick = (path) => {
         if (!loggedInUser) {
-            handleShow();
+            handleLoginShow();
         } else {
             navigate(path);
         }
@@ -86,13 +92,13 @@ const Header = () => {
 
     return (
         <header className={styles.header}>
-            <div className={styles.logo} onClick={() => handleNavClick('/')}>Tixly</div>
+            <div className={styles.logo} onClick={() => navigate('/')}>Tixly</div>
             <nav className={styles.navMenu}>
-                <a href onClick={() => handleNavClick('/myTrips')} className={styles.navItem}>Seyahatlerim</a>
+                <a href="#" onClick={(e) => { e.preventDefault(); handleVerificationShow(); }} className={styles.navItem}>Hesap Doğrulama</a>
                 &nbsp;&nbsp;
-                <a href onClick={() => handleNavClick('/biletlerim')} className={styles.navItem}>Biletlerim</a>
+                <a href="#" onClick={() => handleNavClick('/biletlerim')} className={styles.navItem}>Biletlerim</a>
                 &nbsp;&nbsp;
-                <a href onClick={() => handleNavClick('/hesap')} className={styles.navItem}>Hesap</a>
+                <a href="#" onClick={() => handleNavClick('/hesap')} className={styles.navItem}>Hesap</a>
             </nav>
             <div className={styles.headerActions}>
                 {loggedInUser ? (
@@ -106,21 +112,32 @@ const Header = () => {
                         </Dropdown.Menu>
                     </Dropdown>
                 ) : (
-                    <Button onClick={handleShow} className={styles.loginButton}>
+                    <Button onClick={handleLoginShow} className={styles.loginButton}>
                         Giriş Yap
                     </Button>
                 )}
             </div>
 
-            <LoginModal
-                showModal={showModal}
-                handleClose={handleClose}
-                handleLogin={handleLogin}
-                username={username}
-                setUsername={setUsername}
-                password={password}
-                setPassword={setPassword}
-            />
+            {/* Ensure modals are only shown when their respective states are true */}
+            {showLoginModal && (
+                <LoginModal
+                    showModal={showLoginModal}
+                    handleClose={handleLoginClose}
+                    handleLogin={handleLogin}
+                    username={username}
+                    setUsername={setUsername}
+                    password={password}
+                    setPassword={setPassword}
+                />
+            )}
+
+            {showVerificationModal && (
+                <VerificationModal
+                    show={showVerificationModal}
+                    onClose={handleVerificationClose}
+                    userInfo={{ username, email }} // Pass the email as well
+                />
+            )}
         </header>
     );
 };

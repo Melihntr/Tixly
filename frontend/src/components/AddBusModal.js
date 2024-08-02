@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import styles from './AddBusModal.module.css'; // Import the CSS module
 
-const AddBusModal = ({ showModal, handleClose }) => {
+const AddBusModal = ({ show, handleClose }) => {
     const [plateNo, setPlateNo] = useState('');
     const [busType, setBusType] = useState('');
     const [seatNo, setSeatNo] = useState('');
@@ -42,11 +42,11 @@ const AddBusModal = ({ showModal, handleClose }) => {
     };
 
     return (
-        <Modal show={showModal} onHide={handleClose}>
-            <Modal.Header closeButton>
-                <Modal.Title>Otobüs Ekle</Modal.Title>
+        <Modal show={show} onHide={handleClose}>
+            <Modal.Header closeButton className={styles.modalHeader}>
+                <Modal.Title className={styles.modalTitle}>Otobüs Ekle</Modal.Title>
             </Modal.Header>
-            <Modal.Body>
+            <Modal.Body className={styles.modalBody}>
                 {error && <Alert variant="danger">{error}</Alert>}
                 {success && <Alert variant="success">{success}</Alert>}
                 <Form onSubmit={handleAddBus}>
@@ -80,9 +80,11 @@ const AddBusModal = ({ showModal, handleClose }) => {
                             required
                         />
                     </Form.Group>
-                    <Button variant="primary" type="submit" className="mt-3">
-                        Otobüs Ekle
-                    </Button>
+                    <div className={styles.submitButtonContainer}>
+                        <Button variant="primary" type="submit" className={styles.submitButton}>
+                            Otobüs Ekle
+                        </Button>
+                    </div>
                 </Form>
             </Modal.Body>
         </Modal>

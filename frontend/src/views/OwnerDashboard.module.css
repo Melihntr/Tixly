@@ -1,7 +1,5 @@
 /* Sidebar styles */
-.dashboardContainer {
-    display: flex;
-}
+
 
 /* Sidebar styles */
 .sidebar {
@@ -68,4 +66,34 @@
     background-color: #fdb913; /* Keep the background color same on hover */
     color: #007bff; /* Text color on hover (blue) */
     border-color: #007bff; /* Border color on hover (blue) */
+}
+.dashboardContainer h2 {
+    text-align: center; /* Center the header text */
+    font-size: 2.5rem; /* Increase the text size (adjust as needed) */
+    margin-bottom: 1rem; /* Add some space below the header */
+}
+
+.dashboardContainer p {
+    font-size: 1.25rem; /* Increase the text size of the main body (adjust as needed) */
+    line-height: 1.6; /* Improve readability with increased line height */
+    margin-bottom: 1rem; /* Add some space below paragraphs */
+}
+
+/* Existing styles for the dashboard */
+.dashboardContainer {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+
+.mainContent {
+    margin-left: 250px; /* Adjust margin to fit the sidebar width */
+    padding: 2rem;
+    flex: 1;
+}
+.infoCard {
+    margin: 2rem auto; /* Center the card and add margin */
+    transform: translate(+150px, -30px);
+    
 }
