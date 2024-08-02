@@ -1,10 +1,14 @@
 package com.tixly.ticket.entity;
 
+import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.tixly.ticket.models.dto.BusDTO;
+import com.tixly.ticket.models.dto.BusRowMapper;
 import com.tixly.ticket.utils.ValidUtil;
 
 import lombok.AllArgsConstructor;
@@ -62,4 +66,9 @@ public class Bus {
         String sql = "SELECT companyid FROM bus WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
     }
+    public List<BusDTO> getBusesByCompanyId(Long companyId) {
+        String sql = "SELECT * FROM bus WHERE companyid = ?"; 
+        return jdbcTemplate.query(sql, new Object[]{companyId}, new BusRowMapper());
+    }
+  
 }

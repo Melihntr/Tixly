@@ -14,6 +14,7 @@ import com.tixly.ticket.entity.Passenger;
 import com.tixly.ticket.entity.Ticket;
 import com.tixly.ticket.entity.Trip;
 import com.tixly.ticket.entity.User;
+import com.tixly.ticket.models.dto.TripDTO;
 import com.tixly.ticket.models.dto.TripModel;
 import com.tixly.ticket.utils.BearerUtil;
 
@@ -97,5 +98,13 @@ public class TripDomainService {
         Trip trip = entityService.getTrip();
         List<TripModel> trips=trip.getActiveTrips(departureLocation, arrivalLocation);
         return trips;
+    }
+    public List<TripDTO> getTripsByCompanyId(String authKey){
+        String jwtToken = BearerUtil.extractToken(authKey);
+        AdminUser admin = entityService.getAdmin();
+        Long adminId=admin.getUserIdByAuthKey(jwtToken);
+        Long companyId=admin.getCompanyIdByUserId(adminId);
+        Trip trip = entityService.getTrip();
+        return trip.getTripsByCompanyId(companyId);
     }
 }

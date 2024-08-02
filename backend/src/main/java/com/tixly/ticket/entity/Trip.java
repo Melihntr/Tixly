@@ -10,7 +10,9 @@ import javax.persistence.Id;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.tixly.ticket.models.dto.TripDTO;
 import com.tixly.ticket.models.dto.TripModel;
+import com.tixly.ticket.models.dto.TripRowMapper;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -145,6 +147,16 @@ public class Trip {
             rs.getString("state")
         ));
     }
+    public List<TripDTO> getTripsByCompanyId(Long companyId) {
+      
+        String sql = "SELECT * FROM trips WHERE companyid = ?";
+
+        return jdbcTemplate.query(sql, new Object[]{companyId}, new TripRowMapper());
+    }
+  
 }
+    
+    
+
 
 

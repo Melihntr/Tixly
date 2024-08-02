@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tixly.ticket.models.dto.TripDTO;
 import com.tixly.ticket.models.dto.TripModel;
 import com.tixly.ticket.models.request.TripRequest;
 import com.tixly.ticket.services.TripDomainService;
@@ -107,5 +108,10 @@ public class TripController {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/company")
+    public List<TripDTO> getTripsByCompanyId(@RequestHeader("Authorization") String authKey) {
+        // Call the service method to get trips by company ID
+        return tripDomainService.getTripsByCompanyId(authKey);
     }
 }

@@ -1,11 +1,14 @@
 package com.tixly.ticket.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.tixly.ticket.models.dto.BusDTO;
 import com.tixly.ticket.models.request.BusRequest;
 import com.tixly.ticket.services.BusDomainService;
 
@@ -63,5 +67,10 @@ public class BusController {
             e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
+    }
+    @GetMapping("/company")
+    public List<BusDTO> getBusesByCompanyId(@RequestHeader("Authorization") String authKey) {
+        // Call the service method to get trips by company ID
+        return busService.getBusesByCompanyId(authKey);
     }
 }

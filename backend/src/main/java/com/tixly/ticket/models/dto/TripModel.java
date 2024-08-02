@@ -29,18 +29,17 @@ public class TripModel implements RowMapper<Trip> {
     private String state;
     
 
-    @Override
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Trip.builder()
                 .id(rs.getLong("id"))
-                .peronNo(rs.getString("peron_no"))  
-                .departureLocationId(rs.getString("departure_location_id")) 
-                .arrivalLocationId(rs.getString("arrival_location_id"))   
-                .estimatedTime(rs.getInt("estimated_time")) 
+                .peronNo(rs.getString("peronno"))
+                .departureLocationId(rs.getString("departure_location_id"))
+                .arrivalLocationId(rs.getString("arrival_location_id"))
+                .estimatedTime(rs.getInt("estimatedtime"))
                 .price(rs.getDouble("price"))
-                .companyId(rs.getLong("company_id"))
-                .busId(rs.getLong("bus_id"))
-                .departureTime(rs.getObject("departure_time", LocalDateTime.class))
+                .companyId(rs.getLong("companyid"))
+                .busId(rs.getLong("busid"))
+                .departureTime(rs.getObject("departuretime", LocalDateTime.class))
                 .state(rs.getString("state"))
                 .build();
     }

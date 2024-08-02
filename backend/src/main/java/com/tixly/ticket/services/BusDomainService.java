@@ -1,4 +1,6 @@
 package com.tixly.ticket.services;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -6,6 +8,7 @@ import com.tixly.ticket.entity.AdminUser;
 import com.tixly.ticket.entity.Bus;
 import com.tixly.ticket.entity.Seat;
 import com.tixly.ticket.entity.Trip;
+import com.tixly.ticket.models.dto.BusDTO;
 import com.tixly.ticket.utils.BearerUtil;
 import com.tixly.ticket.utils.ValidUtil;
 
@@ -54,5 +57,13 @@ public class BusDomainService {
         Seat seatEntity = entityService.getSeat();
         seatEntity.deleteSeats(busId);
         busEntity.deleteBus(plateNo);  
+    }
+    public List<BusDTO> getBusesByCompanyId(String authKey){
+        String jwtToken = BearerUtil.extractToken(authKey);
+        AdminUser admin = entityService.getAdmin();
+        Long userId=admin.getUserIdByAuthKey(jwtToken);
+        Long companyId=admin.getCompanyIdByUserId(userId);
+        Bus busEntity = entityService.getBus();
+        return busEntity.getBusesByCompanyId(companyId);
     }
 }
