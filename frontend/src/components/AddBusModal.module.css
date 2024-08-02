@@ -1,0 +1,28 @@
+/* AddBusModal.module.css */
+
+.modalHeader {
+    background-color: #fdb913; /* Background color for the header */
+}
+
+.modalTitle {
+    color: white; /* Text color for the title */
+}
+
+.modalBody {
+    padding: 1rem; /* Add padding to the modal body */
+}
+
+.submitButtonContainer {
+    text-align: center; /* Center-align the button container */
+    margin-top: 1rem; /* Add margin to the top */
+}
+
+.submitButton {
+    background-color: #fdb913; /* Background color for the button */
+    border: none; /* Remove the default border */
+    color: white; /* Text color for the button */
+}
+
+.submitButton:hover {
+    background-color: #e3a507; /* Slightly darker color on hover */
+}

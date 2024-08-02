@@ -31,14 +31,14 @@ public class RegisterDomainService {
             throw new IllegalArgumentException("Username or email already exists.");
         }
     
-        userEntity.createCustomer(username, password, mail, gender, tcNo, phoneNumber); 
+        userEntity.createCustomer(username, password, mail, gender, tcNo, phoneNumber);     
         String verificationCode = verifyutil.generateVerificationCode();
         userEntity.updateVerificationCode(username, verificationCode);
         String jwtToken = jwtUtil.generateToken(username);
         userEntity.updateAuthKey(username, jwtToken);
         
         System.out.println("Your verification code is " + verificationCode);
-        return String.format("Customer registered successfully.\nYour auth key is: %s", jwtToken);
+        return String.format( jwtToken);
     }
 
 

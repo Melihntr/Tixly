@@ -1,0 +1,28 @@
+/* BusSeatingComponent.module.css */
+.busLayout {
+    display: flex;
+    justify-content: center;
+}
+
+.leftSide, .rightSide {
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+}
+
+.seat {
+    margin: 5px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.seat:hover {
+    background-color: #ddd;
+}
+
+.selected {
+    background-color: #fdb913;
+    color: white;
+}

@@ -1,0 +1,27 @@
+/* GetCompanyModal.module.css */
+
+.modalHeader {
+    background-color: #fdb913; /* Background color for the header */
+}
+
+.modalTitle {
+    color: white; /* Text color for the title */
+}
+
+.modalBody {
+    padding: 1rem; /* Add padding to the modal body */
+}
+
+.modalImage {
+    width: 100px; /* Set width for the image */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.alertError {
+    margin-top: 1rem; /* Add margin to the top of the error alert */
+}
+
+.modalFooter {
+    display: flex;
+    justify-content: flex-end; /* Align footer buttons to the right */
+}

@@ -1,7 +1,7 @@
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Register from './views/Register';
 import ForgotPassword from './views/ForgotPassword';
@@ -12,8 +12,15 @@ import Hesap from './views/Hesap';
 import Footer from './components/Footer'; // Import Footer component
 import OwnerDashboard from './views/OwnerDashboard';
 import Biletlerim from './views/Biletlerim';
+import Header from './components/Header';
+import ActiveTrips from './views/ActiveTrips';
+
 
 function App() {
+  useEffect(() => {
+    // Clear local storage when the app starts
+    localStorage.clear();
+  }, []);
   return (
     <Router>
       <div className="d-flex flex-column min-vh-100">
@@ -21,9 +28,10 @@ function App() {
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/myTrips" element={<MyTrips />} />
-            <Route path="/biletlerim" element={Biletlerim} />
+            <Route path="/biletlerim" element={<Biletlerim />} />
             <Route path="/hesap" element={<Hesap />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/trips" element={<ActiveTrips />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/owner-login" element={<OwnerLogin />} />
             <Route path="/owner-dashboard" element={<OwnerDashboard />} />

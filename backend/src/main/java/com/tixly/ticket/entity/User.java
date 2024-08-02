@@ -16,6 +16,7 @@ import lombok.Data;
 @Entity
 @Data
 public class User {
+
     private JdbcTemplate jdbcTemplate;
     private JwtUtil jwtUtil;
     private ValidUtil ValidUtil;
@@ -32,7 +33,7 @@ public class User {
     private String phoneNumber;
     private String tcNo;
 
-    public User(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil,  ValidUtil ValidUtil){
+    public User(JdbcTemplate jdbcTemplate, JwtUtil jwtUtil, ValidUtil ValidUtil) {
         this.jdbcTemplate = jdbcTemplate;
         this.jwtUtil = jwtUtil;
         this.ValidUtil = ValidUtil;
@@ -42,10 +43,10 @@ public class User {
         String hashedPassword = HashUtil.sha256(password);
         String sql = "INSERT INTO customer (username, password, mail, gender, auth_key, account_status, verification_code, tc_no, phonenumber) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-                
+
         jdbcTemplate.update(sql, username, hashedPassword, mail, gender, authKey, "PENDING", null, tcNo, phoneNumber);
     }
-    
+
     public void updateVerificationCode(String username, String verificationCode) {
         String sql = "UPDATE customer SET verification_code = ? WHERE username = ?";
         jdbcTemplate.update(sql, verificationCode, username);
@@ -87,16 +88,14 @@ public class User {
         jdbcTemplate.update(updateSql, customer.getStatus(), customer.getId());
     }
 
-
     public void updatePassword(String username, String newPassword) {
         String hashedPassword = HashUtil.sha256(newPassword);
         String sql = "UPDATE customer SET password = ? WHERE username = ?";
         jdbcTemplate.update(sql, hashedPassword, username);
     }
-    
 
     public String authenticateCustomer(String username, String password) {
-        
+
         // Password hashing with SHA-256
         String hashedPassword = HashUtil.sha256(password);
 
@@ -104,53 +103,61 @@ public class User {
         String sql = "SELECT id FROM customer WHERE username = ? AND password = ?";
         Long customerId = jdbcTemplate.queryForObject(sql, new Object[]{username, hashedPassword}, Long.class);
 
-            // Generate JWT token if customer is found
-            String token = jwtUtil.generateToken(username);
-            updateAuthKey(username, token);
-            
+        // Generate JWT token if customer is found
+        String token = jwtUtil.generateToken(username);
+        updateAuthKey(username, token);
+
         return token;
-        
+
     }
-   
+
     public void logout(String authKey) {
         // Update auth_key to null in the database for the given authKey
-        
+
         String updateSql = "UPDATE customer SET auth_key = null WHERE auth_key = ?";
         jdbcTemplate.update(updateSql, authKey);
     }
-    
+
     public boolean isUserLoggedIn(String username) {
         String sql = "SELECT COUNT(*) FROM customer WHERE username = ? AND auth_key IS NOT NULL";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username}, Integer.class);
         return count != null && count > 0;
     }
+
     public boolean isAuthKeyValid(String authKey) {
         String sql = "SELECT COUNT(*) FROM customer WHERE auth_key = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{authKey}, Integer.class);
         return count != null && count > 0;
     }
-    
 
     public void updateAuthKey(String username, String authKey) {
         String updateSql = "UPDATE customer SET auth_key = ? WHERE username = ?";
         jdbcTemplate.update(updateSql, authKey, username);
     }
+
     public boolean IsUserExist(String username, String email) {
         String sql = "SELECT COUNT(*) FROM customer WHERE username = ? AND mail = ?";
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{username, email}, Integer.class);
         return count != null && count > 0;
     }
+
     public UserInfo getUserInfoByAuthKey(String authKey) {
         String sql = "SELECT mail, gender, account_status, phoneNumber, tc_no FROM customer WHERE auth_key = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{authKey},
-            (rs, rowNum) -> {
-                UserInfo userInfo = new UserInfo();
-                userInfo.setEmail(rs.getString("mail"));
-                userInfo.setGender(rs.getString("gender"));
-                userInfo.setAccountStatus(rs.getString("account_status"));
-                userInfo.setPhoneNumber(rs.getString("phoneNumber")); // Ensure the name matches the column in your DB
-                userInfo.setTcNo(rs.getString("tc_no")); // Add this line
-                return userInfo;
-            });
+                (rs, rowNum) -> {
+                    UserInfo userInfo = new UserInfo();
+                    userInfo.setEmail(rs.getString("mail"));
+                    userInfo.setGender(rs.getString("gender"));
+                    userInfo.setAccountStatus(rs.getString("account_status"));
+                    userInfo.setPhoneNumber(rs.getString("phoneNumber")); // Ensure the name matches the column in your DB
+                    userInfo.setTcNo(rs.getString("tc_no")); // Add this line
+                    return userInfo;
+                });
+    }
+
+    public Long getCustomerIdByAuthKey(String authKey) {
+        String sql = "SELECT id FROM customer WHERE auth_key = ?";
+
+        return jdbcTemplate.queryForObject(sql, new Object[]{authKey}, Long.class);
     }
 }

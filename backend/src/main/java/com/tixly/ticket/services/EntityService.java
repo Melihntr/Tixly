@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import com.tixly.ticket.entity.AdminUser;
 import com.tixly.ticket.entity.Bus;
 import com.tixly.ticket.entity.Company;
+import com.tixly.ticket.entity.Passenger;
 import com.tixly.ticket.entity.Province;
 import com.tixly.ticket.entity.Seat;
+import com.tixly.ticket.entity.Ticket;
 import com.tixly.ticket.entity.Trip;
 import com.tixly.ticket.entity.User;
 import com.tixly.ticket.utils.JwtUtil;
@@ -44,5 +46,11 @@ public class EntityService {
     }
     Company getCompany(){
         return new Company(jdbcTemplate);
+    }
+    Ticket getTicket(){
+        return new Ticket(jdbcTemplate);
+    }
+    Passenger getPassenger(){
+        return new Passenger(jdbcTemplate);
     }
 }

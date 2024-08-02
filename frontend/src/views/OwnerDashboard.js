@@ -1,114 +1,137 @@
-// src/views/OwnerDashboard.js
 import React, { useState } from 'react';
-import { Container, Button, Modal, Form, Alert } from 'react-bootstrap';
+import { Container, Nav, Card } from 'react-bootstrap';
 import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import AddBusModal from '../components/AddBusModal';
+import AddTripModal from '../components/AddTripModal';
+import CancelTripModal from '../components/CancelTripModal';
+import DeleteBusModal from '../components/DeleteBusModal';
+import GetTripModal from '../components/GetTripModal';
+import GetCompanyModal from '../components/GetCompanyModal';
+import GetBusModal from '../components/GetBusModal'; // Import GetBusModal
+import styles from './OwnerDashboard.module.css'; // Import CSS module
 
 const OwnerDashboard = () => {
-    const [showModal, setShowModal] = useState(false);
-    const [plateNo, setPlateNo] = useState('');
-    const [companyId, setCompanyId] = useState('');
-    const [busType, setBusType] = useState('');
-    const [seatNo, setSeatNo] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
+    const [showBusModal, setShowBusModal] = useState(false);
+    const [showTripModal, setShowTripModal] = useState(false);
+    const [showCancelTripModal, setShowCancelTripModal] = useState(false);
+    const [showDeleteBusModal, setShowDeleteBusModal] = useState(false);
+    const [showGetTripModal, setShowGetTripModal] = useState(false);
+    const [showGetCompanyModal, setShowGetCompanyModal] = useState(false);
+    const [showGetBusModal, setShowGetBusModal] = useState(false); // State for GetBusModal
 
-    const handleShow = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
+    const navigate = useNavigate();
 
-    const handleAddBus = async (e) => {
-        e.preventDefault();
+    const handleShowBusModal = () => setShowBusModal(true);
+    const handleCloseBusModal = () => setShowBusModal(false);
 
-        const busData = {
-            plateNo,
-            companyId,
-            busType,
-            seatNo
-        };
+    const handleShowTripModal = () => setShowTripModal(true);
+    const handleCloseTripModal = () => setShowTripModal(false);
 
-        try {
-            const response = await axios.post('http://localhost:8080/buses', busData, {
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            });
+    const handleShowCancelTripModal = () => setShowCancelTripModal(true);
+    const handleCloseCancelTripModal = () => setShowCancelTripModal(false);
 
-            if (response.status === 200) {
-                setSuccess('Bus added successfully!');
-                setError('');
-                handleClose(); // Close the modal on success
+    const handleShowDeleteBusModal = () => setShowDeleteBusModal(true);
+    const handleCloseDeleteBusModal = () => setShowDeleteBusModal(false);
+
+    const handleShowGetTripModal = () => setShowGetTripModal(true);
+    const handleCloseGetTripModal = () => setShowGetTripModal(false);
+
+    const handleShowGetCompanyModal = () => setShowGetCompanyModal(true);
+    const handleCloseGetCompanyModal = () => setShowGetCompanyModal(false);
+
+    const handleShowGetBusModal = () => setShowGetBusModal(true); // Show GetBusModal
+    const handleCloseGetBusModal = () => setShowGetBusModal(false); // Close GetBusModal
+
+    const handleLogout = async () => {
+        const authKey = localStorage.getItem('authKey');
+
+        if (authKey) {
+            try {
+                await axios.post('http://localhost:8080/admin/logout', {}, {
+                    headers: {
+                        'Authorization': `Bearer ${authKey}`
+                    }
+                });
+
+                localStorage.removeItem('authKey');
+                navigate('/owner-login');
+            } catch (error) {
+                console.error('Çıkış yapma hatası:', error);
             }
-        } catch (error) {
-            console.error('Error adding bus:', error);
-            setError('Failed to add bus. Please try again.');
-            setSuccess('');
+        } else {
+            console.warn('Auth key not found in localStorage.');
         }
     };
 
     return (
-        <Container className="mt-5">
-            <h2>Owner Dashboard</h2>
-            <p>Welcome to the Owner Dashboard!</p>
-            <Button variant="primary" onClick={handleShow}>
-                Add Bus
-            </Button>
+        <div className={styles.dashboardContainer}>
+            {/* Sidebar */}
+            <div className={styles.sidebar}>
+                <Link to="/" className={styles.logoLink}>
+                    <div className={styles.logoText}>Tixly</div>
+                </Link>
+                
+                <Nav className="flex-column">
+                    <Nav.Link onClick={handleShowGetCompanyModal} className={`${styles.navLink} ${styles.navLinkTop}`}>Şirket Bilgileri</Nav.Link>
+                    <Nav.Link onClick={handleShowGetTripModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Sefer Bilgileri</Nav.Link>
+                    <Nav.Link onClick={handleShowGetBusModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Otobüs Bilgileri</Nav.Link>
+                    <Nav className="flex-column">
+                        <Nav.Link onClick={handleShowBusModal} className={styles.navLink}>Otobüs Ekle</Nav.Link>
+                    </Nav>
+                    <Nav.Link onClick={handleShowTripModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Seyahat Ekle</Nav.Link>
+                    <Nav.Link onClick={handleShowDeleteBusModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Otobüs Sil</Nav.Link>
+                    <Nav.Link onClick={handleShowCancelTripModal} className={`${styles.navLink} ${styles.navLinkMiddle}`}>Seyahat İptali</Nav.Link>
+                     
+                    <Nav.Link onClick={handleLogout} className={`${styles.navLink} ${styles.navLinkBottom}`}>Çıkış Yap</Nav.Link>
+                </Nav>
+            </div>
 
-            <Modal show={showModal} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Add Bus</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    {error && <Alert variant="danger">{error}</Alert>}
-                    {success && <Alert variant="success">{success}</Alert>}
-                    <Form onSubmit={handleAddBus}>
-                        <Form.Group controlId="formPlateNo">
-                            <Form.Label>Plate Number</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter plate number"
-                                value={plateNo}
-                                onChange={(e) => setPlateNo(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formCompanyId">
-                            <Form.Label>Company ID</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder="Enter company ID"
-                                value={companyId}
-                                onChange={(e) => setCompanyId(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formBusType">
-                            <Form.Label>Bus Type</Form.Label>
-                            <Form.Control
-                                type="text"
-                                placeholder="Enter bus type"
-                                value={busType}
-                                onChange={(e) => setBusType(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-                        <Form.Group controlId="formSeatNo">
-                            <Form.Label>Number of Seats</Form.Label>
-                            <Form.Control
-                                type="number"
-                                placeholder="Enter number of seats"
-                                value={seatNo}
-                                onChange={(e) => setSeatNo(e.target.value)}
-                                required
-                            />
-                        </Form.Group>
-                        <Button variant="primary" type="submit" className="mt-3">
-                            Add Bus
-                        </Button>
-                    </Form>
-                </Modal.Body>
-            </Modal>
-        </Container>
+            {/* Main content */}
+            <Container className={styles.mainContent}>
+            <Card className={styles.infoCard}>
+            <Card.Body>
+            <h2>Yönetici Panosu</h2>
+<p>
+    Yönetici Panosu'na hoş geldiniz! Bu panel, Tixly uygulamanızın yönetimi için tüm gerekli araçları sunar. Burada, çeşitli işlevleri kolayca gerçekleştirebilir ve otobüs, sefer ve şirket bilgilerini yönetebilirsiniz. İşte bu panelde yapabileceğiniz bazı işlemler:
+</p>
+<p>
+    <strong>Otobüs Ekle:</strong> Yeni otobüsler eklemek için bu seçeneği kullanabilirsiniz. Otobüsler, plaka numarası, otobüs tipi ve koltuk sayısı gibi detaylarla birlikte eklenir. Bu işlem, sistemdeki otobüs kapasitenizi güncel tutmanıza yardımcı olur.
+</p>
+<p>
+    <strong>Seyahat Ekle:</strong> Yeni seyahatler ekleyebilir ve mevcut seyahatleri yönetebilirsiniz. Seyahat bilgileri, kalkış ve varış noktaları, tarih ve saat gibi bilgileri içerir. Bu sayede müşterilere sunduğunuz seferlerin detaylarını düzenleyebilirsiniz.
+</p>
+<p>
+    <strong>Seyahat İptali:</strong> Planlanan seyahatlerin iptali işlemini gerçekleştirebilirsiniz. İptal edilen seyahatler, müşterilere bildirilmeli ve sistemden kaldırılmalıdır.
+</p>
+<p>
+    <strong>Otobüs Sil:</strong> Artık kullanılmayan otobüsleri sistemden kaldırmak için bu seçeneği kullanabilirsiniz. Otobüsler, plaka numarası ile silinir ve sistemdeki otobüs veritabanınız güncellenir.
+</p>
+<p>
+    <strong>Otobüs Bilgileri:</strong> Şirketinizin sahip olduğu otobüslerin tüm bilgilerini görüntüleyebilirsiniz. Bu seçenek, otobüslerinizin plaka numarası, tipi ve koltuk sayısı gibi bilgilerini kolayca erişmenizi sağlar.
+</p>
+<p>
+    <strong>Sefer Bilgileri:</strong> Şirketinizin mevcut seferlerini detaylı bir şekilde görüntüleyebilir ve yönetebilirsiniz. Sefer bilgileriniz, seyahat güzergahları, kalkış ve varış noktaları ile diğer önemli detayları içerir.
+</p>
+<p>
+    <strong>Şirket Bilgileri:</strong> Şirketinizin iletişim bilgilerini ve diğer önemli bilgilerini güncelleyebilir ve görüntüleyebilirsiniz. Bu bilgiler, şirketinizin adı, iletişim telefonu, e-posta adresi ve web sitesi gibi detayları içerir.
+</p>
+<p>
+    Yönetici paneli, sisteminizi etkin bir şekilde yönetmenize olanak sağlar. Tüm işlemler, kullanımı kolay arayüzümüz sayesinde hızlı ve verimli bir şekilde gerçekleştirilebilir. Herhangi bir sorun veya geri bildirimde bulunmak için lütfen bizimle iletişime geçmekten çekinmeyin.
+</p>
+</Card.Body>
+                </Card>
+
+                <AddBusModal show={showBusModal} handleClose={handleCloseBusModal} />
+                <AddTripModal show={showTripModal} handleClose={handleCloseTripModal} />
+                <CancelTripModal show={showCancelTripModal} handleClose={handleCloseCancelTripModal} />
+                <DeleteBusModal show={showDeleteBusModal} handleClose={handleCloseDeleteBusModal} />
+                <GetTripModal showModal={showGetTripModal} handleClose={handleCloseGetTripModal} />
+                <GetCompanyModal showModal={showGetCompanyModal} handleClose={handleCloseGetCompanyModal} />
+                <GetBusModal showModal={showGetBusModal} handleClose={handleCloseGetBusModal} /> {/* Add GetBusModal */}
+            </Container>
+        </div>
     );
 };
 
 export default OwnerDashboard;
-

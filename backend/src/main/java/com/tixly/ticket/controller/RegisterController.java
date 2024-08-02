@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tixly.ticket.models.request.RegisterRequest;
+import com.tixly.ticket.models.response.LoginResponse;
 import com.tixly.ticket.services.RegisterDomainService;
 
 @RestController
@@ -21,9 +22,9 @@ public class RegisterController {
     private RegisterDomainService registerDomainService;
 
     @PostMapping()
-public ResponseEntity<String> registerCustomer(@RequestBody RegisterRequest registerRequest) {
+public ResponseEntity<?> registerCustomer(@RequestBody RegisterRequest registerRequest) {
     try {
-        String responseMessage = registerDomainService.register(
+        String authKey = registerDomainService.register(
                 registerRequest.getUsername(),
                 registerRequest.getPassword(),
                 registerRequest.getMail(),
@@ -31,7 +32,8 @@ public ResponseEntity<String> registerCustomer(@RequestBody RegisterRequest regi
                 registerRequest.getTcNo(), 
                 registerRequest.getPhoneNumber()
         );
-        return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
+
+        return ResponseEntity.status( HttpStatus.CREATED).body(new LoginResponse(authKey, "User Logged in Successfully"));
     } catch (IllegalArgumentException e) {
         e.printStackTrace();
         return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);

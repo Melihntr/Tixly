@@ -1,0 +1,28 @@
+/* GetBusModal.module.css */
+
+.modalHeader {
+    background-color: #fdb913; /* Background color for the header */
+}
+
+.modalTitle {
+    color: white; /* Text color for the title */
+}
+
+.modalBody {
+    padding: 1rem; /* Add padding to the modal body */
+}
+
+.spinnerWrapper {
+    text-align: center; /* Center-align the spinner and text */
+    margin-top: 1rem; /* Add margin to the top */
+}
+
+.alertError {
+    color: #dc3545; /* Red color for error messages */
+    text-align: center; /* Center-align the error message */
+    margin-top: 1rem; /* Add margin to the top */
+}
+
+.table {
+    margin-top: 1rem; /* Add margin to the top of the table */
+}

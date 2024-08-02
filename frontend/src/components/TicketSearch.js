@@ -1,78 +1,26 @@
-import React, { useEffect, useState } from 'react';
+// TicketSearch.js
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom'; 
 import axios from 'axios';
-import { Card, Form, Row, Col, Button } from 'react-bootstrap';
 import styles from './TicketSearch.module.css';
 
 const TicketSearch = () => {
-    const Statics = Object.freeze({
-        
-    })
+    const navigate = useNavigate();
 
     const [provinces, setProvinces] = useState([]);
     const [from, setFrom] = useState('');
     const [to, setTo] = useState('');
-    const [date, setDate] = useState(Statics.DateString);
-    const [location, setLocation] = useState({
-        latitude: null,
-        longitude: null,
-        error: null,
-      });
+    const [date, setDate] = useState('');
 
     useEffect(() => {
-        controller();
+        fetchProvinces();
+        setDate(new Date().toISOString().split('T')[0]);
     }, []);
-
-    const controller = async () => {
-        const currentDateAsString = new Date().toISOString().split('T')[0];
-
-        await fetchProvinces(); 
-        await getLocation();
-        setDate(currentDateAsString);
-        console.debug(JSON.stringify(location));
-    }
-
-
-    const getLocation = async() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                setLocation({
-                  latitude: position.coords.latitude,
-                  longitude: position.coords.longitude,
-                  error: null,
-                });
-              },
-              (error) => {
-                console.error(error);
-                setLocation({
-                  latitude: null,
-                  longitude: null,
-                  error: error.message,
-                });
-              }
-            );
-          } else {
-            setLocation({
-              latitude: null,
-              longitude: null,
-              error: 'Geolocation is not supported by this browser.',
-            });
-          }
-    }
-    const handleFromChange = (event) => {
-        const selectedFrom = event.target.value;
-        if (selectedFrom === to) {
-            // If selected 'from' is the same as 'to', clear 'to' value
-            setTo('');
-        }
-        setFrom(selectedFrom);
-    };
 
     const fetchProvinces = async () => {
         try {
             const response = await axios.get('http://localhost:8080/location/provinces');
-            console.log('Provinces fetched:', response.data); // Debug: Log the fetched data
-            // Update state with the correct field names from your data
             setProvinces(response.data.map(province => ({
                 id: province.id,
                 name: province.il_adi
@@ -82,19 +30,14 @@ const TicketSearch = () => {
         }
     };
 
-    const handleToChange = (event) => {
-        const selectedTo = event.target.value;
-        if (selectedTo === from) {
-            // If selected 'to' is the same as 'from', clear 'from' value
-            setFrom('');
-        }
-        setTo(selectedTo);
-    };
+    const handleFromChange = (event) => setFrom(event.target.value);
+    const handleToChange = (event) => setTo(event.target.value);
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        // Handle form submission
-        console.log({ from, to, date });
+        navigate('/trips', {
+            state: { departureLocation: from, arrivalLocation: to }
+        });
     };
 
     return (
@@ -152,14 +95,18 @@ const TicketSearch = () => {
                                         <Form.Label>Tarih</Form.Label>
                                         <Form.Control
                                             type="date"
-                                            defaultValue={new Date()}
+                                            defaultValue={date}
                                             value={date}
                                             onChange={(e) => setDate(e.target.value)}
                                         />
                                     </Form.Group>
                                 </Col>
                                 <Col style={{ display: 'flex', alignItems: 'flex-end' }}>
-                                    <Button variant="primary" type="submit" className={styles.customButton}>
+                                    <Button
+                                        variant="primary"
+                                        type="submit"
+                                        className={styles.customButton}
+                                    >
                                         Ara
                                     </Button>
                                 </Col>

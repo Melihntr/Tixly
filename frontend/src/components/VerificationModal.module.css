@@ -1,0 +1,75 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050; /* Ensure it's above other content */
+}
+
+.modalContent {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  position: relative;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.error {
+  color: red;
+  text-align: center; /* Center the error message */
+}
+
+.message {
+  color: green;
+  text-align: center; /* Center the success message */
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+
+.formGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: black; /* Text color for labels */
+}
+
+.formGroup input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.sendCodeButton, .verifyButton {
+  background-color: #fdb913; /* Button color */
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: block; /* Ensure button takes full width */
+  margin: 20px auto; /* Center button horizontally */
+  text-align: center; /* Center text inside button */
+}
+.modalTitle {
+  text-align: center;
+  margin-bottom: 20px;
+  color: black; /* Title color */
+}

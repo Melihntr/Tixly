@@ -7,8 +7,8 @@ import lombok.Data;
 public class TripRequest {
     private Long id;
     private String peronNo;
-    private int departureLocationId;
-    private int arrivalLocationId;
+    private String departureLocationId;
+    private String arrivalLocationId;
     private int estimatedTime;
     private Double price;
     private Long busId;

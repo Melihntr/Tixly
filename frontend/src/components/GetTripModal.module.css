@@ -1,0 +1,25 @@
+/* GetTripModal.module.css */
+
+.modalHeader {
+    background-color: #fdb913; /* Background color for the header */
+}
+
+.modalTitle {
+    color: white; /* Text color for the title */
+}
+
+.modalBody {
+    padding: 1rem; /* Add padding to the modal body */
+}
+
+.alertSuccess {
+    margin-bottom: 1rem; /* Add margin to the bottom of the success alert */
+}
+
+.alertError {
+    margin-bottom: 1rem; /* Add margin to the bottom of the error alert */
+}
+
+.table {
+    margin-top: 1rem; /* Add margin to the top of the table */
+}

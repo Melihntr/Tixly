@@ -1,0 +1,45 @@
+/* Center the modal on the screen */
+.modal {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    min-height: 100vh; /* Ensure full height */
+}
+
+/* Header styling */
+.modal-header {
+    background-color: #fdb913; /* Header background color */
+    color: white; /* Header text color */
+}
+
+/* Title styling */
+.modal-title {
+    font-size: 1.5rem; /* Adjust font size */
+}
+
+/* Body styling */
+.modal-body {
+    padding: 20px; /* Adjust padding */
+}
+
+/* Form control styling */
+.form-control {
+    border-radius: 5px; /* Rounded corners */
+}
+
+/* Footer styling */
+.modal-footer {
+    justify-content: space-between; /* Space out the footer buttons */
+}
+
+/* Secondary button styling */
+.btn-secondary {
+    background-color: #6c757d; /* Secondary button color */
+    border: none; /* Remove border */
+}
+
+/* Danger button styling */
+.btn-danger {
+    background-color: #dc3545; /* Danger button color */
+    border: none; /* Remove border */
+}

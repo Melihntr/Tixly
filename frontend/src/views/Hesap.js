@@ -1,12 +1,12 @@
 import React from 'react';
 import UserProfile from '../components/UserProfile';
 import './Hesap.module.css'; // Import CSS module for specific styles
-
+import Header from '../components/Header';
 const Hesap = () => {
     return (
         <div className="hesap-container">
+            <Header />
             <div className="hesap-content">
-                <h1 className="hesap-title">Hesap</h1>
                 <UserProfile />
             </div>
         </div>
