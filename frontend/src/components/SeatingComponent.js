@@ -1,5 +1,5 @@
 import React from 'react';
-import './SeatingComponent.css'; // Import your CSS for styling
+import './SeatingComponent.module.css'; // Import your CSS for styling
 
 const SeatingComponent = ({ busType, onSeatClick }) => {
   const renderSeats = () => {
