@@ -13,6 +13,7 @@ const Header = () => {
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [loggedInUser, setLoggedInUser] = useState('');
+    const [loginError, setLoginError] = useState('');
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -31,33 +32,28 @@ const Header = () => {
     const handleVerificationShow = () => setShowVerificationModal(true);
     const handleVerificationClose = () => setShowVerificationModal(false);
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
+    const handleLogin = async () => {
         try {
             const response = await axios.post('http://localhost:8080/auth/login', {
                 username,
                 password
             }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers: { 'Content-Type': 'application/json' }
             });
-            const data = response.data;
+
             if (response.status === 200) {
-                localStorage.setItem('authKey', data.authKey);
+                const { authKey } = response.data;
+                localStorage.setItem('authKey', authKey);
                 localStorage.setItem('username', username);
                 setLoggedInUser(username);
+                setLoginError('');
                 handleLoginClose();
             } else {
-                alert(data.message);
+                setLoginError(response.data.message);
             }
         } catch (error) {
             console.error('Error:', error);
-            if (error.response && error.response.data) {
-                alert(error.response.data.message);
-            } else {
-                alert('Bir hata oluştu.');
-            }
+            setLoginError(error.response?.data?.message || 'Bir hata oluştu.');
         }
     };
 
@@ -69,8 +65,8 @@ const Header = () => {
             await axios.post('http://localhost:8080/auth/logout', {}, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${authKey}`,
-                },
+                    'Authorization': `Bearer ${authKey}`
+                }
             });
 
             localStorage.removeItem('authKey');
@@ -94,11 +90,14 @@ const Header = () => {
         <header className={styles.header}>
             <div className={styles.logo} onClick={() => navigate('/')}>Tixly</div>
             <nav className={styles.navMenu}>
-                <a href="#" onClick={(e) => { e.preventDefault(); handleVerificationShow(); }} className={styles.navItem}>Hesap Doğrulama</a>
                 &nbsp;&nbsp;
-                <a href="#" onClick={() => handleNavClick('/biletlerim')} className={styles.navItem}>Biletlerim</a>
-                &nbsp;&nbsp;
-                <a href="#" onClick={() => handleNavClick('/hesap')} className={styles.navItem}>Hesap</a>
+                {loggedInUser && (
+                    <>
+                        <a href="#" onClick={() => handleNavClick('/biletlerim')} className={styles.navItem}>Biletlerim</a>
+                        &nbsp;&nbsp;
+                        <a href="#" onClick={() => handleNavClick('/hesap')} className={styles.navItem}>Hesap</a>
+                    </>
+                )}
             </nav>
             <div className={styles.headerActions}>
                 {loggedInUser ? (
@@ -118,7 +117,6 @@ const Header = () => {
                 )}
             </div>
 
-            {/* Ensure modals are only shown when their respective states are true */}
             {showLoginModal && (
                 <LoginModal
                     showModal={showLoginModal}
@@ -128,6 +126,7 @@ const Header = () => {
                     setUsername={setUsername}
                     password={password}
                     setPassword={setPassword}
+                    loginError={loginError}
                 />
             )}
 
@@ -135,7 +134,7 @@ const Header = () => {
                 <VerificationModal
                     show={showVerificationModal}
                     onClose={handleVerificationClose}
-                    userInfo={{ username, email }} // Pass the email as well
+                    userInfo={{ username, email }}
                 />
             )}
         </header>

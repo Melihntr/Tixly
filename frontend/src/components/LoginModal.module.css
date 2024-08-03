@@ -36,3 +36,11 @@
 .modal-links a:hover {
     text-decoration: underline; /* Underline on hover */
 }
+.errorBox {
+    background-color: #f8d7da; /* Light red background */
+    color: #721c24; /* Dark red text color */
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #f5c6cb; /* Slightly darker border */
+    margin-bottom: 10px;
+}

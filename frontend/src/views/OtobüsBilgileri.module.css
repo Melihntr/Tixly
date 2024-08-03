@@ -1,0 +1,84 @@
+.container {
+    padding: 20px;
+}
+
+.addBusForm {
+    margin-bottom: 20px;
+}
+
+.spinnerWrapper {
+    text-align: center;
+    padding: 20px;
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.alertError {
+    color: red;
+}
+.dashboardContainer {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: #fdb913;
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+}
+
+.logoLink {
+    text-decoration: none;
+    color: white;
+}
+
+.logoText {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navLink {
+    color: black;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.navLink:hover {
+    background-color: #f0f0f0;
+}
+
+.activeLink {
+    background-color: #e0e0e0;
+}
+
+.mainContent {
+    margin-left: 450px;
+    padding: 20px;
+    width: calc(100% - 250px);
+}
+
+.infoCard {
+    margin-top: 20px;
+}
+
+.addButton {
+    background-color: #fdb913;
+    color: white;
+    border: none;
+    margin-bottom: 20px;
+}
+.addButton:hover {
+    background-color: #f2a900; /* Slightly darker shade for hover effect */
+}
+.busList {
+    margin-top: 20px;
+}
+
+.busItem {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+}
