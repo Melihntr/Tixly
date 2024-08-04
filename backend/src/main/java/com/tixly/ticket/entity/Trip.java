@@ -35,6 +35,8 @@ public class Trip {
     private Long busId;
     private LocalDateTime departureTime;
     private String state;
+    private String busType;
+    private int seatNo;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -42,12 +44,12 @@ public class Trip {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void registerTrip(String peronNo, String departureLocationId, String arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime) {
+    public void registerTrip(String peronNo, String departureLocationId, String arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime,String busType,int seatNo) {
 
-        String sql = "INSERT INTO trips (peronno, departure_location_id, arrival_location_id, estimatedTime, price, companyId, busId, departureTime, state) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif')";
+        String sql = "INSERT INTO trips (peronno, departure_location_id, arrival_location_id, estimatedTime, price, companyId, busId, departureTime, state,bustype,seatno) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif',? ,?)";
 
-        jdbcTemplate.update(sql, peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime);
+        jdbcTemplate.update(sql, peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime,busType,seatNo);
     }
 
     public void cancelTrip(Long tripId) {
@@ -112,7 +114,9 @@ public class Trip {
             rs.getLong("companyId"),
             rs.getLong("busId"),
             rs.getObject("departureTime", LocalDateTime.class),
-            rs.getString("state")
+            rs.getString("state"),
+            rs.getString("bustype"),
+            rs.getInt("seatno")
         ));
     }
     public List<TripModel> getActiveTrips(String departureLocation, String arrivalLocation) {
@@ -144,7 +148,9 @@ public class Trip {
             rs.getLong("companyId"),
             rs.getLong("busId"),
             rs.getObject("departureTime", LocalDateTime.class),
-            rs.getString("state")
+            rs.getString("state"),
+            rs.getString("bustype"),
+            rs.getInt("seatno")
         ));
     }
     public List<TripDTO> getTripsByCompanyId(Long companyId) {

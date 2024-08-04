@@ -46,6 +46,14 @@ public class Bus {
         String sql = "SELECT companyid FROM bus WHERE id = ?";
         return jdbcTemplate.queryForObject(sql, new Object[]{id}, Long.class);
     }
+    public String getBusTypebyBusId(Long id) {
+        String sql = "SELECT bustype FROM bus WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, String.class);
+    }
+    public int getSeatNobyBusId(Long id) {
+        String sql = "SELECT seatno FROM bus WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, Integer.class);
+    }
 
     public String deleteBus(String plateNo) {
         String sql = "DELETE FROM bus WHERE plateno = ?";
