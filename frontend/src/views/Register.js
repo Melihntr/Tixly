@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styles from './Register.module.css'; // Import the CSS module
+import VerificationModal from '../components/VerificationModal'; // Import the VerificationModal
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ const Register = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
+    const [showVerificationModal, setShowVerificationModal] = useState(false); // State for modal visibility
     const navigate = useNavigate();
 
     const handleRegister = async (e) => {
@@ -29,17 +31,22 @@ const Register = () => {
             if (response.status === 201) {
                 // Extract username and authKey from response
                 const { authKey } = response.data;
-                
+
                 // Store username and authKey in localStorage
                 localStorage.setItem('authKey', authKey);
                 localStorage.setItem('username', username);
 
-                setMessage('Registration successful. Redirecting to the main page...');
-                navigate('/'); // Redirect to the main page
+                setMessage('Registration successful. Please verify your account.');
+                setShowVerificationModal(true); // Show the verification modal
             }
         } catch (err) {
             setError('Registration failed. Please try again.');
         }
+    };
+
+    const handleCloseVerificationModal = () => {
+        setShowVerificationModal(false);
+        navigate('/'); // Optionally redirect to the main page
     };
 
     return (
@@ -111,6 +118,9 @@ const Register = () => {
                     <button type="submit" className={styles.submitButton}>Register</button>
                 </form>
             </div>
+
+            {/* VerificationModal */}
+            {showVerificationModal && <VerificationModal onClose={handleCloseVerificationModal} />}
         </div>
     );
 };

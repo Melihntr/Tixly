@@ -1,0 +1,79 @@
+/* TripsPage.module.css */
+.container {
+    margin-top: 20px;
+    padding-left: 250px; /* Offset the main content to fit the sidebar */
+}
+
+.infoCard {
+    margin-top: 20px;
+}
+
+.addButton {
+    margin-bottom: 20px;
+    background-color: #fdb913; /* Example button color */
+    border: none;
+}
+.addButton:hover {
+    background-color: #f2a900; /* Slightly darker shade for hover effect */
+}
+
+.table {
+    margin-top: 20px;
+}
+
+.spinnerWrapper {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.addBusForm {
+    margin-bottom: 20px;
+}
+
+.alertError {
+    color: red;
+}
+
+.dashboardContainer {
+    display: flex;
+}
+
+.sidebar {
+    width: 250px; /* Adjust width as needed */
+    background-color: #fdb913;
+    height: 100vh;
+    padding: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.logoLink {
+    text-decoration: none;
+    color: white;
+}
+
+.logoText {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.navLink {
+    color: black;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.navLink:hover {
+    background-color: #f0f0f0;
+}
+
+.activeLink {
+    background-color: #e0e0e0;
+}
+
+.mainContent {
+    margin-left: 450px; /* Ensure this matches the sidebar width */
+    padding: 20px;
+    width: calc(100% - 250px); /* Adjust width to fit the remaining space */
+}

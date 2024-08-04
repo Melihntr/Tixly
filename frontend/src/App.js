@@ -14,7 +14,8 @@ import OwnerDashboard from './views/OwnerDashboard';
 import Biletlerim from './views/Biletlerim';
 import Header from './components/Header';
 import ActiveTrips from './views/ActiveTrips';
-
+import OtobusBilgileri from './views/OtobüsBilgileri'; 
+import TripsPage from './views/TripsPage';
 
 function App() {
   useEffect(() => {
@@ -32,6 +33,8 @@ function App() {
             <Route path="/hesap" element={<Hesap />} />
             <Route path="/register" element={<Register />} />
             <Route path="/trips" element={<ActiveTrips />} />
+            <Route path="/trips-management" element={<TripsPage />} />
+            <Route path="/otobus-bilgileri" element={<OtobusBilgileri />} /> {/* Add this route */}
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/owner-login" element={<OwnerLogin />} />
             <Route path="/owner-dashboard" element={<OwnerDashboard />} />
