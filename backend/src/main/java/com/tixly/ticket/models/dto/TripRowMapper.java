@@ -22,6 +22,7 @@ public class TripRowMapper implements RowMapper<TripDTO> {
         trip.setBusId(rs.getLong("busid"));
         trip.setBusType(rs.getString("bustype"));
         trip.setSeatNo(rs.getInt("seatno"));
+        trip.setSeatAvailability(rs.getString("seat_availability"));
         
         // Handle possible null value for Timestamp
         Timestamp departureTime = rs.getTimestamp("departuretime");

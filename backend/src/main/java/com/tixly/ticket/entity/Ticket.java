@@ -33,7 +33,7 @@ public class Ticket {
     private Long tripId;
     private String from; // New field
     private String to;   // New field
-    private Long seatId; // New field
+    private int  seatId; // New field
     private LocalDateTime printDate;
     private LocalDateTime checkoutDate;
     private LocalDateTime purchaseDate;
@@ -55,7 +55,7 @@ public class Ticket {
             rs.getLong("tripid"),
             rs.getString("from"), 
             rs.getString("to"),    
-            rs.getLong("seatid"),  
+            rs.getInt("seatid"),  
             rs.getTimestamp("printdate").toLocalDateTime(),
             rs.getTimestamp("checkoutdate").toLocalDateTime(),
             rs.getTimestamp("purchasedate").toLocalDateTime(),

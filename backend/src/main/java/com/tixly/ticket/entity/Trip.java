@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tixly.ticket.models.dto.TripDTO;
 import com.tixly.ticket.models.dto.TripModel;
 import com.tixly.ticket.models.dto.TripRowMapper;
@@ -37,19 +40,37 @@ public class Trip {
     private String state;
     private String busType;
     private int seatNo;
+   @Column(columnDefinition = "json")
+    private String seatAvailability;
 
     private JdbcTemplate jdbcTemplate;
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public Trip(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void registerTrip(String peronNo, String departureLocationId, String arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime,String busType,int seatNo) {
-
-        String sql = "INSERT INTO trips (peronno, departure_location_id, arrival_location_id, estimatedTime, price, companyId, busId, departureTime, state,bustype,seatno) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif',? ,?)";
-
-        jdbcTemplate.update(sql, peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime,busType,seatNo);
+    public void registerTrip(String peronNo, String departureLocationId, String arrivalLocationId, int estimatedTime, Double price, Long companyId, Long busId, LocalDateTime departureTime, String busType, int seatNo) {
+        String seatAvailability = initializeSeatAvailability(seatNo);
+    
+        String sql = "INSERT INTO trips (peronno, departure_location_id, arrival_location_id, estimatedTime, price, companyId, busId, departureTime, state, bustype, seatno, seat_availability) "
+                    + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Aktif', ?, ?, CAST(? AS JSON))";
+    
+        jdbcTemplate.update(sql, peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime, busType, seatNo, seatAvailability);
+    }
+    
+    private String initializeSeatAvailability(int seatNo) {
+        // Initialize all seats as 'available'
+        List<String> seats = new ArrayList<>();
+        for (int i = 0; i < seatNo; i++) {
+            seats.add("available");
+        }
+        // Convert list to JSON string
+        try {
+            return objectMapper.writeValueAsString(seats);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error converting to JSON", e);
+        }
     }
 
     public void cancelTrip(Long tripId) {
@@ -116,7 +137,8 @@ public class Trip {
             rs.getObject("departureTime", LocalDateTime.class),
             rs.getString("state"),
             rs.getString("bustype"),
-            rs.getInt("seatno")
+            rs.getInt("seatno"),
+            rs.getString("seat_availability")
         ));
     }
     public List<TripModel> getActiveTrips(String departureLocation, String arrivalLocation) {
@@ -150,17 +172,55 @@ public class Trip {
             rs.getObject("departureTime", LocalDateTime.class),
             rs.getString("state"),
             rs.getString("bustype"),
-            rs.getInt("seatno")
+            rs.getInt("seatno"),
+            rs.getString("seat_availability")
         ));
     }
+    public void bookSeat(Long tripId, int seatNumber) {
+        // Get current seat availability
+        String seatAvailabilityJson = jdbcTemplate.queryForObject("SELECT seat_availability FROM trips WHERE id = ?", new Object[]{tripId}, String.class);
+    
+        // Convert JSON string to list
+        List<String> seats;
+        try {
+            seats = objectMapper.readValue(seatAvailabilityJson, List.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error processing JSON", e);
+        }
+    
+        // Check if the seat is already sold
+        if (seats.get(seatNumber - 1).equals("sold")) {
+            throw new IllegalStateException("Seat already sold");
+        }
+    
+        // Mark the seat as sold
+        seats.set(seatNumber - 1, "sold");
+    
+        // Convert list back to JSON string
+        String updatedSeatAvailability;
+        try {
+            updatedSeatAvailability = objectMapper.writeValueAsString(seats);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Error converting to JSON", e);
+        }
+    
+        // Update the database
+        updateSeatAvailability(tripId, updatedSeatAvailability);
+    }
+
+    private void updateSeatAvailability(Long tripId, String updatedSeatAvailability) {
+        String sql = "UPDATE trips SET seat_availability = ? WHERE id = ?";
+        jdbcTemplate.update(sql, updatedSeatAvailability, tripId);
+    }
+    
     public List<TripDTO> getTripsByCompanyId(Long companyId) {
       
         String sql = "SELECT * FROM trips WHERE companyid = ?";
 
         return jdbcTemplate.query(sql, new Object[]{companyId}, new TripRowMapper());
     }
-  
 }
+
     
     
 

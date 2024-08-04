@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+
 import org.springframework.jdbc.core.RowMapper;
 
 import com.tixly.ticket.entity.Trip;
@@ -29,7 +31,8 @@ public class TripModel implements RowMapper<Trip> {
     private String state;
     private String busType;
     private int seatNo;
-
+@Column(columnDefinition = "json")
+    private String seatAvailability;
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Trip.builder()
                 .id(rs.getLong("id"))
@@ -44,6 +47,7 @@ public class TripModel implements RowMapper<Trip> {
                 .state(rs.getString("state"))
                 .busType(rs.getString("bustype"))
                 .seatNo(rs.getInt("seatno"))
+                .seatAvailability(rs.getString("seat_availability"))
                 .build();
     }
 }
