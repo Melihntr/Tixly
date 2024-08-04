@@ -16,6 +16,8 @@ public class TripDTO {
     private Long busId;
     private LocalDateTime departureTime;
     private String state;
+    private String busType;
+    private int seatNo;
 
     // Getters and setters
 }

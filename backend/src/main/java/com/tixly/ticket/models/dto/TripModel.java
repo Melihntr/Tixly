@@ -27,7 +27,8 @@ public class TripModel implements RowMapper<Trip> {
     private Long busId;
     private LocalDateTime departureTime;
     private String state;
-    
+    private String busType;
+    private int seatNo;
 
     public Trip mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Trip.builder()
@@ -41,6 +42,8 @@ public class TripModel implements RowMapper<Trip> {
                 .busId(rs.getLong("busid"))
                 .departureTime(rs.getObject("departuretime", LocalDateTime.class))
                 .state(rs.getString("state"))
+                .busType(rs.getString("bustype"))
+                .seatNo(rs.getInt("seatno"))
                 .build();
     }
 }

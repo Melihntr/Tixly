@@ -44,8 +44,10 @@ public class TripDomainService {
         if (!companyEntity.isCompanyExist(companyId)) {
             throw new IllegalArgumentException("Company does not exist");
         }
+        String bustype = bus.getBusTypebyBusId(busId);
+        int seatno = bus.getSeatNobyBusId(busId);
 
-        trip.registerTrip( peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime);
+        trip.registerTrip( peronNo, departureLocationId, arrivalLocationId, estimatedTime, price, companyId, busId, departureTime,bustype,seatno);
     }
 
     public void cancelTrip(Long tripId,String authKey){
