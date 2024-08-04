@@ -17,7 +17,7 @@
 
 .seat {
 position: absolute;
-    top: 50px; /* Adjust the position as needed */
+    top: 150px; /* Adjust the position as needed */
     left: 50px; /* Adjust the position as needed */
     width: 36px; /* Set the width of the overlay image */
     height: 36px; /* Set the height of the overlay image */

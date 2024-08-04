@@ -1,7 +1,5 @@
-// BusSeatingComponent.js
 import React from 'react';
-import styles from './BusSeatingComponent.module.css'; // Ensure you have the corresponding CSS file
-import { Card } from 'react-bootstrap';
+import styles from './BusSeatingComponent.module.css';
 
 const SeatType = Object.freeze({
     SEAT_EMPTY: 0,
@@ -17,107 +15,101 @@ const SeatImages = Object.freeze({
     [SeatType.SEAT_SELECTED]: "seat_selected"
 });
 
+// A simple PRNG with a seed
+function seededRandom(seed) {
+    const x = Math.sin(seed) * 10000;
+    return x - Math.floor(x);
+}
 
-const BusSeatingComponent = ({ busType, selectedSeat, onSeatSelect, selectedGender, setSelectedGender }) => {
-    const render2s1 = () => {
-       return "2s1";
+const getRandomSeatType = (seed, index) => {
+    const random = seededRandom(seed + index);
+    if (random < 0.2) { // 20% chance for SEAT_MAN
+        return SeatType.SEAT_MAN;
+    } else if (random < 0.4) { // 20% chance for SEAT_WOMEN
+        return SeatType.SEAT_WOMEN;
+    } else {
+        return SeatType.SEAT_EMPTY;
+    }
+};
+
+const BusSeatingComponent = ({ busType, seatNo, selectedSeat, onSeatSelect }) => {
+    const handleSeatSelect = (seatLabel) => {
+        if (selectedSeat === seatLabel) {
+            onSeatSelect(null); // Deselect if the same seat is clicked again
+        } else {
+            onSeatSelect(seatLabel); // Set the new selected seat
+        }
     };
 
-    const render2s2 = () => {
-        
-        
-        const seats = [
-            {
-                x: 20,
-                y: 120,
-                label: "1",
-                type: SeatType.SEAT_MAN
-            },
-            {
-                x: 60,
-                y: 120,
-                label: "2",
-                type: SeatType.SEAT_EMPTY
-            },
-            {
-                x: 140,
-                y: 120,
-                label: "3",
-                type: SeatType.SEAT_SELECTED
-            },
-            {
-                x: 180,
-                y: 120,
-                label: "4",
-                type: SeatType.SEAT_WOMEN
-            },
+    const renderSeats = () => {
+        const seats = [];
+        let seatCounter = 1;
+        const seatsPerColumn = busType === "2s1" ? 3 : 4; // 3 seats per column for 2s1, 4 for 2s2
+        const seatSpacingX = 60; // Space between seats horizontally
+        const seatSpacingYFirstRow = 50; // Space between seats vertically for the first row
+        const seatSpacingYOtherRows = 50; // Space between seats vertically for other rows
+        const seatSpacingBeforeLastRows = 60; // Additional vertical spacing before the last two rows
+        const firstColumnOffsetX = 140; // Horizontal offset for the first column
+        const normalColumnOffsetX = 140; // Normal horizontal offset for other columns
+        const firstColumnOffsetY = -100; // Vertical offset to push the first column up
+        const normalColumnOffsetY = -100; // No vertical offset for other columns
+        const numColumns = Math.ceil(seatNo / seatsPerColumn);
 
-            {
-                x: 20,
-                y: 170,
-                label: "5",
-                type: SeatType.SEAT_EMPTY
-            },
-            {
-                x: 60,
-                y: 170,
-                label: "6",
-                type: SeatType.SEAT_EMPTY
-            },
-            {
-                x: 140,
-                y: 170,
-                label: "7",
-                type: SeatType.SEAT_EMPTY
-            },
-            {
-                x: 180,
-                y: 170,
-                label: "8",
-                type: SeatType.SEAT_EMPTY
-            },
-        ];
-        
-        return(
+        // Generate seats based on bus type and seatNo
+        for (let col = 0; col < numColumns; col++) {
+            for (let row = 0; row < seatsPerColumn; row++) {
+                if (seatCounter <= seatNo) {
+                    // Calculate y position with additional spacing before the last two rows
+                    const yOffset = (row === seatsPerColumn - 1 || row === seatsPerColumn - 2) ? seatSpacingBeforeLastRows : 0;
+
+                    seats.push({
+                        x: col === 0 ? firstColumnOffsetX : (col * (seatSpacingX + 20)) + normalColumnOffsetX, // Special offset for first column
+                        y: 120 + (row === 0 ? seatSpacingYFirstRow : seatSpacingYOtherRows) * row + (col === 0 ? firstColumnOffsetY : normalColumnOffsetY) + yOffset, // Additional vertical offset before last two rows
+                        label: seatCounter++,
+                        type: selectedSeat === seatCounter - 1 ? SeatType.SEAT_SELECTED : getRandomSeatType(12345, seatCounter - 1) // Consistent random seed
+                    });
+                }
+            }
+        }
+
+        return (
             <div className={styles.busLayout}>
-            <img src="/bus.png" alt="Background" className={styles.busLayoutBackground} />
-            
+                <img src="/bus.png" alt="Background" className={styles.busLayoutBackground} />
                 {seats.map((eachSeat) => {
                     const seatStyle = {
                         position: 'absolute',
-                        top: `${eachSeat.x }px`,
-                        left: `${eachSeat.y}px`,
+                        top: `${eachSeat.y}px`,
+                        left: `${eachSeat.x}px`,
                         width: '40px',
                         height: '40px'
                     };
 
                     const labelStyle = {
                         position: 'absolute',
-                        top: `${eachSeat.x + 6 }px`,
-                        left: `${eachSeat.y + 14}px`,
-                        
+                        top: `${eachSeat.y + 10}px`,
+                        left: `${eachSeat.x + 10}px`
                     };
 
                     const seatImagePath = `/${SeatImages[eachSeat.type]}.png`;
 
-                    const onClickCallback = () => {
-                        alert("sa, bilgilerim:" +  JSON.stringify(eachSeat));
-                    }
-
                     return (
-                        <div onClick={onClickCallback}>
-                            <img src={seatImagePath}  alt="Overlay" style={seatStyle}/>
+                        <div 
+                            key={eachSeat.label} 
+                            onClick={() => handleSeatSelect(eachSeat.label)} 
+                            style={{ cursor: 'pointer' }}
+                        >
+                            <img src={seatImagePath} alt="Overlay" style={seatStyle} />
                             <p style={labelStyle}>{eachSeat.label}</p>
                         </div>
                     );
-                }) }
-          </div>
-        )
-    }
+                })}
+            </div>
+        );
+    };
 
     return (
         <div>
-            {busType == "2s1" ?  render2s1() : render2s2()}
+            {renderSeats()}
         </div>
     );
 };

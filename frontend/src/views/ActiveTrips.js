@@ -1,140 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Accordion, Card, Button, Form } from 'react-bootstrap';
+import { Accordion, Card, Button, Modal, Form } from 'react-bootstrap';
 import styles from './ActiveTrips.module.css';
 import Header from '../components/Header';
 import axios from 'axios';
-import { useLocation } from 'react-router-dom';
-import BusSeatingComponent from '../components/BusSeatingComponent'; // Import the BusSeatingComponent
+import { useLocation, useNavigate } from 'react-router-dom';
+import BusSeatingComponent from '../components/BusSeatingComponent';
 
 const ActiveTrips = () => {
-    const [trips, setTrips] = useState([
-        {
-            "id": 35,
-            "peronNo": "P1231",
-            "departureLocationId": "Adana",
-            "arrivalLocationId": "Ankara",
-            "estimatedTime": 300,
-            "price": 30,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-31T15:50:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 23,
-            "peronNo": "PN123",
-            "departureLocationId": "Ýstanbul",
-            "arrivalLocationId": "Ankara",
-            "estimatedTime": 300,
-            "price": 150,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-01T15:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 24,
-            "peronNo": "PN001",
-            "departureLocationId": "Ýstanbul",
-            "arrivalLocationId": "Ankara",
-            "estimatedTime": 450,
-            "price": 180,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-01T09:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 25,
-            "peronNo": "PN002",
-            "departureLocationId": "Ýstanbul",
-            "arrivalLocationId": "Ýzmir",
-            "estimatedTime": 600,
-            "price": 220,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-02T11:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 26,
-            "peronNo": "PN003",
-            "departureLocationId": "Ankara",
-            "arrivalLocationId": "Ýzmir",
-            "estimatedTime": 540,
-            "price": 200,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-03T13:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 27,
-            "peronNo": "PN004",
-            "departureLocationId": "Ýstanbul",
-            "arrivalLocationId": "Bursa",
-            "estimatedTime": 150,
-            "price": 90,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-04T10:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 28,
-            "peronNo": "PN005",
-            "departureLocationId": "Ýzmir",
-            "arrivalLocationId": "Antalya",
-            "estimatedTime": 720,
-            "price": 250,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-05T15:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 29,
-            "peronNo": "PN006",
-            "departureLocationId": "Ankara",
-            "arrivalLocationId": "Antalya",
-            "estimatedTime": 660,
-            "price": 230,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-06T08:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 30,
-            "peronNo": "PN007",
-            "departureLocationId": "Ýstanbul",
-            "arrivalLocationId": "Adana",
-            "estimatedTime": 830,
-            "price": 270,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-07T16:00:00",
-            "state": "Aktif"
-        },
-        {
-            "id": 33,
-            "peronNo": "PN010",
-            "departureLocationId": "Ankara",
-            "arrivalLocationId": "Adana",
-            "estimatedTime": 790,
-            "price": 260,
-            "companyId": 1,
-            "busId": 1,
-            "departureTime": "2024-08-10T14:00:00",
-            "state": "Aktif"
-        }
-    ]);
+    const [trips, setTrips] = useState([]);
     const [selectedTrip, setSelectedTrip] = useState(null);
-    const [selectedSeat, setSelectedSeat] = useState('');
-    const [selectedGender, setSelectedGender] = useState('Male');
-    const location = useLocation(); // Use location object to get state
-
-    const { state } = location; // Destructure the state
+    const [selectedSeat, setSelectedSeat] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedGender, setSelectedGender] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+    const location = useLocation();
+    const navigate = useNavigate();
+    const { state } = location;
     const departureLocation = state?.departureLocation || '';
     const arrivalLocation = state?.arrivalLocation || '';
 
@@ -159,6 +40,79 @@ const ActiveTrips = () => {
 
     const handleTripSelect = (trip) => {
         setSelectedTrip(trip);
+        setSelectedSeat(null); // Reset selected seat when a new trip is selected
+    };
+
+    const handleSeatSelect = (seatLabel) => {
+        setSelectedSeat(seatLabel);
+        setErrorMessage(''); // Clear any previous error messages
+    };
+
+    const handleBuyClick = () => {
+        if (selectedSeat) {
+            setShowModal(true);
+        } else {
+            alert("Lütfen önce bir koltuk seçin.");
+        }
+    };
+
+    const handleModalClose = () => setShowModal(false);
+
+    const handleModalConfirm = async () => {
+        const authKey = localStorage.getItem('authKey');
+        if (!authKey) {
+            alert("Kimlik doğrulama anahtarı eksik.");
+            return;
+        }
+    
+        const ticketData = {
+            tripId: selectedTrip.id,
+            from: selectedTrip.departureLocationId,
+            to: selectedTrip.arrivalLocationId,
+            seatId: selectedSeat,
+            printDate: new Date().toISOString(),
+            checkoutDate: new Date().toISOString(),
+            purchaseDate: new Date().toISOString(),
+            gender: selectedGender
+        };
+    
+        try {
+            const response = await fetch('http://localhost:8080/tickets/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${authKey}`
+                },
+                body: JSON.stringify(ticketData)
+            });
+    
+            // Read response as text
+            const responseText = await response.text();
+    
+            // Try to parse as JSON
+            let responseData;
+            try {
+                responseData = JSON.parse(responseText);
+            } catch (e) {
+                // If parsing fails, assume it's a text error message
+                responseData = { message: responseText };
+            }
+    
+            if (!response.ok) {
+                if (responseData.message.includes("koltuk doludur")) {
+                    setErrorMessage("Bu koltuk doludur, lütfen başka koltuk seçin.");
+                } else {
+                    throw new Error(responseData.message || 'Server error');
+                }
+            } else {
+                alert('Bilet satın alındı!');
+                handleModalClose();
+                navigate('/biletlerim#'); // Redirect after successful purchase
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(`Bilet satın alırken bir hata oluştu: ${error.message}`);
+        }
     };
 
     return (
@@ -181,21 +135,25 @@ const ActiveTrips = () => {
                                             <p><strong>Kalkış Yeri:</strong> {trip.departureLocationId}</p>
                                             <p><strong>Fiyat:</strong> {trip.price} TL</p>
                                             
+                                            {/* Add Bus Type and Number of Seats */}
+                                            <p><strong>Otobüs Tipi:</strong> {trip.busType === "2s1" ? "2+1" : "2+2"}</p>
+                                            <p><strong>Koltuk Sayısı:</strong> {trip.seatNo}</p>
+                                            
                                             <div className='mt-3'>
                                                 <BusSeatingComponent
-                                                    busType={trip.busType} // Pass the bus type from the trip object
+                                                    busType={trip.busType}
+                                                    seatNo={trip.seatNo}
                                                     selectedSeat={selectedSeat}
-                                                    selectedGender={selectedGender}
-                                                    
-                                                    onSeatSelect={setSelectedSeat}
-                                                    onGenderSelect={setSelectedGender}
-                                                    // Directly pass the setter function
+                                                    onSeatSelect={handleSeatSelect}
                                                 />
+                                                <Button 
+                                                    onClick={handleBuyClick}
+                                                    className={styles.buyButton}
+                                                >
+                                                    Satın Al
+                                                </Button>
                                             </div>
-
-                                            <Button className='mt-3' variant="primary" onClick={() => {/* Handle purchase */}}>
-                                                Satın al
-                                            </Button>
+                                            {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
                                         </div>
                                     )}
                                 </Accordion.Body>
@@ -204,6 +162,39 @@ const ActiveTrips = () => {
                     ))}
                 </Accordion>
             </div>
+
+            {/* Gender Selection Modal */}
+            <Modal show={showModal} onHide={handleModalClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Cinsiyet Seçimi</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Check 
+                            type="radio" 
+                            label="Erkek" 
+                            value="male" 
+                            checked={selectedGender === 'male'} 
+                            onChange={(e) => setSelectedGender(e.target.value)} 
+                        />
+                        <Form.Check 
+                            type="radio" 
+                            label="Kadın" 
+                            value="female" 
+                            checked={selectedGender === 'female'} 
+                            onChange={(e) => setSelectedGender(e.target.value)} 
+                        />
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleModalClose}>
+                        Kapat
+                    </Button>
+                    <Button variant="primary" onClick={handleModalConfirm}>
+                        Onayla
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </div>
     );
 };

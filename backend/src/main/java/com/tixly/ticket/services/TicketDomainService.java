@@ -10,6 +10,7 @@ import com.tixly.ticket.entity.User;
 import com.tixly.ticket.models.dto.TicketModel;
 import com.tixly.ticket.utils.BearerUtil;
 
+
 @Service
 public class TicketDomainService {
      @Autowired
@@ -31,6 +32,8 @@ public List<TicketModel> getTicketsByAuthKey(String authKey) {
         Ticket ticket = entityService.getTicket();
         User user = entityService.getCustomer();
         Long customerId = user.getCustomerIdByAuthKey(jwtToken);
-        ticket.addTicket(customerId,ticketModel);  
+    
+        ticket.addTicket(customerId,ticketModel); 
+       
     }
 }

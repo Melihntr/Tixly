@@ -2,6 +2,8 @@ package com.tixly.ticket.models.dto;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
@@ -18,7 +20,8 @@ public class TripDTO {
     private String state;
     private String busType;
     private int seatNo;
-
+@Column(columnDefinition = "json")
+    private String seatAvailability;
     // Getters and setters
 }
 

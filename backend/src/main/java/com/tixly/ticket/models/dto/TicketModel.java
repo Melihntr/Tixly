@@ -24,7 +24,7 @@ public class TicketModel implements RowMapper<Ticket> {
     private Long tripId;
     private String from;  // New field
     private String to;    // New field
-    private Long seatId;  // New field
+    private int  seatId;  // New field
     private LocalDateTime printDate;
     private LocalDateTime checkoutDate;
     private LocalDateTime purchaseDate;
@@ -38,7 +38,7 @@ public class TicketModel implements RowMapper<Ticket> {
                 .tripId(rs.getLong("tripid"))
                 .from(rs.getString("from"))  
                 .to(rs.getString("to"))      
-                .seatId(rs.getLong("seatid")) 
+                .seatId(rs.getInt("seatid")) 
                 .printDate(rs.getTimestamp("printdate").toLocalDateTime()) 
                 .checkoutDate(rs.getTimestamp("checkoutdate").toLocalDateTime()) 
                 .purchaseDate(rs.getTimestamp("purchasedate").toLocalDateTime())
