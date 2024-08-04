@@ -7,7 +7,128 @@ import { useLocation } from 'react-router-dom';
 import BusSeatingComponent from '../components/BusSeatingComponent'; // Import the BusSeatingComponent
 
 const ActiveTrips = () => {
-    const [trips, setTrips] = useState([]);
+    const [trips, setTrips] = useState([
+        {
+            "id": 35,
+            "peronNo": "P1231",
+            "departureLocationId": "Adana",
+            "arrivalLocationId": "Ankara",
+            "estimatedTime": 300,
+            "price": 30,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-31T15:50:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 23,
+            "peronNo": "PN123",
+            "departureLocationId": "Ýstanbul",
+            "arrivalLocationId": "Ankara",
+            "estimatedTime": 300,
+            "price": 150,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-01T15:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 24,
+            "peronNo": "PN001",
+            "departureLocationId": "Ýstanbul",
+            "arrivalLocationId": "Ankara",
+            "estimatedTime": 450,
+            "price": 180,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-01T09:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 25,
+            "peronNo": "PN002",
+            "departureLocationId": "Ýstanbul",
+            "arrivalLocationId": "Ýzmir",
+            "estimatedTime": 600,
+            "price": 220,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-02T11:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 26,
+            "peronNo": "PN003",
+            "departureLocationId": "Ankara",
+            "arrivalLocationId": "Ýzmir",
+            "estimatedTime": 540,
+            "price": 200,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-03T13:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 27,
+            "peronNo": "PN004",
+            "departureLocationId": "Ýstanbul",
+            "arrivalLocationId": "Bursa",
+            "estimatedTime": 150,
+            "price": 90,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-04T10:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 28,
+            "peronNo": "PN005",
+            "departureLocationId": "Ýzmir",
+            "arrivalLocationId": "Antalya",
+            "estimatedTime": 720,
+            "price": 250,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-05T15:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 29,
+            "peronNo": "PN006",
+            "departureLocationId": "Ankara",
+            "arrivalLocationId": "Antalya",
+            "estimatedTime": 660,
+            "price": 230,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-06T08:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 30,
+            "peronNo": "PN007",
+            "departureLocationId": "Ýstanbul",
+            "arrivalLocationId": "Adana",
+            "estimatedTime": 830,
+            "price": 270,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-07T16:00:00",
+            "state": "Aktif"
+        },
+        {
+            "id": 33,
+            "peronNo": "PN010",
+            "departureLocationId": "Ankara",
+            "arrivalLocationId": "Adana",
+            "estimatedTime": 790,
+            "price": 260,
+            "companyId": 1,
+            "busId": 1,
+            "departureTime": "2024-08-10T14:00:00",
+            "state": "Aktif"
+        }
+    ]);
     const [selectedTrip, setSelectedTrip] = useState(null);
     const [selectedSeat, setSelectedSeat] = useState('');
     const [selectedGender, setSelectedGender] = useState('Male');
@@ -52,35 +173,27 @@ const ActiveTrips = () => {
                                 <Accordion.Header onClick={() => handleTripSelect(trip)}>
                                     {trip.departureLocationId} - {trip.arrivalLocationId} - {new Date(trip.departureTime).toLocaleString()}
                                 </Accordion.Header>
-                                <Accordion.Body>
+                                <Accordion.Body className={styles.accordionBody}>
                                     {selectedTrip && selectedTrip.id === trip.id && (
                                         <div style={{ padding: '10px' }}>
                                             <p><strong>Varış Yeri:</strong> {trip.arrivalLocationId}</p>
                                             <p><strong>Ayrılış Zamanı:</strong> {new Date(trip.departureTime).toLocaleString()}</p>
                                             <p><strong>Kalkış Yeri:</strong> {trip.departureLocationId}</p>
                                             <p><strong>Fiyat:</strong> {trip.price} TL</p>
-                                            <BusSeatingComponent
-                                                busType={trip.busType} // Pass the bus type from the trip object
-                                                selectedSeat={selectedSeat}
-                                                onSeatSelect={setSelectedSeat} // Directly pass the setter function
-                                            />
-                                            <Form.Group controlId="formSeat">
-                                                <Form.Label>Koltuk Seç</Form.Label>
-                                                <Form.Control
-                                                    type="text"
-                                                    placeholder="Koltuk Numarası"
-                                                    value={selectedSeat}
-                                                    onChange={(e) => setSelectedSeat(e.target.value)}
+                                            
+                                            <div className='mt-3'>
+                                                <BusSeatingComponent
+                                                    busType={trip.busType} // Pass the bus type from the trip object
+                                                    selectedSeat={selectedSeat}
+                                                    selectedGender={selectedGender}
+                                                    
+                                                    onSeatSelect={setSelectedSeat}
+                                                    onGenderSelect={setSelectedGender}
+                                                    // Directly pass the setter function
                                                 />
-                                            </Form.Group>
-                                            <Form.Group controlId="formGender">
-                                                <Form.Label>Cinsiyet</Form.Label>
-                                                <Form.Control as="select" value={selectedGender} onChange={(e) => setSelectedGender(e.target.value)}>
-                                                    <option value="Male">Erkek</option>
-                                                    <option value="Female">Kadın</option>
-                                                </Form.Control>
-                                            </Form.Group>
-                                            <Button variant="primary" onClick={() => {/* Handle purchase */}}>
+                                            </div>
+
+                                            <Button className='mt-3' variant="primary" onClick={() => {/* Handle purchase */}}>
                                                 Satın al
                                             </Button>
                                         </div>
