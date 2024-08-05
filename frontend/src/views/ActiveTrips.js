@@ -64,7 +64,13 @@ const ActiveTrips = () => {
             alert("Kimlik doğrulama anahtarı eksik.");
             return;
         }
-    
+
+        const genderMap = {
+            'male': 'Male',
+            'female': 'Female'
+        };
+        const mappedGender = genderMap[selectedGender] || ''; // Default to empty string if not found
+
         const ticketData = {
             tripId: selectedTrip.id,
             from: selectedTrip.departureLocationId,
@@ -72,12 +78,11 @@ const ActiveTrips = () => {
             seatId: selectedSeat,
             printDate: new Date().toISOString(),
             checkoutDate: new Date().toISOString(),
-            purchaseDate: new Date().toISOString(),
-            gender: selectedGender
+            purchaseDate: new Date().toISOString()
         };
-    
+
         try {
-            const response = await fetch('http://localhost:8080/tickets/add', {
+            const response = await fetch(`http://localhost:8080/tickets/add?gender=${mappedGender}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -85,10 +90,10 @@ const ActiveTrips = () => {
                 },
                 body: JSON.stringify(ticketData)
             });
-    
+
             // Read response as text
             const responseText = await response.text();
-    
+
             // Try to parse as JSON
             let responseData;
             try {
@@ -97,7 +102,7 @@ const ActiveTrips = () => {
                 // If parsing fails, assume it's a text error message
                 responseData = { message: responseText };
             }
-    
+
             if (!response.ok) {
                 if (responseData.message.includes("koltuk doludur")) {
                     setErrorMessage("Bu koltuk doludur, lütfen başka koltuk seçin.");
@@ -145,6 +150,7 @@ const ActiveTrips = () => {
                                                     seatNo={trip.seatNo}
                                                     selectedSeat={selectedSeat}
                                                     onSeatSelect={handleSeatSelect}
+                                                    tripId={trip.id}  // Pass the trip ID here
                                                 />
                                                 <Button 
                                                     onClick={handleBuyClick}

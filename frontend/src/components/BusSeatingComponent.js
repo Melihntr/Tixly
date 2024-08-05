@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import styles from './BusSeatingComponent.module.css';
 
 const SeatType = Object.freeze({
@@ -15,58 +16,77 @@ const SeatImages = Object.freeze({
     [SeatType.SEAT_SELECTED]: "seat_selected"
 });
 
-// A simple PRNG with a seed
-function seededRandom(seed) {
-    const x = Math.sin(seed) * 10000;
-    return x - Math.floor(x);
-}
+const BusSeatingComponent = ({ busType, seatNo, selectedSeat, onSeatSelect, tripId }) => {
+    const [seatsData, setSeatsData] = useState([]);
+    const [error, setError] = useState('');
 
-const getRandomSeatType = (seed, index) => {
-    const random = seededRandom(seed + index);
-    if (random < 0.2) { // 20% chance for SEAT_MAN
-        return SeatType.SEAT_MAN;
-    } else if (random < 0.4) { // 20% chance for SEAT_WOMEN
-        return SeatType.SEAT_WOMEN;
-    } else {
-        return SeatType.SEAT_EMPTY;
-    }
-};
+    useEffect(() => {
+        const fetchSeatsData = async () => {
+            try {
+                const response = await axios.get('http://localhost:8080/passengers', {
+                    params: {
+                        tripIds: tripId
+                    }
+                });
+                console.log('Seats data fetched:', response.data); // Debugging output
+                setSeatsData(response.data);
+            } catch (error) {
+                console.error('Error fetching seat data:', error);
+                setError('Unable to fetch seat data');
+            }
+        };
 
-const BusSeatingComponent = ({ busType, seatNo, selectedSeat, onSeatSelect }) => {
-    const handleSeatSelect = (seatLabel) => {
+        if (tripId) {
+            fetchSeatsData();
+        }
+    }, [tripId]);
+
+    const handleSeatSelect = (seatLabel, seatType) => {
+        // Prevent selection of seats that are already occupied (SEAT_MAN or SEAT_WOMEN)
+        if (seatType === SeatType.SEAT_MAN || seatType === SeatType.SEAT_WOMEN) {
+            return;
+        }
+
+        // Toggle seat selection
         if (selectedSeat === seatLabel) {
-            onSeatSelect(null); // Deselect if the same seat is clicked again
+            onSeatSelect(null);
         } else {
-            onSeatSelect(seatLabel); // Set the new selected seat
+            onSeatSelect(seatLabel);
         }
     };
 
     const renderSeats = () => {
         const seats = [];
         let seatCounter = 1;
-        const seatsPerColumn = busType === "2s1" ? 3 : 4; // 3 seats per column for 2s1, 4 for 2s2
-        const seatSpacingX = 60; // Space between seats horizontally
-        const seatSpacingYFirstRow = 50; // Space between seats vertically for the first row
-        const seatSpacingYOtherRows = 50; // Space between seats vertically for other rows
-        const seatSpacingBeforeLastRows = 60; // Additional vertical spacing before the last two rows
-        const firstColumnOffsetX = 140; // Horizontal offset for the first column
-        const normalColumnOffsetX = 140; // Normal horizontal offset for other columns
-        const firstColumnOffsetY = -100; // Vertical offset to push the first column up
-        const normalColumnOffsetY = -100; // No vertical offset for other columns
+        const seatsPerColumn = busType === "2s1" ? 3 : 4;
+        const seatSpacingX = 60;
+        const seatSpacingYFirstRow = 50;
+        const seatSpacingYOtherRows = 50;
+        const seatSpacingBeforeLastRows = 60;
+        const firstColumnOffsetX = 140;
+        const normalColumnOffsetX = 140;
+        const firstColumnOffsetY = -100;
+        const normalColumnOffsetY = -100;
         const numColumns = Math.ceil(seatNo / seatsPerColumn);
 
-        // Generate seats based on bus type and seatNo
+        // Create a mapping of seatId to seatType from the fetched data
+        const seatTypeMap = {};
+        seatsData.forEach(seat => {
+            seatTypeMap[seat.seatId] = seat.gender === "Male" ? SeatType.SEAT_MAN : SeatType.SEAT_WOMEN;
+        });
+
         for (let col = 0; col < numColumns; col++) {
             for (let row = 0; row < seatsPerColumn; row++) {
                 if (seatCounter <= seatNo) {
-                    // Calculate y position with additional spacing before the last two rows
                     const yOffset = (row === seatsPerColumn - 1 || row === seatsPerColumn - 2) ? seatSpacingBeforeLastRows : 0;
 
+                    const seatType = seatTypeMap[seatCounter] || SeatType.SEAT_EMPTY;
+
                     seats.push({
-                        x: col === 0 ? firstColumnOffsetX : (col * (seatSpacingX + 20)) + normalColumnOffsetX, // Special offset for first column
-                        y: 120 + (row === 0 ? seatSpacingYFirstRow : seatSpacingYOtherRows) * row + (col === 0 ? firstColumnOffsetY : normalColumnOffsetY) + yOffset, // Additional vertical offset before last two rows
+                        x: col === 0 ? firstColumnOffsetX : (col * (seatSpacingX + 20)) + normalColumnOffsetX,
+                        y: 120 + (row === 0 ? seatSpacingYFirstRow : seatSpacingYOtherRows) * row + (col === 0 ? firstColumnOffsetY : normalColumnOffsetY) + yOffset,
                         label: seatCounter++,
-                        type: selectedSeat === seatCounter - 1 ? SeatType.SEAT_SELECTED : getRandomSeatType(12345, seatCounter - 1) // Consistent random seed
+                        type: selectedSeat === seatCounter - 1 ? SeatType.SEAT_SELECTED : seatType
                     });
                 }
             }
@@ -93,9 +113,9 @@ const BusSeatingComponent = ({ busType, seatNo, selectedSeat, onSeatSelect }) =>
                     const seatImagePath = `/${SeatImages[eachSeat.type]}.png`;
 
                     return (
-                        <div 
-                            key={eachSeat.label} 
-                            onClick={() => handleSeatSelect(eachSeat.label)} 
+                        <div
+                            key={eachSeat.label}
+                            onClick={() => handleSeatSelect(eachSeat.label, eachSeat.type)}
                             style={{ cursor: 'pointer' }}
                         >
                             <img src={seatImagePath} alt="Overlay" style={seatStyle} />
@@ -103,6 +123,7 @@ const BusSeatingComponent = ({ busType, seatNo, selectedSeat, onSeatSelect }) =>
                         </div>
                     );
                 })}
+                {error && <p style={{ color: 'red' }}>{error}</p>}
             </div>
         );
     };

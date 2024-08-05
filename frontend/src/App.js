@@ -20,7 +20,6 @@ import TripsPage from './views/TripsPage';
 function App() {
   useEffect(() => {
     // Clear local storage when the app starts
-    localStorage.clear();
   }, []);
   return (
     <Router>
