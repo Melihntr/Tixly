@@ -1,24 +1,11 @@
-Tixly
-Tixly is a full-stack bus ticket purchasing application developed during an internship at VakıfBank. This project provides a platform for users to book bus tickets, manage their trips, and view ticket details. It is built using a variety of technologies, including Spring Boot, PostgreSQL, React, Bootstrap, and more.
+Built With
+This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
 
-Features
-User Authentication: Register, log in, and manage user accounts.
-Trip Management: View available trips, book tickets, and manage active trips.
-Seat Selection: Choose seats based on bus type and availability.
-Admin Panel: Add, delete, and manage bus details.
-Technologies Used
-Backend:
-
-Spring Boot
-PostgreSQL
-Java
-Frontend:
-
+Next
 React
+Vue
+Angular
+Svelte
+Laravel
 Bootstrap
-JavaScript
-CSS
-HTML
-API Testing:
-
-Postman
+JQuery
