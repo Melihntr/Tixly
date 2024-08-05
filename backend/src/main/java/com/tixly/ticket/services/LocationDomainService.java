@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.tixly.ticket.entity.Province;
 import com.tixly.ticket.models.dto.ProvinceModel;
+import com.tixly.ticket.services.EntityService;
 
 @Service
 public class LocationDomainService {

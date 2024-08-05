@@ -1,10 +1,12 @@
 package com.tixly.ticket.services;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tixly.ticket.entity.Passenger;
 import com.tixly.ticket.entity.Ticket;
 import com.tixly.ticket.entity.User;
 import com.tixly.ticket.models.dto.TicketModel;
@@ -27,13 +29,19 @@ public List<TicketModel> getTicketsByAuthKey(String authKey) {
         return ticket.getTicketsByCustomerId(customerId);
     }
 
-    public void addTicket(String authKey,TicketModel ticketModel) {
+    public void addTicket(String authKey, TicketModel ticketModel, String gender) {
         String jwtToken = BearerUtil.extractToken(authKey);
-        Ticket ticket = entityService.getTicket();
         User user = entityService.getCustomer();
         Long customerId = user.getCustomerIdByAuthKey(jwtToken);
-    
-        ticket.addTicket(customerId,ticketModel); 
-       
+        
+        // Create a new ticket and get its ID
+        Ticket ticket = entityService.getTicket();
+       UUID invoice = ticket.addTicket(customerId, ticketModel); 
+       Long ticketId= ticket.getTicketIdByInvoiceId(invoice);
+        int seatId=ticket.getSeatIdByTicketId(ticketId);
+        Long tripId=ticket.getTripIdByTicketId(ticketId);
+        Passenger passenger = entityService.getPassenger();
+        passenger.createPassenger(ticketId, tripId, seatId, gender);
     }
+
 }

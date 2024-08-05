@@ -33,12 +33,11 @@ public class Ticket {
     private Long tripId;
     private String from; // New field
     private String to;   // New field
-    private int  seatId; // New field
+    private int seatId; // New field
     private LocalDateTime printDate;
     private LocalDateTime checkoutDate;
     private LocalDateTime purchaseDate;
     private UUID invoiceId;
-
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -50,37 +49,55 @@ public class Ticket {
     public List<TicketModel> getTicketsByCustomerId(Long customerId) {
         String sql = "SELECT * FROM tickets WHERE customerid = ?";
         return jdbcTemplate.query(sql, new Object[]{customerId}, (rs, rowNum) -> new TicketModel(
-            rs.getLong("id"),
-            rs.getLong("customerid"),
-            rs.getLong("tripid"),
-            rs.getString("from"), 
-            rs.getString("to"),    
-            rs.getInt("seatid"),  
-            rs.getTimestamp("printdate").toLocalDateTime(),
-            rs.getTimestamp("checkoutdate").toLocalDateTime(),
-            rs.getTimestamp("purchasedate").toLocalDateTime(),
-            (UUID) rs.getObject("invoiceid")
+                rs.getLong("id"),
+                rs.getLong("customerid"),
+                rs.getLong("tripid"),
+                rs.getString("from"),
+                rs.getString("to"),
+                rs.getInt("seatid"),
+                rs.getTimestamp("printdate").toLocalDateTime(),
+                rs.getTimestamp("checkoutdate").toLocalDateTime(),
+                rs.getTimestamp("purchasedate").toLocalDateTime(),
+                (UUID) rs.getObject("invoiceid")
         ));
     }
-    
+
     public List<Long> getTicketIdsByCustomerId(Long customerId) {
         String sql = "SELECT id FROM tickets WHERE customerid = ?";
         return jdbcTemplate.queryForList(sql, new Object[]{customerId}, Long.class);
     }
-    public void addTicket(Long customerId,TicketModel ticketModel) {
-        UUID invoice = UUID.randomUUID();
-        String sql = "INSERT INTO tickets (customerid, tripid, \"from\", \"to\", seatid, printdate, checkoutdate, purchasedate, invoiceid) " +
-        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql,
-                customerId,
-                ticketModel.getTripId(),
-                ticketModel.getFrom(),
-                ticketModel.getTo(),
-                ticketModel.getSeatId(),
-                ticketModel.getPrintDate(),
-                ticketModel.getCheckoutDate(),
-                ticketModel.getPurchaseDate(),
-                invoice
-        );
+
+    public UUID addTicket(Long customerId, TicketModel ticketModel) {
+        UUID invoiceId = UUID.randomUUID();
+        String sql = "INSERT INTO tickets (customerid, tripid, \"from\", \"to\", seatid, printdate, checkoutdate, purchasedate, invoiceid) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING invoiceid";
+
+        return jdbcTemplate.queryForObject(sql, new Object[]{
+            customerId,
+            ticketModel.getTripId(),
+            ticketModel.getFrom(),
+            ticketModel.getTo(),
+            ticketModel.getSeatId(),
+            ticketModel.getPrintDate(),
+            ticketModel.getCheckoutDate(),
+            ticketModel.getPurchaseDate(),
+            invoiceId
+        }, UUID.class);
+
+    }
+
+    public Long getTripIdByTicketId(Long ticketId) {
+        String sql = "SELECT tripid FROM tickets WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{ticketId}, Long.class);
+    }
+
+    public Integer getSeatIdByTicketId(Long ticketId) {
+        String sql = "SELECT seatid FROM tickets WHERE id = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{ticketId}, Integer.class);
+    }
+
+    public Long getTicketIdByInvoiceId(UUID invoiceId) {
+        String sql = "SELECT id FROM tickets WHERE invoiceid = ?";
+        return jdbcTemplate.queryForObject(sql, new Object[]{invoiceId}, Long.class);
     }
 }
