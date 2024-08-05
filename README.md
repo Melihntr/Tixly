@@ -1,7 +1,3 @@
-
-Bellek güncellendi
-Certainly! Here's a README template for your Tixly project:
-
 Tixly
 Tixly is a full-stack bus ticket purchasing application developed during an internship at VakıfBank. This project provides a platform for users to book bus tickets, manage their trips, and view ticket details. It is built using a variety of technologies, including Spring Boot, PostgreSQL, React, Bootstrap, and more.
 
