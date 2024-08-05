@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tixly.ticket.models.dto.TicketModel;
@@ -34,11 +35,13 @@ public class TicketController {
         }
     }
     @PostMapping("/add")
-    public ResponseEntity<String> addTicket(
-        @RequestHeader("Authorization") String authKey,
-        @RequestBody TicketModel ticketModel) {
+public ResponseEntity<String> addTicket(
+    @RequestHeader("Authorization") String authKey,
+    @RequestBody TicketModel ticketModel,
+    @RequestParam("gender") String gender) {
     try {
-        ticketDomainService.addTicket(authKey, ticketModel);
+        // Pass the gender parameter to the service method
+        ticketDomainService.addTicket(authKey, ticketModel, gender);
         return new ResponseEntity<>("Ticket added successfully.", HttpStatus.CREATED);
     } catch (Exception e) {
         e.printStackTrace();
