@@ -5,6 +5,7 @@ import Header from '../components/Header';
 import axios from 'axios';
 import { useLocation, useNavigate } from 'react-router-dom';
 import BusSeatingComponent from '../components/BusSeatingComponent';
+import CreditCardForm from '../components/CreditCardForm'; // Import your CreditCardForm component
 
 const ActiveTrips = () => {
     const [trips, setTrips] = useState([]);
@@ -13,6 +14,7 @@ const ActiveTrips = () => {
     const [showModal, setShowModal] = useState(false);
     const [selectedGender, setSelectedGender] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const [showPaymentModal, setShowPaymentModal] = useState(false); // State for payment modal
     const location = useLocation();
     const navigate = useNavigate();
     const { state } = location;
@@ -110,14 +112,21 @@ const ActiveTrips = () => {
                     throw new Error(responseData.message || 'Server error');
                 }
             } else {
-                alert('Bilet satın alındı!');
-                handleModalClose();
-                navigate('/biletlerim#'); // Redirect after successful purchase
+                setShowModal(false); // Close the gender modal
+                setShowPaymentModal(true); // Open the payment modal
             }
         } catch (error) {
             console.error('Error:', error);
             alert(`Bilet satın alırken bir hata oluştu: ${error.message}`);
         }
+    };
+
+    const handlePaymentModalClose = () => setShowPaymentModal(false);
+
+    const handlePaymentModalSuccess = () => {
+        alert('Ödeme başarılı!');
+        handlePaymentModalClose(); // Close the payment modal
+        navigate('/biletlerim#'); // Navigate to the tickets page
     };
 
     return (
@@ -201,6 +210,30 @@ const ActiveTrips = () => {
                     </Button>
                 </Modal.Footer>
             </Modal>
+
+            {/* Payment Modal */}
+            <Modal show={showPaymentModal} onHide={handlePaymentModalClose}>
+    <Modal.Header closeButton>
+        <Modal.Title>Kredi Kartı Bilgileri</Modal.Title>
+    </Modal.Header>
+    <Modal.Body>
+        <CreditCardForm onSuccess={handlePaymentModalSuccess} />
+    </Modal.Body>
+    <Modal.Footer>
+        <Button variant="secondary" onClick={handlePaymentModalClose}>
+            Kapat
+        </Button>
+        <Button 
+            variant="primary" 
+            onClick={() => {
+                handlePaymentModalClose();
+                navigate('/biletlerim#'); // Redirect to /biletlerim# when the button is pressed
+            }}
+        >
+            Satın Al
+        </Button>
+    </Modal.Footer>
+</Modal>
         </div>
     );
 };
