@@ -29,7 +29,7 @@ Tixly is a full-stack bus ticket purchasing application developed during an inte
 - PgAdmin: GUI editor for managing PostgreSQL database
 
 ## 📘 Database Diagram
-![Database Diagram](/assets/database_diagram.png)
+![Database Diagram](/assets/database_diagram.jpg)
 
 ## 🚀 Starting Up Tixly on Your Locale
 Note: You have to install Java Runtime Environment 13+ & PostgreSQL & Node for starting Tixly up
