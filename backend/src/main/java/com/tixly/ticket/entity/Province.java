@@ -43,7 +43,7 @@ public class Province {
         return jdbcTemplate.query(sql, new ProvinceModel.ProvinceRowMapper());
 
     }
-    public List<ProvinceModel> getMAllProvinces() {
+    public List<ProvinceModel> getwedfvewProvinces() {
         String sql = "SELECT id,il_adi FROM iller";
         return jdbcTemplate.query(sql, new ProvinceModel.ProvinceRowMapper());
 
